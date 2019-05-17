@@ -1,6 +1,6 @@
 #### 以Centos7.x为例安装Docker，官网参照文档 https://docs.docker.com/install/linux/docker-ce/centos/
 ```bash
-$ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+$ sudo yum install yum-utils device-mapper-persistent-data lvm2
 $ sudo yum-config-manager --add-repo  https://download.docker.com/linux/centos/docker-ce.repo
 $ sudo yum install docker-ce -y
 $ yum list docker-ce.x86_64 --showduplicates | sort -r       # 查看Docker安装详情
