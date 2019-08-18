@@ -52,5 +52,6 @@
 	<modules>
 		<module>prometheus</module>
     <module>docker</module>
+    <module>rancher</module>
   </modules>
 </project>

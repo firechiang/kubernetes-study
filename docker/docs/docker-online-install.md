@@ -7,5 +7,6 @@ $ yum list docker-ce.x86_64 --showduplicates | sort -r       # 查看Docker安�
 $ docker -v                                                  # 查看Docker版本号
 $ docker version                                             # 查看Docker版本详细信息
 $ sudo systemctl start docker.service                        # 立即启动 docker服务
+$ sudo systemctl restart docker                              # 重启docker服务
 $ sudo systemctl enable docker.service                       # 设置开机启动docker服务
 ```
