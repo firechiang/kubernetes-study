@@ -6,3 +6,8 @@ $ sudo docker run -d --restart=unless-stopped -p 8080:8080 rancher/server  # 下
 #### 二、为Rancher Server添加Rancher Client（就是添加要被Rancher Server管理的服务器）
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/rancher/image/rancher1x-use01.PNG)
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/rancher/image/rancher1x-use02.PNG)
+
+#### 三、添加应用（注意：应用里面包含服务，所以应用可以简单的理解为服务的分组）
+![image](https://github.com/firechiang/kubernetes-study/blob/master/rancher/image/rancher1x-use03.PNG)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/rancher/image/rancher1x-use04.PNG)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/rancher/image/rancher1x-use05.PNG)
