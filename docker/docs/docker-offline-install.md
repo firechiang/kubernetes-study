@@ -11,8 +11,8 @@ $ wget -P /home/tools/docker http://yum.dockerproject.org/repo/main/centos/7/Pac
 #### 二、安装Docker
 ```bash
 $ cd /home/tools/docker
-$ yum remove -y docker* container-selinux       # 清理原有版本
-$ yum localinstall *.rpm                        # 安装所有依赖包
+$ yum remove -y docker* container-selinux                    # 清理原有版本
+$ yum localinstall *.rpm                                     # 安装所有依赖包
 ```
 
 #### 三、启动
