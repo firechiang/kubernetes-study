@@ -116,7 +116,7 @@ networking:
 imageRepository: registry.aliyuncs.com/google_containers
 ```
 #### 十、使用Kubeadm工具创建Kubernetes集群的第一个主节点（注意：要在我们上面的那个配置文件里面配置的那台API Server上安装）
-##### 10.1，创建首个主节点
+##### 10.1，创建首个主节点（注意：kubeadm init命令执行完成以后会打印出新增节点加入集群的命令，切记要将这两个命令保存起来，具体命令看下面）
 ```bash
 # --config是指定Kubeadm工具的配置文件（配置文件在上一步已经创建好了）
 $ kubeadm init --config=/home/kubeadm-config.yaml --experimental-upload-certs
@@ -150,9 +150,14 @@ kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
     --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
 
 # 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在Your Kubernetes control-plane has initialized successfully! 下面）
-$ mkdir -p $HOME/.kube                                     # 创建文件夹
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
-$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限
+# 创建文件夹
+$ mkdir -p $HOME/.kube     
+
+# 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+
+# 给配置文件赋予权限
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          
 
 # 测试节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
 $ kubectl get pods --all-namespaces                        # 获取当前pod的所有命名空间
