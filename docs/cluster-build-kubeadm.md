@@ -78,14 +78,28 @@ $ yum list kubeadm --showduplicates | sort -r
 $ yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 ```
 
-#### 七、修改Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。如果Docker的已经改了，那这里就不需要改了（注意：如果需要修改的话，集群中每个节点都要修改）
-```bash
-# 注意：如果这个文件报不存在的错误，可能是这个 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 目录
-# 也可以使用 find / -name *kubeadm.conf 命令找到文件所在地址
-$ sed -i "s/cgroup-driver=systemd/cgroup-driver=cgroupfs/g" /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
+#### 七、启动 Kubelet（注意：可以不手动启动 Kubelet，只需要开启开机启动 Kubelet即可，它会自动启动）
+$ systemctl start kubelet.service                          # 启动 Kubelet
+$ systemctl restart kubelet.service                        # 重动 Kubelet
+$ systemctl stop kubelet.service                           # 停止 Kubelet
+$ systemctl status kubelet.service                         # 查看 Kubelet状态
+
+$ systemctl enable kubelet.service                         # 启用开机启动 Kubelet（注意：建议启用）
+$ systemctl disable kubelet.service                        # 禁用开机启动 Kubelet
 ```
 
-#### 八、创建[vi /home/kubeadm-config.yaml]使用Kubeadm搭建集群的配置文件（注意：集群中每个节点都要创建）
+#### 八、修改[vi /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf]Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。建议使用cgroupfs，因为在搭建的过程中使用systemd驱动，日志文件总是不停的有错误信息（说明：如果/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf配置文件没有。可使用 find / -name *kubeadm.conf 命令找到10-kubeadm.conf文件所在地址。注意：集群中每个节点都要修改）
+```bash
+# 新增这一行
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs"
+# 修改这一行，好像是最后一行，在后面添加 $KUBELET_CGROUP_ARGS（就是我们上面定义的那个变量）
+ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS $KUBELET_CGROUP_ARGS
+
+$ systemctl daemon-reload                                  # 重启守护进程
+$ systemctl restart kubelet.service                        # 重启 Kubelet
+```
+
+#### 九、创建[vi /home/kubeadm-config.yaml]使用Kubeadm搭建集群的配置文件（注意：集群中每个节点都要创建）
 ```bash
 apiVersion: kubeadm.k8s.io/v1beta1
 # 集群模式
@@ -100,8 +114,8 @@ networking:
 # 指定镜像地址    
 imageRepository: registry.aliyuncs.com/google_containers
 ```
-#### 九、使用Kubeadm工具创建Kubernetes集群的第一个主节点（注意：要在我们上面的那个配置文件里面配置的那台API Server上安装）
-##### 9.1，创建首个主节点
+#### 十、使用Kubeadm工具创建Kubernetes集群的第一个主节点（注意：要在我们上面的那个配置文件里面配置的那台API Server上安装）
+##### 10.1，创建首个主节点
 ```bash
 # --config是指定Kubeadm工具的配置文件（配置文件在上一步已经创建好了）
 $ kubeadm init --config=/home/kubeadm-config.yaml --experimental-upload-certs
@@ -154,7 +168,7 @@ kube-system   kube-scheduler-server006            1/1     Running   0          2
 $ curl -k https://localhost:6443/healthz
 ```
 
-##### 9.2，在首个主节点上部署网络插件 Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)，（注意：Calico只需要在首个主节点上部署，其它节点会自动部署）
+##### 10.2，在首个主节点上部署网络插件 Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)，（注意：Calico只需要在首个主节点上部署，其它节点会自动部署）
 ```bash
 # 创建存放Calico安装的配置文件目录
 $ mkdir -p /etc/kubernetes/addons                          
@@ -198,9 +212,14 @@ $ kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
                               --experimental-control-plane --certificate-key 1bacb184556cf573646d80f5c3b55fbce56a4f07e82bf42c511ef89e1de2eb61
                               
 # 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在To start administering your cluster from this node, you need to run the following as a regular user 下面）
-$ mkdir -p $HOME/.kube                                     # 创建文件夹
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
-$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限                              
+# 创建文件夹
+$ mkdir -p $HOME/.kube
+
+# 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）                                     
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+
+# 给配置文件赋予权限  
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config                                      
   
 # 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行）     
 # 注意：如果正常的话都是Ready状态                       
@@ -217,9 +236,14 @@ $ kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
     --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
                               
 # 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在To start administering your cluster from this node, you need to run the following as a regular user 下面）
-$ mkdir -p $HOME/.kube                                     # 创建文件夹
-$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
-$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限                              
+# 创建文件夹
+$ mkdir -p $HOME/.kube                                   
+
+# 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）  
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+
+# 给配置文件赋予权限
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config                                        
   
 # 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行） 
 # 注意：如果正常的话都是Ready状态                           
