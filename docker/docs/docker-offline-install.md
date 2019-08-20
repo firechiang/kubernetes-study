@@ -1,66 +1,45 @@
-#### 一、下载安装依赖包
+#### 一、下载安装依赖包，[官方安装文档](https://docs.docker.com/install/linux/docker-ce/binaries/#install-static-binaries)
 ```bash
-$ wget -P /home/tools/docker http://mirror.centos.org/centos/7/os/x86_64/Packages/yum-utils-1.1.31-50.el7.noarch.rpm
 $ wget -P /home/tools/docker http://mirror.centos.org/centos/7/os/x86_64/Packages/device-mapper-persistent-data-0.7.3-3.el7.x86_64.rpm
 $ wget -P /home/tools/docker http://mirror.centos.org/centos/7/os/x86_64/Packages/lvm2-2.02.180-8.el7.x86_64.rpm
-$ wget -P /home/tools/docker https://download.docker.com/linux/static/stable/x86_64/docker-19.03.1.tgz
+
+$ wget -P /home/tools/docker http://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-selinux-17.03.1.ce-1.el7.centos.noarch.rpm
+$ wget -P /home/tools/docker http://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-17.03.1.ce-1.el7.centos.x86_64.rpm
+$ wget -P /home/tools/docker http://yum.dockerproject.org/repo/main/centos/7/Packages/docker-engine-debuginfo-17.03.1.ce-1.el7.centos.x86_64.rpm
 ```
 
-#### 二、安装Docker，详情请查看[官方安装文档](https://docs.docker.com/install/linux/docker-ce/binaries/#install-static-binaries)
+#### 二、安装Docker
 ```bash
 $ cd /home/tools/docker
-$ yum localinstall *.rpm                      # 安装所有依赖包
-$ tar -xvf docker-19.03.1.tgz                 # 解压Docker安装包到当前目录
-$ sudo cp docker/* /usr/bin/                  # 拷贝Docker安装包到/usr/bin/目录下
+$ yum remove -y docker* container-selinux       # 清理原有版本
+$ yum localinstall *.rpm                        # 安装所有依赖包
 ```
 
-#### 三、修改[vi /etc/systemd/system/docker.service]将Docker注册为Service
+#### 三、启动
 ```bash
-[Unit]
-Description=Docker Application Container Engine
-Documentation=https://docs.docker.com
-After=network-online.target firewalld.service
-Wants=network-online.target
- 
-[Service]
-Type=notify
-# the default is not to use systemd for cgroups because the delegate issues still
-# exists and systemd currently does not support the cgroup feature set required
-# for containers run by docker
-ExecStart=/usr/bin/dockerd
-ExecReload=/bin/kill -s HUP $MAINPID
-# Having non-zero Limit*s causes performance problems due to accounting overhead
-# in the kernel. We recommend using cgroups to do container-local accounting.
-LimitNOFILE=infinity
-LimitNPROC=infinity
-LimitCORE=infinity
-# Uncomment TasksMax if your systemd version supports it.
-# Only systemd 226 and above support this version.
-#TasksMax=infinity
-TimeoutStartSec=0
-# set delegate yes so that systemd does not reset the cgroups of docker containers
-Delegate=yes
-# kill only the docker process, not all processes in the cgroup
-KillMode=process
-# restart the docker process if it exits prematurely
-Restart=on-failure
-StartLimitBurst=3
-StartLimitInterval=60s
- 
-[Install]
-WantedBy=multi-user.target
+$ docker -v                                                  # 查看Docker版本号
+$ docker version                                             # 查看Docker版本详细信息
+
+$ sudo systemctl status docker.service                       # 查看Docker状态
+$ sudo systemctl start docker.service                        # 启动Docker
+$ sudo systemctl restart docker.service                      # 重启Docker
+$ sudo systemctl stop docker.service                         # 停止Docker
+
+$ sudo systemctl enable docker.service                       # 设置开机启动Docker
+$ sudo systemctl disable docker.service                      # 禁止开机启动Docker
 ```
 
-#### 四、为docker.service文件添加权限
+#### 四、配置[vi /etc/docker/daemon.json]Docker启动参数（注意：修改这个配置需要先启动Docker）
 ```bash
-$ chmod +x /etc/systemd/system/docker.service   # 放开权限
-$ systemctl daemon-reload                       # 重新加载配置
-```
+# registry-mirrors=设置镜像地址（可以使用docker info命令查看，默认镜像地址）
+# graph=设置docker数据目录：选择比较大的分区（我这里是根目录就不需要配置了，默认为/var/lib/docker）
+# exec-opts=设置cgroup driver驱动（默认是cgroupfs，也可使用docker info命令查看，改成systemd的主要目的是与Kubernetes的Kubelet配置统一）
+{
+  "registry-mirrors": ["https://fy707np5.mirror.aliyuncs.com"],
+  "graph": "/var/lib/docker",
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
 
-#### 五、启动Docker
-```bash
-$ docker -v                                     # 查看Docker版本
-$ systemctl start docker			            # 启动Docker
-$ systemctl enable docker.service			    # 设置开机自启
-$ systemctl status docker			            # 查看Docker状态
+$ systemctl daemon-reload                                    # 重启守护进程
+$ service docker restart                                     # 重启Docker
 ```
