@@ -78,7 +78,7 @@ $ yum list kubeadm --showduplicates | sort -r
 $ yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 ```
 
-#### 七、修改Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。如果Docker的已经改了，那这里就不需要改了（注意：集群中每个节点都要修改）
+#### 七、修改Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。如果Docker的已经改了，那这里就不需要改了（注意：如果需要修改的话，集群中每个节点都要修改）
 ```bash
 # 注意：如果这个文件报不存在的错误，可能是这个 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 目录
 # 也可以使用 find / -name *kubeadm.conf 命令找到文件所在地址
