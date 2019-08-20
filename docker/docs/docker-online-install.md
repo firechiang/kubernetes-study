@@ -13,10 +13,10 @@ $ yum list docker-ce.x86_64 --showduplicates | sort -r       # 查看Docker安�
 $ docker -v                                                  # 查看Docker版本号
 $ docker version                                             # 查看Docker版本详细信息
 
-$ sudo systemctl status docker.service                       # 查看Docker状态
 $ sudo systemctl start docker.service                        # 启动Docker
 $ sudo systemctl restart docker.service                      # 重启Docker
 $ sudo systemctl stop docker.service                         # 停止Docker
+$ sudo systemctl status docker.service                       # 查看Docker状态
 
 $ sudo systemctl enable docker.service                       # 设置开机启动Docker
 $ sudo systemctl disable docker.service                      # 禁止开机启动Docker
@@ -34,5 +34,5 @@ $ sudo systemctl disable docker.service                      # 禁止开机启�
 }
 
 $ systemctl daemon-reload                                    # 重启守护进程
-$ service docker restart                                     # 重启Docker
+$ sudo systemctl restart docker.service                      # 重启Docker
 ```
