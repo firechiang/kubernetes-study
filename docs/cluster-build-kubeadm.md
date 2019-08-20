@@ -18,7 +18,7 @@ $ yum update
 $ yum install -y conntrack ipvsadm ipset jq sysstat curl iptables libseccomp
 ```
 
-#### 三、关闭防火墙（生产不建议关闭）、swap，重置iptables（注意：集群中每个节点都要安装）
+#### 三、关闭防火墙（生产不建议关闭）、swap，重置iptables（注意：集群中每个节点都要设置）
 ```bash
 # 关闭防火墙
 $ systemctl stop firewalld && systemctl disable firewalld
