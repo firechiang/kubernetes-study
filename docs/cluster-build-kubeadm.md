@@ -93,7 +93,7 @@ $ systemctl disable kubelet.service                        # 禁用开机启动 
 ```bash
 # 新增这一行
 Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs"
-# 修改这一行，好像是最后一行，在后面添加 $KUBELET_CGROUP_ARGS（就是我们上面定义的那个变量）
+# 修改这一行，好像是最后一行，在最后面添加 $KUBELET_CGROUP_ARGS（就是我们上面定义的那个变量）
 ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS $KUBELET_CGROUP_ARGS
 
 $ systemctl daemon-reload                                  # 重启守护进程
