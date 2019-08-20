@@ -194,7 +194,7 @@ $ POD_CIDR="172.22.0.0/16" && sed -i -e "s?192.168.0.0/16?$POD_CIDR?g" calico-ty
 # 部署Calico（注意：可以修改calico-typha.yaml文件里面的replicas属性来指定Calico的部署副本数（默认是1，就是同时部署2个Calico），-f是指定配置文件）
 $ kubectl apply -f calico-typha.yaml
 
-# 查看pod的状态看看calico是否部署成功（注意：部署成功后，除了calico-node容器是Pending状态以外，其它所有的容器都会处于Running（运行）状态）
+# 查看pod的状态看看calico是否部署成功（注意：部署成功后，除了calico-typha容器是Pending状态以外，其它所有的容器都会处于Running（运行）状态）
 $ kubectl get pods -n kube-system
 NAME                                      READY   STATUS    RESTARTS   AGE
 calico-kube-controllers-f9dbcb664-7cd6p   1/1     Running   0          77s
