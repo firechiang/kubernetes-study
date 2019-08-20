@@ -120,9 +120,9 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 
 You can now join any number of the control-plane node running the following command on each as root:
 
-  kubeadm join server006:6443 --token 0lktbo.6xqnydbgfaetw9hn \
-    --discovery-token-ca-cert-hash sha256:f9dfa6cda0aceaec8ab0677c478b3638691d27aa1fcd7fe66d0e7d26c67b3ab1 \
-    --experimental-control-plane --certificate-key 2d27f9decb9e931771790f95a612a3bbd0a11544e425baba1cd9862aef2cb706
+  kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
+    --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6 \
+    --experimental-control-plane --certificate-key 1bacb184556cf573646d80f5c3b55fbce56a4f07e82bf42c511ef89e1de2eb61
 
 Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
 As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
@@ -130,8 +130,8 @@ As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you c
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join server006:6443 --token 0lktbo.6xqnydbgfaetw9hn \
-    --discovery-token-ca-cert-hash sha256:f9dfa6cda0aceaec8ab0677c478b3638691d27aa1fcd7fe66d0e7d26c67b3ab1
+kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
+    --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
 
 # 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在Your Kubernetes control-plane has initialized successfully! 下面）
 $ mkdir -p $HOME/.kube                                     # 创建文件夹
@@ -162,7 +162,7 @@ $ cd /etc/kubernetes/addons
 $ curl https://docs.projectcalico.org/v3.8/manifests/calico-typha.yaml -O
 
 # 修改pod网段，我们上面的配置文件里面使用的是：172.22.0.0/16，所以要修改成它
-$ POD_CIDR="172.22.0.0/16" && sed -i -e "s?10.244.0.0/16?$POD_CIDR?g" calico-typha.yaml
+$ POD_CIDR="172.22.0.0/16" && sed -i -e "s?192.168.0.0/16?$POD_CIDR?g" calico-typha.yaml
 
 # 部署Calico（注意：可以修改calico-typha.yaml文件里面的replicas属性来指定Calico的部署副本数（默认是1，就是同时部署2个Calico），-f是指定配置文件）
 $ kubectl apply -f calico-typha.yaml
