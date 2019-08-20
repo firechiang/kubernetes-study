@@ -78,7 +78,8 @@ $ yum list kubeadm --showduplicates | sort -r
 $ yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 ```
 
-#### 七、启动 Kubelet（注意：可以不手动启动 Kubelet，只需要开启开机启动 Kubelet即可，它会自动启动）
+#### 七、启动 Kubelet（注意：因为还未配置集群，启动Kubelet回报错，所以可以不手动启动 Kubelet，只需要开启开机启动 Kubelet即可，它会自动启动）
+```bash
 $ systemctl start kubelet.service                          # 启动 Kubelet
 $ systemctl restart kubelet.service                        # 重动 Kubelet
 $ systemctl stop kubelet.service                           # 停止 Kubelet
