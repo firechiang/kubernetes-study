@@ -163,9 +163,9 @@ $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 # 给配置文件赋予权限
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config          
 
-# 测试节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
-$ kubectl get pods --all-namespaces                        # 获取当前pod的所有命名空间
-
+# 获取当前pod的所有命名空间
+# 查看节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
+$ kubectl get pods --all-namespaces                        
 NAMESPACE     NAME                                READY   STATUS    RESTARTS   AGE
 kube-system   coredns-8686dcc4fd-pgzmx            0/1     Pending   0          29m
 kube-system   coredns-8686dcc4fd-wf4j7            0/1     Pending   0          29m
@@ -286,5 +286,8 @@ kube-proxy-qf4pk                          1/1     Running   0          24m
 kube-proxy-rdwp4                          1/1     Running   0          50m
 kube-scheduler-server006                  1/1     Running   1          49m
 kube-scheduler-server007                  1/1     Running   0          24m
+
+# 到各个节点上执行,看看日志里面有没有什么问题
+$ journalctl -f
 ```
 
