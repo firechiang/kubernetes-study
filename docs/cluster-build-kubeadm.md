@@ -165,7 +165,8 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 # 测试节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
 $ kubectl get pods --all-namespaces                        # 获取当前pod的所有命名空间
-NAME                                      READY   STATUS    RESTARTS   AGE
+
+NAMESPACE     NAME                                READY   STATUS    RESTARTS   AGE
 kube-system   coredns-8686dcc4fd-pgzmx            0/1     Pending   0          29m
 kube-system   coredns-8686dcc4fd-wf4j7            0/1     Pending   0          29m
 kube-system   etcd-server006                      1/1     Running   0          28m
