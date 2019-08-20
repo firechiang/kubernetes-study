@@ -22,7 +22,7 @@ $ sudo systemctl enable docker.service                       # 设置开机启�
 $ sudo systemctl disable docker.service                      # 禁止开机启动Docker
 ```
 
-#### 三、配置 [vi /etc/docker/daemon.json] Docker启动参数，可使用docker info先查看默认值再修改，建议使用默认值（注意：修改这个配置需要先启动Docker）
+#### 三、配置 [vi /etc/docker/daemon.json] 指定Docker启动参数，可使用docker info先查看默认值再修改，建议使用默认值（注意：修改这个配置需要先启动Docker）
 ```bash
 # registry-mirrors=设置镜像地址（可以使用docker info命令查看，默认镜像地址）
 # graph=设置docker数据目录：选择比较大的分区（我这里是根目录就不需要配置了，默认为/var/lib/docker）
