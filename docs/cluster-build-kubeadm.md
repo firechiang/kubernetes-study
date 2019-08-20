@@ -52,7 +52,7 @@ EOF
 $ sysctl -p /etc/sysctl.d/kubernetes.conf                # 使配置文件生效（注意：这一步不能报错）
 ```
 
-#### 五、配置Kubernetes Yum源地址，我们使用的是阿里云的源，可以科学上网的同学可以把"mirrors.aliyun.com"替换为"packages.cloud.google.com"官方源（注意：集群中每个节点都要配置）
+#### 五、配置Kubernetes Yum源地址，我们使用的是阿里云的源，可以科学上网的同学可以把"mirrors.aliyun.com"替换为"packages.cloud.google.com"官方源即可（注意：集群中每个节点都要配置）
 ```bash
 $ cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
@@ -78,7 +78,7 @@ $ yum list kubeadm --showduplicates | sort -r
 $ yum install -y kubeadm-1.14.0-0 kubelet-1.14.0-0 kubectl-1.14.0-0 --disableexcludes=kubernetes
 ```
 
-#### 七、修改Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs（注意：集群中每个节点都要修改）
+#### 七、修改Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。如果Docker的已经改了，那这里就不需要改了（注意：集群中每个节点都要修改）
 ```bash
 # 注意：如果这个文件报不存在的错误，可能是这个 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 目录
 # 也可以使用 find / -name *kubeadm.conf 命令找到文件所在地址
