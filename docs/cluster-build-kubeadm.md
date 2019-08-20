@@ -89,7 +89,7 @@ $ systemctl enable kubelet.service                         # 启用开机启动 
 $ systemctl disable kubelet.service                        # 禁用开机启动 Kubelet
 ```
 
-#### 八、修改[vi /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf] Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。建议使用cgroupfs，因为在搭建的过程中使用systemd驱动，日志文件总是不停的有错误信息（说明：如果/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf配置文件没有。可使用 find / -name *kubeadm.conf 命令找到10-kubeadm.conf文件所在地址。注意：集群中每个节点都要修改）
+#### 八、修改 [vi /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf] 指定Kubelet的CGroup Driver驱动和Docker的保持一致，因为Kubelet的CGroup Driver默认为systemd。Docker的默认为cgroupfs。建议使用cgroupfs，因为在搭建的过程中使用systemd驱动，日志文件总是不停的有错误信息（说明：如果/usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf配置文件没有。可使用 find / -name *kubeadm.conf 命令找到10-kubeadm.conf文件所在地址。注意：集群中每个节点都要修改）
 ```bash
 # 新增这一行
 Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs"
