@@ -119,7 +119,7 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
   https://kubernetes.io/docs/concepts/cluster-administration/addons/
 
 You can now join any number of the control-plane node running the following command on each as root:
-
+# 注意：这个命令要保存起来，如果要添加其它主节点到集群只需要拿着这个命令去那台机器上执行一下即可（前提是那台机器已经安装有Kubeadm工具和Docker）
   kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
     --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6 \
     --experimental-control-plane --certificate-key 1bacb184556cf573646d80f5c3b55fbce56a4f07e82bf42c511ef89e1de2eb61
@@ -130,6 +130,7 @@ As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you c
 
 Then you can join any number of worker nodes by running the following on each as root:
 
+# 注意：这个命令要保存起来，如果要添加从节点到集群只需要拿着这个命令去那台机器上执行一下即可（前提是那台机器已经安装有Kubeadm工具和Docker）
 kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
     --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
 
@@ -140,6 +141,7 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋�
 
 # 测试节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
 $ kubectl get pods --all-namespaces                        # 获取当前pod的所有命名空间
+NAME                                      READY   STATUS    RESTARTS   AGE
 kube-system   coredns-8686dcc4fd-pgzmx            0/1     Pending   0          29m
 kube-system   coredns-8686dcc4fd-wf4j7            0/1     Pending   0          29m
 kube-system   etcd-server006                      1/1     Running   0          28m
@@ -152,7 +154,7 @@ kube-system   kube-scheduler-server006            1/1     Running   0          2
 $ curl -k https://localhost:6443/healthz
 ```
 
-##### 9.2，在首个主节点上部署网络插件 Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)
+##### 9.2，在首个主节点上部署网络插件 Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)，（注意：Calico只需要在首个主节点上部署，其它节点会自动部署）
 ```bash
 # 创建存放Calico安装的配置文件目录
 $ mkdir -p /etc/kubernetes/addons                          
@@ -167,26 +169,87 @@ $ POD_CIDR="172.22.0.0/16" && sed -i -e "s?192.168.0.0/16?$POD_CIDR?g" calico-ty
 # 部署Calico（注意：可以修改calico-typha.yaml文件里面的replicas属性来指定Calico的部署副本数（默认是1，就是同时部署2个Calico），-f是指定配置文件）
 $ kubectl apply -f calico-typha.yaml
 
-# 查看pod的状态看看calico是否部署成功（注意：部署成功后，所有的容器都会处于Running（运行）状态）
+# 查看pod的状态看看calico是否部署成功（注意：部署成功后，除了calico-node容器是Pending状态以外，其它所有的容器都会处于Running（运行）状态）
 $ kubectl get pods -n kube-system
-calico-kube-controllers-f9dbcb664-5pcvl   1/1     Running   0          2m28s
-calico-node-r9z48                         1/1     Running   0          2m28s
-coredns-8686dcc4fd-dw5t4                  1/1     Running   0          26m
-coredns-8686dcc4fd-h8z48                  1/1     Running   0          26m
-etcd-server006                            1/1     Running   0          26m
-kube-apiserver-server006                  1/1     Running   0          26m
-kube-controller-manager-server006         1/1     Running   0          26m
-kube-proxy-4sdgx                          1/1     Running   0          26m
-kube-scheduler-server006                  1/1     Running   0          26m
+NAME                                      READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-f9dbcb664-7cd6p   1/1     Running   0          77s
+calico-node-xclk2                         0/1     Running   0          77s
+calico-typha-649d9968df-2zrtq             0/1     Pending   0          78s
+coredns-8686dcc4fd-66pr6                  1/1     Running   0          6m37s
+coredns-8686dcc4fd-9x74w                  1/1     Running   0          6m37s
+etcd-server006                            1/1     Running   0          5m30s
+kube-apiserver-server006                  1/1     Running   0          5m54s
+kube-controller-manager-server006         1/1     Running   0          5m42s
+kube-proxy-rdwp4                          1/1     Running   0          6m37s
+kube-scheduler-server006                  1/1     Running   0          5m53s
 
-# 因为calico-typha-666749994b-qmtcx处于Pending状态，所以查看一下其详细信息（里面有没启动起来的原因）
+# 查看calico-typha-649d9968df-2zrtq的详细信息
+# 因为calico-typha-649d9968df-2zrtq处于Pending状态，所以查看一下其详细信息（里面有没有跑起来的原因，一般在详细信息的最下面）
 # 如果原因是：default-scheduler  0/1 nodes are available: 1 node(s) had taints that the pod didn't tolerate
-# 表示我们没有Work节点（从节点），集群至少有一个Work节点，calico-typha才能跑起来
-$ kubectl describe pods -n kube-system calico-typha-666749994b-qmtcx
+# 表示我们没有Work节点（从节点），集群至少有一个Work节点，calico-typha才能跑起来（因为我们上面配置了Calico的部署副本数是1）
+$ kubectl describe pods -n kube-system calico-typha-649d9968df-2zrtq(容器的名字可能不一样，注意修改)
 ```
 
-#### 十、（注意：集群中每个节点都要部署）
+#### 十一、添加其它主节点到集群（注意：当前机器要安装有Kubeadm工具和Docker以及/home/kubeadm-config.yaml配置文件（上面有配置文件的创建方法））
 ```bash
+# 加入集群（注意：这个命令是第一个主节点搭建好以后打印出来的，上面有说明）
+$ kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
+                              --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6 \
+                              --experimental-control-plane --certificate-key 1bacb184556cf573646d80f5c3b55fbce56a4f07e82bf42c511ef89e1de2eb61
+                              
+# 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在To start administering your cluster from this node, you need to run the following as a regular user 下面）
+$ mkdir -p $HOME/.kube                                     # 创建文件夹
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限                              
+  
+# 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行）     
+# 注意：如果正常的话都是Ready状态                       
+$ kubectl get nodes	
+NAME        STATUS   ROLES    AGE    VERSION
+server006   Ready    master   34m     v1.14.0
+server007   Ready    master   8m15s   v1.14.0
+```
 
+#### 十二、添加从节点到集群（注意：当前机器要安装有Kubeadm工具和Docker以及/home/kubeadm-config.yaml配置文件（上面有配置文件的创建方法））
+```bash
+# 加入集群（注意：这个命令是第一个主节点搭建好以后打印出来的，上面有说明）
+$ kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
+    --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
+                              
+# 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在To start administering your cluster from this node, you need to run the following as a regular user 下面）
+$ mkdir -p $HOME/.kube                                     # 创建文件夹
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限                              
+  
+# 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行） 
+# 注意：如果正常的话都是Ready状态                           
+$ kubectl get nodes	
+NAME        STATUS   ROLES    AGE    VERSION
+server006   Ready    master   45m    v1.14.0
+server007   Ready    master   19m    v1.14.0
+server008   Ready    <none>   109s   v1.14.0
+
+# 查看pod里所有容器的状态，看看Calico是否正常了（正常的话都是Running状态）（注意：该命令须在主节点上执行）
+# 开始集群里面没有从节点，所以calico-typha跑不起来处于Pending状态
+$ kubectl get pods -n kube-system
+NAME                                      READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-f9dbcb664-7cd6p   1/1     Running   0          45m
+calico-node-lf497                         1/1     Running   0          6m57s
+calico-node-qx4zk                         1/1     Running   0          24m
+calico-node-xclk2                         1/1     Running   0          45m
+calico-typha-649d9968df-2zrtq             1/1     Running   0          45m
+coredns-8686dcc4fd-66pr6                  1/1     Running   0          50m
+coredns-8686dcc4fd-9x74w                  1/1     Running   0          50m
+etcd-server006                            1/1     Running   0          49m
+etcd-server007                            1/1     Running   0          24m
+kube-apiserver-server006                  1/1     Running   0          49m
+kube-apiserver-server007                  1/1     Running   0          24m
+kube-controller-manager-server006         1/1     Running   1          49m
+kube-controller-manager-server007         1/1     Running   0          24m
+kube-proxy-cvw55                          1/1     Running   0          6m57s
+kube-proxy-qf4pk                          1/1     Running   0          24m
+kube-proxy-rdwp4                          1/1     Running   0          50m
+kube-scheduler-server006                  1/1     Running   1          49m
+kube-scheduler-server007                  1/1     Running   0          24m
 ```
 
