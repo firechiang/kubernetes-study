@@ -1,4 +1,4 @@
-#### 一、环境说明（注意：集群中每个节点要预先装好Docker而且还都要配置好hostname和host）
+#### 一、环境说明（注意：集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
 ```bash
 -----------|------------|------------|
            |   Master   |   Worker   | 
