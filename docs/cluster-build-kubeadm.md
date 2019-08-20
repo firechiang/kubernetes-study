@@ -208,11 +208,11 @@ kube-controller-manager-server006         1/1     Running   0          5m42s
 kube-proxy-rdwp4                          1/1     Running   0          6m37s
 kube-scheduler-server006                  1/1     Running   0          5m53s
 
-# 查看calico-typha-649d9968df-2zrtq的详细信息
-# 因为calico-typha-649d9968df-2zrtq处于Pending状态，所以查看一下其详细信息（里面有没有跑起来的原因，一般在详细信息的最下面）
+# 查看calico-typha-649d9968df-2zrtq运行的详细信息
+# 因为calico-typha-649d9968df-2zrtq运行处于Pending状态，所以查看一下其详细信息（里面有没有跑起来的原因，一般在详细信息的最下面）
 # 如果原因是：default-scheduler  0/1 nodes are available: 1 node(s) had taints that the pod didn't tolerate
 # 表示我们没有Work节点（从节点），集群至少有一个Work节点，calico-typha才能跑起来（因为我们上面配置了Calico的部署副本数是1）
-$ kubectl describe pods -n kube-system calico-typha-649d9968df-2zrtq(容器的名字可能不一样，注意修改)
+$ kubectl describe pods -n kube-system calico-typha-649d9968df-2zrtq(容器运行的名字可能不一样，注意修改)
 ```
 
 #### 十一、添加其它主节点到集群（注意：当前机器要安装有Kubeadm工具和Docker以及/home/kubeadm-config.yaml配置文件（上面有配置文件的创建方法））
