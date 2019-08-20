@@ -92,7 +92,7 @@ apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
 # Kubernetes版本
 kubernetesVersion: v1.14.0
-# api server的服务地址，就是Master节点的服务地址（注意：如果有多个Master，建议使用Keepalived抢占IP，以达到高可用）
+# API Server的服务地址（注意：如果有多个API Server就是Master节点，建议使用Keepalived抢占IP，以达到高可用）
 controlPlaneEndpoint: "server006:6443"
 networking:
     # pod的网段（就是容器内部的网段），16位的掩码（注意：这些都可以改，但不要和已使用的网段起冲突）
