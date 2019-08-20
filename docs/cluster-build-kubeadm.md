@@ -1,4 +1,4 @@
-#### 一、环境说明（注意：集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
+#### 一、环境说明，如需官方安装文档请[点击](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)（注意：集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
 ```bash
 -----------|------------|------------|
            |   Master   |   Worker   | 
@@ -100,10 +100,93 @@ networking:
 # 指定镜像地址    
 imageRepository: registry.aliyuncs.com/google_containers
 ```
-#### 九、使用Kubeadm工具创建Kubernetes集群的主节点（注意：我们有多个主节点都要执行）
+#### 九、使用Kubeadm工具创建Kubernetes集群的第一个主节点（注意：要在我们上面的那个配置文件里面配置的那台API Server上安装）
+##### 9.1，创建首个主节点
 ```bash
 # --config是指定Kubeadm工具的配置文件（配置文件在上一步已经创建好了）
 $ kubeadm init --config=/home/kubeadm-config.yaml --experimental-upload-certs
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of the control-plane node running the following command on each as root:
+
+  kubeadm join server006:6443 --token 0lktbo.6xqnydbgfaetw9hn \
+    --discovery-token-ca-cert-hash sha256:f9dfa6cda0aceaec8ab0677c478b3638691d27aa1fcd7fe66d0e7d26c67b3ab1 \
+    --experimental-control-plane --certificate-key 2d27f9decb9e931771790f95a612a3bbd0a11544e425baba1cd9862aef2cb706
+
+Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
+As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
+"kubeadm init phase upload-certs --experimental-upload-certs" to reload certs afterward.
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join server006:6443 --token 0lktbo.6xqnydbgfaetw9hn \
+    --discovery-token-ca-cert-hash sha256:f9dfa6cda0aceaec8ab0677c478b3638691d27aa1fcd7fe66d0e7d26c67b3ab1
+
+# 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在Your Kubernetes control-plane has initialized successfully! 下面）
+$ mkdir -p $HOME/.kube                                     # 创建文件夹
+$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config # 拷贝配置文件到$HOME/.kube目录（注意：这个配置文件包含集群的信息和API Server的访问地址）
+$ sudo chown $(id -u):$(id -g) $HOME/.kube/config          # 给配置文件赋予权限
+
+# 测试节点是否搭建成功（注意：除了coredns是Pending状态，其它的都应该是Running状态。也可使用netstat -ntlp查看各个服务是否都起起来了）
+$ kubectl get pods --all-namespaces                        # 获取当前pod的所有命名空间
+kube-system   coredns-8686dcc4fd-pgzmx            0/1     Pending   0          29m
+kube-system   coredns-8686dcc4fd-wf4j7            0/1     Pending   0          29m
+kube-system   etcd-server006                      1/1     Running   0          28m
+kube-system   kube-apiserver-server006            1/1     Running   0          28m
+kube-system   kube-controller-manager-server006   1/1     Running   0          28m
+kube-system   kube-proxy-96jk7                    1/1     Running   0          29m
+kube-system   kube-scheduler-server006            1/1     Running   0          28m
+
+# 请求一下当前API Server的健康检查地址看看是否正常（注意：正常的话会返回ok，-k表示使用https）
+$ curl -k https://localhost:6443/healthz
 ```
 
+##### 9.2，在首个主节点上部署网络插件 Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)
+```bash
+# 创建存放Calico安装的配置文件目录
+$ mkdir -p /etc/kubernetes/addons                          
+$ cd /etc/kubernetes/addons
+
+# 从官方下载Calico安装的配置文件
+$ curl https://docs.projectcalico.org/v3.8/manifests/calico-typha.yaml -O
+
+# 修改pod网段，我们上面的配置文件里面使用的是：172.22.0.0/16，所以要修改成它
+$ POD_CIDR="172.22.0.0/16" && sed -i -e "s?10.244.0.0/16?$POD_CIDR?g" calico-typha.yaml
+
+# 部署Calico（注意：可以修改calico-typha.yaml文件里面的replicas属性来指定Calico的部署副本数（默认是1，就是同时部署2个Calico），-f是指定配置文件）
+$ kubectl apply -f calico-typha.yaml
+
+# 查看pod的状态看看calico是否部署成功（注意：部署成功后，所有的容器都会处于Running（运行）状态）
+$ kubectl get pods -n kube-system
+calico-kube-controllers-f9dbcb664-5pcvl   1/1     Running   0          2m28s
+calico-node-r9z48                         1/1     Running   0          2m28s
+coredns-8686dcc4fd-dw5t4                  1/1     Running   0          26m
+coredns-8686dcc4fd-h8z48                  1/1     Running   0          26m
+etcd-server006                            1/1     Running   0          26m
+kube-apiserver-server006                  1/1     Running   0          26m
+kube-controller-manager-server006         1/1     Running   0          26m
+kube-proxy-4sdgx                          1/1     Running   0          26m
+kube-scheduler-server006                  1/1     Running   0          26m
+
+# 因为calico-typha-666749994b-qmtcx处于Pending状态，所以查看一下其详细信息（里面有没启动起来的原因）
+# 如果原因是：default-scheduler  0/1 nodes are available: 1 node(s) had taints that the pod didn't tolerate
+# 表示我们没有Work节点（从节点），集群至少有一个Work节点，calico-typha才能跑起来
+$ kubectl describe pods -n kube-system calico-typha-666749994b-qmtcx
+```
+
+#### 十、（注意：集群中每个节点都要部署）
+```bash
+
+```
 
