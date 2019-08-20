@@ -100,7 +100,7 @@ $ systemctl daemon-reload                                  # 重启守护进程
 $ systemctl restart kubelet.service                        # 重启 Kubelet
 ```
 
-#### 九、创建[vi /home/kubeadm-config.yaml]使用Kubeadm搭建集群的配置文件（注意：集群中每个节点都要创建）
+#### 九、创建 [vi /home/kubeadm-config.yaml] 使用Kubeadm搭建集群的配置文件（注意：集群中每个节点都要创建）
 ```bash
 apiVersion: kubeadm.k8s.io/v1beta1
 # 集群模式
