@@ -121,6 +121,8 @@ imageRepository: registry.aliyuncs.com/google_containers
 # --config是指定Kubeadm工具的配置文件（配置文件在上一步已经创建好了）
 $ kubeadm init --config=/home/kubeadm-config.yaml --experimental-upload-certs
 
+---------------------------kubeadm init命令打印的信息 statr----------------------------------------------------
+
 Your Kubernetes control-plane has initialized successfully!
 
 To start using your cluster, you need to run the following as a regular user:
@@ -148,6 +150,8 @@ Then you can join any number of worker nodes by running the following on each as
 # 注意：这个命令要保存起来，如果要添加从节点到集群只需要拿着这个命令去那台机器上执行一下即可（前提是那台机器已经安装有Kubeadm工具和Docker）
 kubeadm join server006:6443 --token 066swh.oei8kdj0ax4z6h07 \
     --discovery-token-ca-cert-hash sha256:7cffb69278a9c7c1555695dd6427a20e8bdd93530bc3c8e683b8e842caeb8ea6
+    
+---------------------------kubeadm init命令打印的信息 end----------------------------------------------------    
 
 # 配置节点（注意：以下的配置步骤，在上面的命令执行完成以后会有提示，要根据提示来做，一般是在Your Kubernetes control-plane has initialized successfully! 下面）
 # 创建文件夹
