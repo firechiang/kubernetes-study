@@ -64,7 +64,8 @@ $ ping <pod-ip>
 # 示例：curl 10.102.140.207:80
 $ curl <service-ip>:<port>
 
-# 在每个节点检查node-port可用性（注意：node-port（服务绑定在节点的端口），是service信息里面PORT(S)项里面后面的那一个端口。正常的话应该是每个节点都可以访问）
+# 在每个节点检查node-port可用性（正常的话应该是每个节点都可以访问）
+# 注意：node-port（服务绑定在节点的端口），是service信息里面PORT(S)项里面的信息，前面的那个端口是绑定在容器里面的，后面的那个端口是绑定在节点机器上的
 # 示例：curl server008:30213
 $ curl <node-ip>:<port>
 ```
