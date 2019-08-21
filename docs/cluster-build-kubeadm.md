@@ -255,8 +255,7 @@ $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 # 给配置文件赋予权限
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config                                        
   
-# 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行） 
-# 注意：如果正常的话都是Ready状态                           
+# 查看所有节点信息（注意：在主节点上执行（只要是主节点就是行），如果正常的话都是Ready状态）                            
 $ kubectl get nodes	
 NAME        STATUS   ROLES    AGE    VERSION
 server006   Ready    master   45m    v1.14.0
@@ -264,7 +263,7 @@ server007   Ready    master   19m    v1.14.0
 server008   Ready    <none>   109s   v1.14.0
 
 # 查看pod里所有容器的状态，看看Calico是否正常了（正常的话都是Running状态）（注意：该命令须在主节点上执行）
-# 开始集群里面没有从节点，所以calico-typha跑不起来处于Pending状态
+# 开始集群里面没有从节点，所以calico-typha跑不起来处于Pending状态，现在有从节点了应该是Running（运行）状态
 $ kubectl get pods -n kube-system
 NAME                                      READY   STATUS    RESTARTS   AGE
 calico-kube-controllers-f9dbcb664-7cd6p   1/1     Running   0          45m
