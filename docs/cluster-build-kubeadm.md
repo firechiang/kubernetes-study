@@ -232,8 +232,7 @@ $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 # 给配置文件赋予权限  
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config                                      
   
-# 查看所有节点信息（注意：这个命令要到第一个搭建好的主节点上去执行，而不是当前这个节点。如果那台主节点挂掉了，才能到其它的主节点上执行）     
-# 注意：如果正常的话都是Ready状态                       
+# 查看所有节点信息（注意：在主节点上执行（只要是主节点就是行），如果正常的话都是Ready状态）                       
 $ kubectl get nodes	
 NAME        STATUS   ROLES    AGE    VERSION
 server006   Ready    master   34m     v1.14.0
