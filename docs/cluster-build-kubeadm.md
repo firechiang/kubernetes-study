@@ -1,4 +1,4 @@
-#### 一、环境说明，如需官方安装文档请[点击](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)（注意：集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
+#### 一、环境说明，[官方安装文档](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)，[参考文档](https://gitee.com/pa/kubernetes-ha-kubeadm)，（注意：集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
 ```bash
 -----------|------------|------------|
            |   Master   |   Worker   | 
