@@ -221,7 +221,7 @@ $ sudo systemctl disable etcd                # 禁止开机启动
 $ sudo systemctl daemon-reload               # 重启守护进程
 ```
 
-#### 九、简单使用
+#### 九、简单测试
 ```bash
 # 查看ETCD版本
 $ /opt/kubernetes/bin/etcd/etcd --version    
