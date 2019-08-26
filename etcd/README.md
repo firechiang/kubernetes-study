@@ -223,6 +223,9 @@ $ sudo systemctl daemon-reload               # 重启守护进程
 
 #### 九、简单测试
 ```bash
+# 查看ETCD服务日志
+$ journalctl -f -u etcd.service
+
 # 查看ETCD版本
 $ /opt/kubernetes/bin/etcd/etcd --version    
 
