@@ -30,10 +30,10 @@ $ /home/cfssl/bin/cfssl version
 #### 三、生成CA根证书（注意：在装有cfssl工具的节点上执行生成CA根证书，其它节点要生成证书在该节点生成即可，然后再拷贝到集群的各个节点即可）
 ```bash
 # 创建存放根证书目录
-$ mkdir -p /home/cfssl/pki
+$ mkdir -p /home/cfssl/pki/etcd
 
 # 创建config配置文件（注意：证书的过期时间是87600小时）
-$ cat > /home/cfssl/pki/ca-config.json <<EOF
+$ cat > /home/cfssl/pki/etcd/ca-config.json <<EOF
 {
   "signing": {
     "default": {
@@ -55,7 +55,7 @@ $ cat > /home/cfssl/pki/ca-config.json <<EOF
 EOF
 
 # 创建csr配置文件
-$ cat > /home/cfssl/pki/ca-csr.json <<EOF
+$ cat > /home/cfssl/pki/etcd/ca-csr.json <<EOF
 {
   "CN": "kubernetes",
   "key": {
@@ -75,7 +75,7 @@ $ cat > /home/cfssl/pki/ca-csr.json <<EOF
 EOF
 
 # 到存放根证书目录
-$ cd /home/cfssl/pki/
+$ cd /home/cfssl/pki/etcd/
 
 # 生成证书和私钥
 $ /home/cfssl/bin/cfssl gencert -initca ca-csr.json | /home/cfssl/bin/cfssljson -bare ca
@@ -88,7 +88,7 @@ ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem
 #### 四、生成ETCD的证书（注意：在装有cfssl工具的节点上执行生成证书，最后将证书拷贝到其它节点即可）
 ```bash
 # 创建并定位到存放ETCD的证书目录
-$ mkdir -p /home/cfssl/pki/etcd && cd /home/cfssl/pki/etcd
+$ cd /home/cfssl/pki/etcd
 
 # 创建ETCD的csr配置文件（注意：要修改ETCD节点的主机名）
 $ cat > /home/cfssl/pki/etcd/etcd-csr.json <<EOF
