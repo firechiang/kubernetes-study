@@ -169,11 +169,11 @@ $ ls
 ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  kubernetes.csr  kubernetes-csr.json  kubernetes-key.pem  kubernetes.pem
 
 # 创建节点存放证书目录并将证书复制到该目录
-$ mkdir -p /etc/kubernetes/pki/apiserver && scp /home/cfssl/pki/apiserver/*.pem /etc/kubernetes/pki/apiserver/
+$ mkdir -p /etc/kubernetes-pki-apiserver && scp /home/cfssl/pki/apiserver/*.pem /etc/kubernetes-pki-apiserver
 
 # 分发CA根证书和Api Server证书到集群的各个节点
-$ scp -r /etc/kubernetes root@server007:/etc
-$ scp -r /etc/kubernetes root@server008:/etc
+$ scp -r /etc/kubernetes-pki-apiserver root@server007:/etc
+$ scp -r /etc/kubernetes-pki-apiserver root@server008:/etc
 ```
 
 #### 七、下载和安装以及分发安装包（因要翻墙下载，所以百度云有备份），[官方详细下载地址](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.15.md)
@@ -217,12 +217,12 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-apiserver \
   # NodePort的取值范围（注意：下面的这个范围一般也够用了，不需要修改）
   --service-node-port-range=8400-8900 \
   # Api Server相关证书地址
-  --tls-cert-file=/etc/kubernetes/pki/apiserver/kubernetes.pem \
-  --tls-private-key-file=/etc/kubernetes/pki/apiserver/kubernetes-key.pem \
-  --client-ca-file=/etc/kubernetes/pki/apiserver/ca.pem \
-  --kubelet-client-certificate=/etc/kubernetes/pki/apiserver/kubernetes.pem \
-  --kubelet-client-key=/etc/kubernetes/pki/apiserver/kubernetes-key.pem \
-  --service-account-key-file=/etc/kubernetes/pki/apiserver/ca-key.pem \
+  --tls-cert-file=/etc/kubernetes-pki-apiserver/kubernetes.pem \
+  --tls-private-key-file=/etc/kubernetes-pki-apiserver/kubernetes-key.pem \
+  --client-ca-file=/etc/kubernetes-pki-apiserver/ca.pem \
+  --kubelet-client-certificate=/etc/kubernetes-pki-apiserver/kubernetes.pem \
+  --kubelet-client-key=/etc/kubernetes-pki-apiserver/kubernetes-key.pem \
+  --service-account-key-file=/etc/kubernetes-pki-apiserver/ca-key.pem \
   # ETCD相关证书地址
   --etcd-cafile=/etc/kubernetes/pki/etcd/ca.pem \
   --etcd-certfile=/etc/kubernetes/pki/etcd/etcd.pem \
