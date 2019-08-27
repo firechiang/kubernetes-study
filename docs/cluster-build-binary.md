@@ -242,6 +242,10 @@ $ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes /home/cfssl/pki/kubernetes-cluster/controller-manager/controller-manager-csr.json | /home/cfssl/bin/cfssljson -bare controller-manager
+  
+# 生成完成后会有以下文件（我们最终想要的就是controller-manager-key.pem和controller-manager.pem，一个秘钥，一个证书）
+$ ls
+controller-manager.csr  controller-manager-csr.json  controller-manager-key.pem  controller-manager.pem
 ```
 
 
