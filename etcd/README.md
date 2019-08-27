@@ -193,6 +193,7 @@ ExecStart=/opt/kubernetes/etcd/bin/etcd \
   --initial-cluster-token=etcd-cluster-0 \
   # ETCD集群所有节点的信息（注意：server006是--name 指定的名字。后面的那个地址一定要在证书的host里面，否则集群内部无法连通）
   --initial-cluster=server006=https://server006:2380,server007=https://server007:2380,server008=https://server008:2380 \
+  # new为新创建集群，existing为已存在的集群
   --initial-cluster-state=new
 Restart=on-failure
 RestartSec=5
