@@ -251,7 +251,7 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 ```
 
-#### 七、启动集群各个主节点的Api Server（注意：集群每个主节点都要执行）
+#### 七、启动和简单测试Api Server节点（注意：集群每个主节点都要执行）
 ```bash
 $ sudo systemctl daemon-reload && systemctl start kube-apiserver   # 启动 Api Server
 $ sudo systemctl daemon-reload && systemctl restart kube-apiserver # 重启 Api Server
@@ -262,4 +262,10 @@ $ sudo systemctl disable kube-apiserver                            # 禁止开�
 $ sudo service kube-apiserver status                               # 查看 Api Server 服务状态
 $ journalctl -f -u kube-apiserver                                  # 查看 Api Server 日志
 $ netstat -ntlp                                                    # 查看端口绑定情况
+
+# 查看当前节点Api Server的健康状态，正常的话会放回ok（注意：不带证书访问的话会报没有权限错误）
+$ curl -k                                                \
+  --cert /etc/kubernetes-pki-apiserver/kubernetes.pem    \
+  --key /etc/kubernetes-pki-apiserver/kubernetes-key.pem \
+  https://127.0.0.1:6443/healthz
 ```
