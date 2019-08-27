@@ -166,7 +166,7 @@ $ /home/cfssl/bin/cfssl gencert                             \
   
 # 生成完成后会有以下文件（我们最终想要的就是kubernetes-key.pem和kubernetes.pem，一个秘钥，一个证书）
 $ ls
-ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  kubernetes.csr  kubernetes-csr.json  kubernetes-key.pem  kubernetes.pem
+kubernetes.csr  kubernetes-csr.json  kubernetes-key.pem  kubernetes.pem
 ```
 
 #### 七、生成Kubectl的证书（注意：在装有cfssl工具的节点上执行生成证书，最后将证书拷贝到其它节点即可）
