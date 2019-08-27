@@ -196,7 +196,7 @@ $ cat > /home/cfssl/pki/kubernetes-cluster/kubectl/admin-csr.json <<EOF
 EOF
 
 # 生成证书、私钥（注意：\代表命令换行的意思）
-$ cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
+$ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes /home/cfssl/pki/kubernetes-cluster/kubectl/admin-csr.json | /home/cfssl/bin/cfssljson -bare admin
@@ -234,7 +234,7 @@ $ cat > /home/cfssl/pki/kubernetes-cluster/controller-manager/controller-manager
 EOF
 
 # 生成证书、私钥（注意：\代表命令换行的意思）
-$ cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
+$ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes /home/cfssl/pki/kubernetes-cluster/controller-manager/controller-manager-csr.json | /home/cfssl/bin/cfssljson -bare controller-manager
@@ -273,7 +273,7 @@ $ cat > /home/cfssl/pki/kubernetes-cluster/scheduler/scheduler-csr.json <<EOF
 EOF
 
 # 生成证书、私钥（注意：\代表命令换行的意思）
-$ cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
+$ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes /home/cfssl/pki/kubernetes-cluster/scheduler/scheduler-csr.json | /home/cfssl/bin/cfssljson -bare kube-scheduler
@@ -305,7 +305,7 @@ $ cat > /home/cfssl/pki/kubernetes-cluster/kube-proxy/kube-proxy-csr.json <<EOF
 EOF
 
 # 生成证书、私钥（注意：\代表命令换行的意思）
-$ cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
+$ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes  /home/cfssl/pki/kubernetes-cluster/kube-proxy/kube-proxy-csr.json | /home/cfssl/bin/cfssljson -bare kube-proxy
