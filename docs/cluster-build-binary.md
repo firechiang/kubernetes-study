@@ -194,7 +194,7 @@ $ tar -vxf kubernetes-server-linux-amd64.tar.gz && mkdir -p /opt/kubernetes-apis
 $ scp -r /opt/kubernetes-apiserver root@server007:/opt
 ```
 
-#### 六、在集群的各个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP要修改成各自节点自己的，而且创建文件时，要删除注释，否则会报错）
+#### 六、在集群的各个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP要修改成节点自己的，而且创建文件时，要删除注释，否则会报错）
 ```bash
 [Unit]
 Description=Kubernetes API Server
