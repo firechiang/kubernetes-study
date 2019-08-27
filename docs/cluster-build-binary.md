@@ -378,12 +378,12 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-apiserver \
   # NodePort的取值范围（注意：下面的这个范围一般也够用了，不需要修改）
   --service-node-port-range=8400-8900 \
   # Api Server相关证书地址
-  --tls-cert-file=/etc/kubernetes-pki-apiserver/kubernetes.pem \
-  --tls-private-key-file=/etc/kubernetes-pki-apiserver/kubernetes-key.pem \
-  --client-ca-file=/etc/kubernetes-pki-apiserver/ca.pem \
-  --kubelet-client-certificate=/etc/kubernetes-pki-apiserver/kubernetes.pem \
-  --kubelet-client-key=/etc/kubernetes-pki-apiserver/kubernetes-key.pem \
-  --service-account-key-file=/etc/kubernetes-pki-apiserver/ca-key.pem \
+  --tls-cert-file=/etc/kubernetes-pki-cluster/apiserver/kubernetes.pem \
+  --tls-private-key-file=/etc/kubernetes-pki-cluster/apiserver/kubernetes-key.pem \
+  --client-ca-file=/etc/kubernetes-pki-cluster/ca.pem \
+  --kubelet-client-certificate=/etc/kubernetes-pki-cluster/apiserver/kubernetes.pem \
+  --kubelet-client-key=/etc/kubernetes-pki-cluster/apiserver/kubernetes-key.pem \
+  --service-account-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
   # ETCD相关证书地址
   --etcd-cafile=/etc/kubernetes/pki/etcd/ca.pem \
   --etcd-certfile=/etc/kubernetes/pki/etcd/etcd.pem \
