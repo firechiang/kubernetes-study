@@ -330,7 +330,7 @@ kube-proxy.csr  kube-proxy-csr.json  kube-proxy-key.pem  kube-proxy.pem
 #### 十一、分发证书到集群的各个节点
 ```bash
 # 创建节点存放证书目录并将证书复制到该目录
-$ mkdir -p /etc/kubernetes-pki-cluster && scp /home/cfssl/pki/kubernetes-cluster/* /etc/kubernetes-pki-cluster
+$ mkdir -p /etc/kubernetes-pki-cluster && scp -r /home/cfssl/pki/kubernetes-cluster/* /etc/kubernetes-pki-cluster
 
 # 将所有的证书分发到集群的各个节点
 $ scp -r /etc/kubernetes-pki-cluster root@server007:/etc
