@@ -125,7 +125,7 @@ $ /home/cfssl/bin/cfssl gencert               \
   
 # 生成完成后会有以下文件（我们最终想要的就是etcd-key.pem和etcd.pem，一个秘钥，一个证书）
 $ ls
-etcd.csr  etcd-csr.json  etcd-key.pem  etcd.pem  
+ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem  etcd.csr  etcd-csr.json  etcd-key.pem  etcd.pem
 
 # 创建证书存放目录并将证书复制到该目录
 $ mkdir -p /etc/kubernetes/pki/etcd && scp /home/cfssl/pki/etcd/*.pem /etc/kubernetes/pki/etcd/
