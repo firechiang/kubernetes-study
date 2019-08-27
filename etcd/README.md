@@ -126,25 +126,16 @@ $ /home/cfssl/bin/cfssl gencert           \
 # 生成完成后会有以下文件（我们最终想要的就是etcd-key.pem和etcd.pem，一个秘钥，一个证书）
 $ ls
 etcd.csr  etcd-csr.json  etcd-key.pem  etcd.pem  
+
+# 创建证书存放目录并将证书复制到该目录
+$ mkdir -p /etc/kubernetes/pki/etcd && scp /home/cfssl/pki/etcd/*.pem /etc/kubernetes/pki/etcd/
+
+# 分发CA根证书和ETCD证书到集群的各个节点
+$ scp -r /etc/kubernetes root@server007:/etc
+$ scp -r /etc/kubernetes root@server008:/etc
 ```
 
-#### 五、分发证书到集群的各个节点
-```bash
-# 在每个节点上创建存放证书的目录（注意：集群所有的节点都要执行）
-$ mkdir -p /etc/kubernetes/pki
-
-# 分发CA根证书到集群的各个节点
-$ scp /home/cfssl/pki/*.pem root@server006:/etc/kubernetes/pki/
-$ scp /home/cfssl/pki/*.pem root@server007:/etc/kubernetes/pki/
-$ scp /home/cfssl/pki/*.pem root@server008:/etc/kubernetes/pki/
-
-# 分发ETCD证书到集群的各个节点
-$ scp /home/cfssl/pki/etcd/etcd*.pem root@server006:/etc/kubernetes/pki/
-$ scp /home/cfssl/pki/etcd/etcd*.pem root@server007:/etc/kubernetes/pki/
-$ scp /home/cfssl/pki/etcd/etcd*.pem root@server008:/etc/kubernetes/pki/
-```
-
-#### 六、下载和分发ETCD安装包（注意：以下操作在集群当中，随便找一个节点操作即可）
+#### 五、下载和分发ETCD安装包（注意：以下操作在集群当中，随便找一个节点操作即可）
 ```bash
 # 创建ETCD的安装目录和数据存储目录（注意：集群所有的节点都要执行）
 $ mkdir -p /opt/kubernetes/bin/etcd && mkdir -p /var/lib/etcd
@@ -159,11 +150,11 @@ $ cd /home/tools/kubernetes
 $ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/bin/etcd
 
 # 分发ETCD安装包到集群的各个节点
-$ scp -r /opt/kubernetes/bin/etcd root@server007:/opt/kubernetes/bin
-$ scp -r /opt/kubernetes/bin/etcd root@server008:/opt/kubernetes/bin
+$ scp -r /opt/kubernetes root@server007:/opt
+$ scp -r /opt/kubernetes root@server008:/opt
 ```
 
-#### 七、在集群的各个节点上创建 [vi /etc/systemd/system/etcd.service] ETCD Service系统启动文件（注意：IP和主机名要修改成各个节点自己的，而且创建文件时，要删除注释，否则会报错）
+#### 六、在集群的各个节点上创建 [vi /etc/systemd/system/etcd.service] ETCD Service系统启动文件（注意：IP和主机名要修改成各个节点自己的，而且创建文件时，要删除注释，否则会报错）
 ```bash
 [Unit]
 Description=Etcd Server
@@ -182,12 +173,12 @@ ExecStart=/opt/kubernetes/bin/etcd/etcd \
   --data-dir=/var/lib/etcd \
   # 当前节点的名称（注意：修改成自己的主机名）
   --name=server006 \
-  --cert-file=/etc/kubernetes/pki/etcd.pem \
-  --key-file=/etc/kubernetes/pki/etcd-key.pem \
-  --trusted-ca-file=/etc/kubernetes/pki/ca.pem \
-  --peer-cert-file=/etc/kubernetes/pki/etcd.pem \
-  --peer-key-file=/etc/kubernetes/pki/etcd-key.pem \
-  --peer-trusted-ca-file=/etc/kubernetes/pki/ca.pem \
+  --cert-file=/etc/kubernetes/pki/etcd/etcd.pem \
+  --key-file=/etc/kubernetes/pki/etcd/etcd-key.pem \
+  --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.pem \
+  --peer-cert-file=/etc/kubernetes/pki/etcd/etcd.pem \
+  --peer-key-file=/etc/kubernetes/pki/etcd/etcd-key.pem \
+  --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.pem \
   --peer-client-cert-auth \
   --client-cert-auth \
   # 监听集群内部通信地址（监听其他 Etcd 实例的地址）
@@ -211,7 +202,7 @@ LimitNOFILE=65536
 WantedBy=multi-user.target
 ```
 
-#### 八、启动ETCD的各个节点（注意：集群的各个节点都要执行）
+#### 七、启动ETCD的各个节点（注意：集群的各个节点都要执行）
 ```bash
 $ sudo systemctl start etcd                  # 启动ETCD
 $ sudo systemctl stop etcd                   # 停止ETCD
@@ -221,7 +212,7 @@ $ sudo systemctl disable etcd                # 禁止开机启动
 $ sudo systemctl daemon-reload               # 重启守护进程
 ```
 
-#### 九、简单测试
+#### 八、简单测试
 ```bash
 # 查看ETCD服务日志
 $ journalctl -f -u etcd.service
