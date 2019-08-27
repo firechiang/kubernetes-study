@@ -117,10 +117,10 @@ $ cat > /home/cfssl/pki/etcd/etcd-csr.json <<EOF
 EOF
 
 # 生成证书、私钥（注意：\代表命令换行的意思）
-$ /home/cfssl/bin/cfssl gencert           \
-  -ca=/home/cfssl/pki/ca.pem              \
-  -ca-key=/home/cfssl/pki/ca-key.pem      \
-  -config=/home/cfssl/pki/ca-config.json  \
+$ /home/cfssl/bin/cfssl gencert                \
+  -ca=/home/cfssl/pki/etcd/ca.pem              \
+  -ca-key=/home/cfssl/pki/etcd/ca-key.pem      \
+  -config=/home/cfssl/pki/etcd/ca-config.json  \
   -profile=kubernetes /home/cfssl/pki/etcd/etcd-csr.json | /home/cfssl/bin/cfssljson -bare etcd
   
 # 生成完成后会有以下文件（我们最终想要的就是etcd-key.pem和etcd.pem，一个秘钥，一个证书）
