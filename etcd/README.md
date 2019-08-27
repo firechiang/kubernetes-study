@@ -143,8 +143,11 @@ $ wget -P /home/tools/kubernetes https://github.com/etcd-io/etcd/releases/downlo
 # 定位到下载目录
 $ cd /home/tools/kubernetes
 
-# 解压安装包并将里面的内容复制到/opt/kubernetes/bin/etcd目录
-$ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && mkdir -p /opt/kubernetes/bin/etcd && scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/bin/etcd
+# 解压安装包并将里面的内容复制到/opt/kubernetes/etcd/bin目录并创建etcd数据存储目录
+$ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && \
+  mkdir -p /opt/kubernetes/etcd/bin &&         \
+  mkdir -p /opt/kubernetes/etcd/data           \
+  scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/etcd/bin
 
 # 分发ETCD安装包到集群的各个节点
 $ scp -r /opt/kubernetes root@server007:/opt
@@ -163,9 +166,9 @@ Documentation=https://github.com/coreos
 [Service]
 Type=notify
 # ETCD数据存储地址
-WorkingDirectory=/var/lib/etcd/
+WorkingDirectory=/opt/kubernetes/etcd/data
 # ETCD启动文件所在地址
-ExecStart=/opt/kubernetes/bin/etcd/etcd \
+ExecStart=/opt/kubernetes/etcd/bin/etcd \
   # ETCD数据存储地址
   --data-dir=/var/lib/etcd \
   # 当前节点的名称（注意：修改成自己的主机名）
@@ -215,23 +218,23 @@ $ sudo systemctl daemon-reload               # 重启守护进程
 $ journalctl -f -u etcd.service
 
 # 查看ETCD版本
-$ /opt/kubernetes/bin/etcd/etcd --version    
+$ /opt/kubernetes/etcd/bin/etcd --version    
 
 # 查看ETCD控制命令使用帮助
-$ /opt/kubernetes/bin/etcd/etcdctl -h      
+$ /opt/kubernetes/etcd/bin/etcdctl -h      
 
 # 查看集群节点信息（注意：因为我们添加了安全验证，所以必须携带证书访问，否则会报错）
-$ /opt/kubernetes/bin/etcd/etcdctl            \
-  --ca-file=/etc/kubernetes/pki/ca.pem        \
-  --cert-file=/etc/kubernetes/pki/etcd.pem    \
-  --key-file=/etc/kubernetes/pki/etcd-key.pem \
+$ /opt/kubernetes/etcd/bin/etcdctl                 \
+  --ca-file=/etc/kubernetes/pki/etcd/ca.pem        \
+  --cert-file=/etc/kubernetes/pki/etcd/etcd.pem    \
+  --key-file=/etc/kubernetes/pki/etcd/etcd-key.pem \
   member list
 
 # 查看集群的健康状态（注意：因为我们添加了安全验证，所以必须携带证书访问，否则会报错）
-$ /opt/kubernetes/bin/etcd/etcdctl            \
-  --ca-file=/etc/kubernetes/pki/ca.pem        \
-  --cert-file=/etc/kubernetes/pki/etcd.pem    \
-  --key-file=/etc/kubernetes/pki/etcd-key.pem \
+$ /opt/kubernetes/etcd/bin/etcdctl                 \
+  --ca-file=/etc/kubernetes/pki/etcd/ca.pem        \
+  --cert-file=/etc/kubernetes/pki/etcd/etcd.pem    \
+  --key-file=/etc/kubernetes/pki/etcd/etcd-key.pem \
   cluster-health
 ```
 
