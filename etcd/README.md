@@ -173,6 +173,10 @@ ExecStart=/opt/kubernetes/etcd/bin/etcd \
   --data-dir=/var/lib/etcd \
   # 当前节点的名称（注意：修改成自己的主机名）
   --name=server006 \
+  # 集群内部访问本节点的地址（注意：修改成自己的主机名或IP）
+  --initial-advertise-peer-urls=https://server006:2380 \
+  # 客户端访问本节点的地址（注意：修改成自己的主机名或IP）
+  --advertise-client-urls=https://server006:2379 \
   --cert-file=/etc/kubernetes/pki/etcd/etcd.pem \
   --key-file=/etc/kubernetes/pki/etcd/etcd-key.pem \
   --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.pem \
@@ -182,19 +186,15 @@ ExecStart=/opt/kubernetes/etcd/bin/etcd \
   --peer-client-cert-auth \
   --client-cert-auth \
   # ETCD DB数据大小，配置成8G（默认是2G,当数据达到2G的时候就不允许写入）
-  --quota-backend-bytes=8589934592
+  --quota-backend-bytes=8589934592 \
   # etcd Raft消息最大字节数，配置成10M（默认：1.5M）
-  --max-request-bytes=10485760
+  --max-request-bytes=10485760 \
   # 历史数据多长时间压缩一次（单位小时），如果数据量大的话可以配置成1小时压缩一次
-  --auto-compaction-retention=12
+  --auto-compaction-retention=12 \
   # 监听集群内部通信地址（监听其他 Etcd 实例的地址）
   --listen-peer-urls=https://0.0.0.0:2380 \
   # 监听客户端通信地址（注意：因为老版本使用的是4001端口，所以这里配了两个地址）
   --listen-client-urls=https://0.0.0.0:2379,http://127.0.0.1:4001 \
-  # 集群内部访问本节点的地址（注意：修改成自己的主机名或IP）
-  --initial-advertise-peer-urls=https://server006:2380 \
-  # 客户端访问本节点的地址（注意：修改成自己的主机名或IP）
-  --advertise-client-urls=https://server006:2379 \
   # 集群ID（注意：每个节点配置需要一致）
   --initial-cluster-token=etcd-cluster-0 \
   # ETCD集群所有节点的信息（注意：server006是--name 指定的名字。后面的那个地址一定要在证书的host里面，否则集群内部无法连通）
