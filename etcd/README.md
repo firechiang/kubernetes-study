@@ -181,7 +181,7 @@ ExecStart=/opt/kubernetes/etcd/bin/etcd \
   --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.pem \
   --peer-client-cert-auth \
   --client-cert-auth \
-  # ETCD DB数据大小，配置成8G（默认是２G,当数据达到２G的时候就不允许写入）
+  # ETCD DB数据大小，配置成8G（默认是2G,当数据达到2G的时候就不允许写入）
   --quota-backend-bytes=8589934592
   # etcd Raft消息最大字节数，配置成10M（默认：1.5M）
   --max-request-bytes=10485760
