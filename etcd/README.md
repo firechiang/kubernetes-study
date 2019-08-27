@@ -137,9 +137,6 @@ $ scp -r /etc/kubernetes root@server008:/etc
 
 #### 五、下载和分发ETCD安装包（注意：以下操作在集群当中，随便找一个节点操作即可）
 ```bash
-# 创建ETCD的安装目录和数据存储目录（注意：集群所有的节点都要执行）
-$ mkdir -p /opt/kubernetes/bin/etcd && mkdir -p /var/lib/etcd
-
 # 下载安装包
 $ wget -P /home/tools/kubernetes https://github.com/etcd-io/etcd/releases/download/v3.3.15/etcd-v3.3.15-linux-amd64.tar.gz
 
@@ -147,7 +144,7 @@ $ wget -P /home/tools/kubernetes https://github.com/etcd-io/etcd/releases/downlo
 $ cd /home/tools/kubernetes
 
 # 解压安装包并将里面的内容复制到/opt/kubernetes/bin/etcd目录
-$ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/bin/etcd
+$ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && mkdir -p /opt/kubernetes/bin/etcd && scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/bin/etcd
 
 # 分发ETCD安装包到集群的各个节点
 $ scp -r /opt/kubernetes root@server007:/opt
