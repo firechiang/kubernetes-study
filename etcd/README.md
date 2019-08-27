@@ -146,7 +146,7 @@ $ cd /home/tools/kubernetes
 # 解压安装包并将里面的内容复制到/opt/kubernetes/etcd/bin目录并创建etcd数据存储目录
 $ tar -zxvf etcd-v3.3.15-linux-amd64.tar.gz && \
   mkdir -p /opt/kubernetes/etcd/bin &&         \
-  mkdir -p /opt/kubernetes/etcd/data           \
+  mkdir -p /opt/kubernetes/etcd/data &&        \
   scp -r ./etcd-v3.3.15-linux-amd64/* /opt/kubernetes/etcd/bin
 
 # 分发ETCD安装包到集群的各个节点
