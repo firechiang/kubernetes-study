@@ -285,6 +285,10 @@ $ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes /home/cfssl/pki/kubernetes-cluster/scheduler/scheduler-csr.json | /home/cfssl/bin/cfssljson -bare kube-scheduler
+
+# 生成完成后会有以下文件（我们最终想要的就是kube-scheduler-key.pem和kube-scheduler.pem，一个秘钥，一个证书）
+$ ls
+kube-scheduler.csr  kube-scheduler-key.pem  kube-scheduler.pem  scheduler-csr.json
 ```
 
 #### 十、生成Kube Proxy的证书（注意：在装有cfssl工具的节点上执行生成证书，最后将证书拷贝到其它节点即可）
