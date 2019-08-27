@@ -123,7 +123,7 @@ ca-config.json  ca.csr  ca-csr.json  ca-key.pem  ca.pem
 # 创建并定位到存放Api Server的证书目录
 $ mkdir -p /home/cfssl/pki/kubernetes-cluster/apiserver && cd /home/cfssl/pki/kubernetes-cluster/apiserver
 
-# 创建Api Server的csr配置文件，注意修改IP和主机名（注意：创建时要删除注释，否则无法生成证书，会报invalid character '#' looking for beginning of value错误）
+# 创建Api Server的csr配置文件，注意修改Api Server节点的IP和主机名（注意：创建时要删除注释，否则无法生成证书，会报invalid character '#' looking for beginning of value错误）
 $ vi /home/cfssl/pki/kubernetes-cluster/apiserver/kubernetes-csr.json
 {
   "CN": "kubernetes",
@@ -131,7 +131,6 @@ $ vi /home/cfssl/pki/kubernetes-cluster/apiserver/kubernetes-csr.json
     "127.0.0.1",
     "server006",
     "server007",
-    "server008",
     # 当前正在使用的Api Server节点的IP（注意：最好用Keepalived做高可用，然后配个虚拟ip或主机名放到这里）
     "192.168.83.143",
     # kubernetes的默认服务ip，一般是cidr的第一个（注意：这个一般不需要修改）
@@ -211,7 +210,7 @@ admin.csr  admin-csr.json  admin-key.pem  admin.pem
 # 创建并定位到存放Controller Manager的证书目录
 $ mkdir -p /home/cfssl/pki/kubernetes-cluster/controller-manager && cd /home/cfssl/pki/kubernetes-cluster/controller-manager
 
-# 创建Controller Manager的csr配置文件（注意：修改主节点的主机名）
+# 创建Controller Manager的csr配置文件（注意：修改Api Server节点的主机名）
 $ cat > /home/cfssl/pki/kubernetes-cluster/controller-manager/controller-manager-csr.json <<EOF
 {
     "CN": "system:kube-controller-manager",
@@ -222,8 +221,7 @@ $ cat > /home/cfssl/pki/kubernetes-cluster/controller-manager/controller-manager
     "hosts": [
       "127.0.0.1",
       "server006",
-      "server007",
-      "server008"
+      "server007"
     ],
     "names": [
       {
@@ -254,15 +252,14 @@ controller-manager.csr  controller-manager-csr.json  controller-manager-key.pem 
 # 创建并定位到存放Scheduler的证书目录
 $ mkdir -p /home/cfssl/pki/kubernetes-cluster/scheduler && cd /home/cfssl/pki/kubernetes-cluster/scheduler
 
-# 创建Scheduler的csr配置文件（注意：修改主节点的主机名）
+# 创建Scheduler的csr配置文件（注意：修改Api Server节点的主机名）
 $ cat > /home/cfssl/pki/kubernetes-cluster/scheduler/scheduler-csr.json <<EOF
 {
     "CN": "system:kube-scheduler",
     "hosts": [
       "127.0.0.1",
       "server006",
-      "server007",
-      "server008"
+      "server007"
     ],
     "key": {
         "algo": "rsa",
