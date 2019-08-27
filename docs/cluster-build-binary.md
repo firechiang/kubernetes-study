@@ -194,7 +194,7 @@ $ tar -vxf kubernetes-server-linux-amd64.tar.gz && mkdir -p /opt/kubernetes-apis
 $ scp -r /opt/kubernetes-apiserver root@server007:/opt
 ```
 
-#### 六、在集群的各个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP和主机名要修改成各个节点自己的，而且创建文件时，要删除注释，否则会报错）
+#### 六、在集群的各个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP要修改成各自节点自己的，而且创建文件时，要删除注释，否则会报错）
 ```bash
 [Unit]
 Description=Kubernetes API Server
@@ -206,7 +206,7 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-apiserver \
   --enable-admission-plugins=NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
   --anonymous-auth=false \
   # 当前节点的IP（注意：修改成自己的IP，一定是IP，否则报错）
-  --advertise-address=server006 \
+  --advertise-address=192.168.83.143 \
   --bind-address=0.0.0.0 \
   --insecure-port=0 \
   --authorization-mode=Node,RBAC \
