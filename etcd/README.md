@@ -214,7 +214,7 @@ WantedBy=multi-user.target
 $ sudo systemctl start etcd                  # 启动ETCD
 $ sudo systemctl stop etcd                   # 停止ETCD
 $ sudo systemctl restart etcd                # 重启ETCD
-$ sudo systemctl enable etcd                 # 开启开机启动
+$ sudo systemctl enable etcd                 # 开启开机启动（建议开启）
 $ sudo systemctl disable etcd                # 禁止开机启动
 $ sudo systemctl daemon-reload               # 重启守护进程
 ```
