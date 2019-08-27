@@ -176,7 +176,7 @@ $ scp -r /etc/kubernetes-pki-apiserver root@server007:/etc
 $ scp -r /etc/kubernetes-pki-apiserver root@server008:/etc
 ```
 
-#### 七、下载和安装以及分发安装包（因要翻墙下载，所以百度云有备份），[官方详细下载地址](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.15.md)
+#### 七、下载和分发主节点安装包（因要翻墙下载，所以百度云有备份），[官方详细下载地址](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.15.md)
 ```bash
 # 下载主节点安装包
 $ wget -P /home/tools/kubernetes/apiServer https://dl.k8s.io/v1.15.3/kubernetes-server-linux-amd64.tar.gz
