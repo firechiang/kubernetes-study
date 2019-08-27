@@ -425,8 +425,8 @@ $ journalctl -f -u kube-apiserver                                  # 查看 Api 
 $ netstat -ntlp                                                    # 查看端口绑定情况
 
 # 查看当前节点Api Server的健康状态，正常的话会放回ok（注意：不带证书访问的话会报没有权限错误）
-$ curl -k                                                \
-  --cert /etc/kubernetes-pki-apiserver/kubernetes.pem    \
-  --key /etc/kubernetes-pki-apiserver/kubernetes-key.pem \
+$ curl -k                                                        \
+  --cert /etc/kubernetes-pki-cluster/apiserver/kubernetes.pem    \
+  --key /etc/kubernetes-pki-cluster/apiserver/kubernetes-key.pem \
   https://127.0.0.1:6443/healthz
 ```
