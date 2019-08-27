@@ -321,6 +321,10 @@ $ /home/cfssl/bin/cfssl gencert -ca=/home/cfssl/pki/kubernetes-cluster/ca.pem \
   -ca-key=/home/cfssl/pki/kubernetes-cluster/ca-key.pem       \
   -config=/home/cfssl/pki/kubernetes-cluster/ca-config.json   \
   -profile=kubernetes  /home/cfssl/pki/kubernetes-cluster/kube-proxy/kube-proxy-csr.json | /home/cfssl/bin/cfssljson -bare kube-proxy
+
+# 生成完成后会有以下文件（我们最终想要的就是kube-proxy-key.pem和kube-proxy.pem，一个秘钥，一个证书）
+$ ls
+kube-proxy.csr  kube-proxy-csr.json  kube-proxy-key.pem  kube-proxy.pem
 ```
 
 #### 十一、分发证书到集群的各个节点
