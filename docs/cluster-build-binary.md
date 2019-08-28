@@ -463,8 +463,9 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl create clusterrolebinding kube-ap
   --user kubernetes
   
 # 测试Kubectl命令是否部署成功
-# 查看Api Server集群相关信息
+# 查看Api Server状态信息
 $ /opt/kubernetes-apiserver/server/bin/kubectl cluster-info
+Kubernetes master is running at https://server007:6443
 
 # 查看所有pod，service，deployment等信息
 $ /opt/kubernetes-apiserver/server/bin/kubectl get all --all-namespaces
