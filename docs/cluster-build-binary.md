@@ -427,3 +427,55 @@ $ curl -k                                                        \
   --key /etc/kubernetes-pki-cluster/apiserver/kubernetes-key.pem \
   https://127.0.0.1:6443/healthz
 ```
+
+#### 十五、在主节点上部署Kubectl工具，因为使用该命令时，它默认会读取 ~/.kube/config配置文件里面Api Server的地址、证书、用户名等信息。所以下面的命令只是创建和配置 ~/.kube/config文件而已（注意：集群每个主节点都要执行）
+```bash
+# 创建并定位到存储Kubectl工具的配置文件的目录
+$ mkdir -p ~/.kube && cd ~/.kube
+
+# 设置Api Server地址（注意：修改成当前节点的地址。这个命令只是往当前目录下的kube.config文件里面写了一些配置信息）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
+  --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
+  --embed-certs=true                                                         \
+  --server=https://server007:6443                                            \
+  --kubeconfig=config
+  
+# 设置证书相关配置（注意：这个命令只是往当前目录下的config文件里面写了一些配置信息）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-credentials admin  \
+  --client-certificate=/etc/kubernetes-pki-cluster/kubectl/admin.pem         \
+  --client-key=/etc/kubernetes-pki-cluster/kubectl/admin-key.pem             \
+  --embed-certs=true                                                         \
+  --kubeconfig=config  
+  
+# 设置上下文配置（注意：这个命令只是往当前目录下的config文件里面写了一些配置信息）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-context kubernetes \
+  --cluster=kubernetes                                                       \
+  --user=admin                                                               \
+  --kubeconfig=config
+  
+# 设置默认上下文配置（注意：这个命令只是往当前目录下的config文件里面写了一些配置信息）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config use-context kubernetes --kubeconfig=config
+
+# 授予kubernetes证书访问 kubelet API 的权限
+# 因为在在执行 kubectl exec、run、logs 等命令时，apiserver 会转发到 kubelet。而kubelet里面定义了 RBAC规则，所以要授权 apiserver 调用 kubelet API的权限
+$ /opt/kubernetes-apiserver/server/bin/kubectl create clusterrolebinding kube-apiserver:kubelet-apis \
+  --clusterrole=system:kubelet-api-admin                                                             \
+  --user kubernetes
+  
+# 测试Kubectl命令是否部署成功
+# 查看Api Server集群相关信息
+$ /opt/kubernetes-apiserver/server/bin/kubectl cluster-info
+
+# 查看所有pod，service，deployment等信息
+$ /opt/kubernetes-apiserver/server/bin/kubectl get all --all-namespaces
+NAMESPACE   NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+default     service/kubernetes   ClusterIP   10.254.0.1   <none>        443/TCP   15h
+
+# 获取所有组件的健康状态（注意：scheduler和controller-manager因为还没有部署所以是不健康的）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get componentstatuses      
+scheduler            Unhealthy   Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connect: connection refused   
+controller-manager   Unhealthy   Get http://127.0.0.1:10252/healthz: dial tcp 127.0.0.1:10252: connect: connection refused   
+etcd-2               Healthy     {"health":"true"}                                                                           
+etcd-0               Healthy     {"health":"true"}                                                                           
+etcd-1               Healthy     {"health":"true"}
+```
