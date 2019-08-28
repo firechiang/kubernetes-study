@@ -480,3 +480,104 @@ etcd-2               Healthy     {"health":"true"}
 etcd-0               Healthy     {"health":"true"}                                                                           
 etcd-1               Healthy     {"health":"true"}
 ```
+
+#### 十六、为每个Api Server节点（Master节点）的Controller-Manager创建配置文件（注意：修改成当前节点的地址或主机名，还有每个Api Server节点（Master节点）都要执行）
+```bash
+# 创建并进入配置文件目录
+$ mkdir -p /opt/kubernetes-apiserver/config && cd /opt/kubernetes-apiserver/config
+
+# 创建配置文件（注意：修改成当前节点的地址）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
+  --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
+  --embed-certs=true                                                         \
+  --server=https://server006:6443                                            \
+  --kubeconfig=controller-manager.kubeconfig
+  
+# 设置证书相关配置  
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-credentials system:kube-controller-manager \
+  --client-certificate=/etc/kubernetes-pki-cluster/controller-manager/controller-manager.pem         \
+  --client-key=/etc/kubernetes-pki-cluster/controller-manager/controller-manager-key.pem             \
+  --embed-certs=true                                                                                 \
+  --kubeconfig=controller-manager.kubeconfig 
+  
+# 设置上下文配置  
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-context system:kube-controller-manager \
+  --cluster=kubernetes                                                                           \
+  --user=system:kube-controller-manager                                                          \
+  --kubeconfig=controller-manager.kubeconfig 
+  
+# 设置默认上下文配置  
+$ /opt/kubernetes-apiserver/server/bin/kubectl config use-context system:kube-controller-manager \
+  --kubeconfig=controller-manager.kubeconfig  
+```
+
+#### 十七、[vi /etc/systemd/system/kube-controller-manager.service]为每个Api Server节点（Master节点）的Controller-Manager创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建）
+```bash
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+
+[Service]
+ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
+  --port=0 \
+  --secure-port=10252 \
+  --bind-address=127.0.0.1 \
+  # Controller-Manager配置文件目录
+  --kubeconfig=/opt/kubernetes-apiserver/config/controller-manager.kubeconfig \
+  --service-cluster-ip-range=10.254.0.0/16 \
+  --cluster-name=kubernetes \
+  --allocate-node-cidrs=true \
+  --cluster-cidr=172.22.0.0/16 \
+  --experimental-cluster-signing-duration=8760h \
+  # CA相关证书地址
+  --root-ca-file=/etc/kubernetes-pki-cluster/ca.pem \
+  --service-account-private-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
+  --cluster-signing-cert-file=/etc/kubernetes-pki-cluster/ca.pem \
+  --cluster-signing-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
+  --leader-elect=true \
+  --feature-gates=RotateKubeletServerCertificate=true \
+  --controllers=*,bootstrapsigner,tokencleaner \
+  --horizontal-pod-autoscaler-use-rest-clients=true \
+  --horizontal-pod-autoscaler-sync-period=10s \
+  # Controller-Manager相关证书地址
+  --tls-cert-file=/etc/kubernetes-pki-cluster/controller-manager/controller-manager.pem \
+  --tls-private-key-file=/etc/kubernetes-pki-cluster/controller-manager/controller-manager-key.pem \
+  --use-service-account-credentials=true \
+  --alsologtostderr=true \
+  --logtostderr=false \
+  # 日志地址（注意：这个好像不起作用）
+  --log-dir=/var/log/kubernetes \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 十八、启动和简单测试Controller-Manager节点（注意：集群每个主节点都要执行）
+```bash
+$ sudo systemctl daemon-reload && systemctl start kube-controller-manager   # 启动 Controller-Manager
+$ sudo systemctl daemon-reload && systemctl restart kube-controller-manager # 重启 Controller-Manager
+$ sudo systemctl stop kube-controller-manager                               # 停止 Controller-Manager
+$ sudo systemctl enable kube-controller-manager                             # 开启开机启动（建议开启）
+$ sudo systemctl disable kube-controller-manager                            # 禁止开机启动
+
+$ sudo service kube-controller-manager status                               # 查看 Controller-Manager 服务状态
+$ journalctl -f -u kube-controller-manager                                  # 查看 Controller-Manager 日志
+$ netstat -ntlp                                                             # 查看端口绑定情况
+
+# 查看 Leader信息
+$ /opt/kubernetes-apiserver/server/bin/kubectl get endpoints kube-controller-manager --namespace=kube-system -o yaml
+apiVersion: v1
+kind: Endpoints
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"server006_450d1f67-cad6-4328-88ef-3a1e24d67ae8","leaseDurationSeconds":15,"acquireTime":"2019-08-28T03:40:21Z","renewTime":"2019-08-28T03:58:19Z","leaderTransitions":0}'
+  creationTimestamp: "2019-08-28T03:40:21Z"
+  name: kube-controller-manager
+  namespace: kube-system
+  resourceVersion: "3322"
+  selfLink: /api/v1/namespaces/kube-system/endpoints/kube-controller-manager
+  uid: 585a4d8e-c4c7-4139-87d6-23c51010fe85
+```
