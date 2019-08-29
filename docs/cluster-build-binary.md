@@ -425,7 +425,7 @@ $ curl -k                                                        \
   https://127.0.0.1:6443/healthz
 ```
 
-#### 十五、在主节点上部署Kubectl工具，因为使用该命令时，它默认会读取 ~/.kube/config配置文件里面Api Server的地址、证书、用户名等信息。所以下面的命令只是创建和配置 ~/.kube/config文件而已（注意：集群每个主节点都要执行）
+#### 十五、在主节点上部署Kubectl工具，因为使用该命令时，它默认会读取 ~/.kube/config配置文件里面Api Server的地址、证书、用户名等信息。所以下面的命令只是创建和配置 ~/.kube/config文件而已（注意：集群每个主节点都要执行），[kubectl命令官方使用说明](https://kubernetes.io/docs/reference/kubectl/kubectl/)
 ```bash
 # 创建并定位到存储Kubectl工具的配置文件的目录
 $ mkdir -p ~/.kube && cd ~/.kube
@@ -510,7 +510,7 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl config use-context system:kube-co
   --kubeconfig=controller-manager.kubeconfig  
 ```
 
-#### 十七、[vi /etc/systemd/system/kube-controller-manager.service]为每个Api Server节点（Master节点）的Controller-Manager创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建）
+#### 十七、[vi /etc/systemd/system/kube-controller-manager.service]为每个Api Server节点（Master节点）的Controller-Manager创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建），[kube-controller-manager命令官方使用说明](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-controller-manager/)
 ```bash
 [Unit]
 Description=Kubernetes Controller Manager
