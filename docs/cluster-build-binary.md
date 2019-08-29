@@ -481,7 +481,7 @@ etcd-0               Healthy     {"health":"true"}
 etcd-1               Healthy     {"health":"true"}
 ```
 
-#### 十六、为每个Api Server节点（Master节点）的Controller-Manager创建配置文件（注意：修改成当前节点的地址或主机名，还有每个Api Server节点（Master节点）都要执行）
+#### 十六、为每个Api Server节点（Master节点）的Controller-Manager创建配置文件（注意：修改成当前节点的IP或主机名，还有每个Api Server节点（Master节点）都要执行）
 ```bash
 # 创建并进入配置文件目录
 $ mkdir -p /opt/kubernetes-apiserver/config && cd /opt/kubernetes-apiserver/config
