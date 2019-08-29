@@ -519,9 +519,10 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
-  # 关闭监听 http /metrics 的请求，同时--address 参数无效，--bind-address 参数有效
-  --port=0 \
-  --secure-port=10252 \
+  # 绑定 http的端口（注意：因为健康检查使用的是http的方式，所以绑定http的端口，0表示不绑定http的端口）
+  --port=10252 \
+  # 绑定 https的端口（注意：0表示不绑定https的端口）
+  --secure-port=0 \
   --bind-address=127.0.0.1 \
   # Controller-Manager配置文件地址
   --kubeconfig=/opt/kubernetes-apiserver/config/controller-manager.kubeconfig \
@@ -570,7 +571,16 @@ $ sudo systemctl disable kube-controller-manager                            # �
 
 $ sudo service kube-controller-manager status                               # 查看 Controller-Manager 服务状态
 $ journalctl -f -u kube-controller-manager                                  # 查看 Controller-Manager 日志
-$ netstat -ntlp                                                             # 查看端口绑定情况
+$ netstat -ntlp                                                             # 查看端口绑定情况（注意：应该绑定了一个10252的端口，这个端口是我们在上面的配置文件里面配置的）
+
+# 获取所有组件的健康状态（注意：scheduler因为还没有部署所以是不健康的）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get componentstatuses 
+NAME                 STATUS      MESSAGE                        ERROR
+scheduler            Unhealthy   Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connect: connection refused   
+controller-manager   Healthy     ok                                                     
+etcd-0               Healthy     {"health":"true"}                                                                           
+etcd-1               Healthy     {"health":"true"}                                                                           
+etcd-2               Healthy     {"health":"true"}
 
 # 查看 Leader信息
 $ /opt/kubernetes-apiserver/server/bin/kubectl get endpoints kube-controller-manager --namespace=kube-system -o yaml
@@ -654,6 +664,15 @@ $ sudo systemctl disable kube-scheduler                            # 禁止开�
 $ sudo service kube-scheduler status                               # 查看 Kube-Scheduler 服务状态
 $ journalctl -f -u kube-scheduler                                  # 查看 Kube-Scheduler 日志
 $ netstat -ntlp
+
+# 获取所有组件的健康状态（注意：到这里了所有的组件都应该是健康的）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get componentstatuses 
+NAME                 STATUS    MESSAGE             ERROR
+controller-manager   Healthy   ok                  
+scheduler            Healthy   ok                  
+etcd-0               Healthy   {"health":"true"}   
+etcd-1               Healthy   {"health":"true"}   
+etcd-2               Healthy   {"health":"true"}
 
 # 查看 Leader信息
 $ /opt/kubernetes-apiserver/server/bin/kubectl get endpoints kube-scheduler --namespace=kube-system -o yaml
