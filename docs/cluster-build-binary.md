@@ -528,14 +528,17 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
   --cluster-name=kubernetes \
   --allocate-node-cidrs=true \
   --cluster-cidr=172.22.0.0/16 \
+  # 指定 TLS Bootstrap 证书的有效期
   --experimental-cluster-signing-duration=8760h \
   # CA相关证书地址
   --root-ca-file=/etc/kubernetes-pki-cluster/ca.pem \
   --service-account-private-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
   --cluster-signing-cert-file=/etc/kubernetes-pki-cluster/ca.pem \
   --cluster-signing-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
+  # 集群运行模式，启用自动选举功能；被选为 leader 的节点负责处理工作
   --leader-elect=true \
   --feature-gates=RotateKubeletServerCertificate=true \
+  # 启用的控制器列表，tokencleaner 用于自动清理过期的 Bootstrap token
   --controllers=*,bootstrapsigner,tokencleaner \
   --horizontal-pod-autoscaler-use-rest-clients=true \
   --horizontal-pod-autoscaler-sync-period=10s \
