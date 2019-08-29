@@ -829,7 +829,6 @@ ExecStart=/opt/kubernetes-work/node/bin/kubelet \
   --network-plugin=cni \
   # 指定镜像下载地址
   --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1 \
-  --allow-privileged=true \
   --alsologtostderr=true \
   --logtostderr=false \
   # 日志地址（注意：这个好像不起作用）
