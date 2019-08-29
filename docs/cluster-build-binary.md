@@ -537,6 +537,7 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
   --cluster-signing-key-file=/etc/kubernetes-pki-cluster/ca-key.pem \
   # 集群运行模式，启用自动选举功能；被选为 leader 的节点负责处理工作
   --leader-elect=true \
+  # 开启 kublet server 证书的自动更新特性
   --feature-gates=RotateKubeletServerCertificate=true \
   # 启用的控制器列表，tokencleaner 用于自动清理过期的 Bootstrap token
   --controllers=*,bootstrapsigner,tokencleaner \
