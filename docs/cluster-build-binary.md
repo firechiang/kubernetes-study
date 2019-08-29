@@ -482,6 +482,8 @@ etcd-1               Healthy     {"health":"true"}
 ```
 
 #### 十六、为每个Api Server节点（Master节点）的Controller-Manager创建配置文件（注意：修改成当前节点的IP或主机名，还有每个Api Server节点（Master节点）都要执行）
+ - Controller-Manager启动后将通过竞争选举机制产生一个 leader 节点，其它节点为阻塞状态。当 leader 节点不可用后，剩余节点将再次进行选举产生新的 leader 节点，从而保证服务的可用性
+ - 说明：这个和 HDFS 集群的 NameNode 高可用相似
 ```bash
 # 创建并进入配置文件目录
 $ mkdir -p /opt/kubernetes-apiserver/config && cd /opt/kubernetes-apiserver/config
