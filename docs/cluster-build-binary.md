@@ -712,7 +712,7 @@ $ export BOOTSTRAP_TOKEN=$(/opt/kubernetes-apiserver/server/bin/kubeadm token cr
   --groups system:bootstrappers:worker                                               \
   --kubeconfig ~/.kube/config)
   
-# # 创建Kubelet配置文件（注意：Api Server的地址，最好使用Keepalived做高可用，然后配个虚拟ip或主机名放到这里）
+# 创建Kubelet配置文件（注意：Api Server的地址，最好使用Keepalived做高可用，然后配个虚拟ip或主机名放到这里）
 $ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
   --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
   --embed-certs=true                                                         \
@@ -760,7 +760,7 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl config set-context default \
 $ /opt/kubernetes-apiserver/server/bin/kubectl config use-context default \
   --kubeconfig=kube-proxy.kubeconfig   
   
-# 分发work（从）节点安装包到集群的各个work（从）节点（注意：是work（从）节点）
+# 分发安装包到集群的各个work（从）节点（注意：是work（从）节点）
 $ scp -r /opt/kubernetes-work root@server008:/opt  
 ```
 
@@ -845,6 +845,9 @@ WantedBy=multi-user.target
 #### 二五、启动work（从）节点的Kubelet服务和简单测试（注意：每个work（从）节点都要执行）
  - kublet 启动时查找配置的 --kubeletconfig 文件是否存在，如果不存在则使用 --bootstrap-kubeconfig 向 kube-apiserver 发送证书签名请求 (CSR)。 kube-apiserver 收到 CSR 请求后，对其中的 Token 进行认证（事先使用 kubeadm 创建的 token），认证通过后将请求的 user 设置为 system:bootstrap:，group 设置为 system:bootstrappers，这就是Bootstrap Token Auth
 ```bash
-# bootstrap附权
-$ /opt/kubernetes-work/node/bin/kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --group=system:bootstrappers
+# 给Kubelet赋予访问Api Server的权限（注意：该命令在任意一台主节点上执行即可，注意是在主节点上执行）
+$ /opt/kubernetes-apiserver/server/bin/kubectl create clusterrolebinding kubelet-bootstrap \
+  --clusterrole=system:node-bootstrapper                                                   \
+  --group=system:bootstrappers
+  
 ```
