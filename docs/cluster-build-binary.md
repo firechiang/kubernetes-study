@@ -339,9 +339,6 @@ $ scp -r /etc/kubernetes-pki-cluster root@server008:/etc
 # 下载主节点安装包
 $ wget -P /home/tools/kubernetes/apiServer https://dl.k8s.io/v1.15.3/kubernetes-server-linux-amd64.tar.gz
 
-# 下载从节点安装包
-$ wget -P /home/tools/kubernetes/work https://dl.k8s.io/v1.15.3/kubernetes-node-linux-amd64.tar.gz
-
 # 定位到主节点安装包目录
 $ cd /home/tools/kubernetes/apiServer
 
@@ -640,7 +637,7 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-#### 十八、启动和简单测试Scheduler节点（注意：集群每个主节点都要执行）
+#### 二一、启动和简单测试Scheduler节点（注意：集群每个主节点都要执行）
 ```bash
 $ sudo systemctl daemon-reload && systemctl start kube-scheduler   # 启动 Kube-Scheduler
 $ sudo systemctl daemon-reload && systemctl restart kube-scheduler # 重启 Kube-Scheduler
@@ -665,4 +662,164 @@ metadata:
   resourceVersion: "4238"
   selfLink: /api/v1/namespaces/kube-system/endpoints/kube-scheduler
   uid: 45d660c3-242d-4f6b-bf62-8694a4bae57d
+```
+
+#### 二二、下载和分发Work节点的Kubelet（因要翻墙下载，所以百度云有备份），[官方详细下载地址](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.15.md)，（注意：在任意一台主节点上创建部署文件，再将部署文件分发到所有的Work（从）节点）
+```bash
+# 下载Work（从）节点安装包
+$ wget -P /home/tools/kubernetes/work https://dl.k8s.io/v1.15.3/kubernetes-node-linux-amd64.tar.gz
+
+# 定位到主节点安装包目录
+$ cd /home/tools/kubernetes/work
+
+# 解压work（从）节点安装包并将里面的内容复制到/opt/kubernetes-work目录
+$ tar -vxf kubernetes-node-linux-amd64.tar.gz && mkdir -p /opt/kubernetes-work && scp -r ./kubernetes/* /opt/kubernetes-work
+
+# 创建并进入配置文件目录
+$ mkdir -p /opt/kubernetes-work/config && cd /opt/kubernetes-work/config
+
+$ cat ~/.kube/config >> /opt/kubernetes-work/config/kubectl.config
+
+# 生成Kubelet的配置文件
+# 定义生成 token 的变量
+$ export BOOTSTRAP_TOKEN=$(/opt/kubernetes-apiserver/server/bin/kubeadm token create \
+  --description kubelet-bootstrap-token                                              \
+  --groups system:bootstrappers:worker                                               \
+  --kubeconfig ~/.kube/config)
+  
+# # 创建Kubelet配置文件（注意：Api Server的地址，最好使用Keepalived做高可用，然后配个虚拟ip或主机名放到这里）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
+  --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
+  --embed-certs=true                                                         \
+  --server=https://server006:6443                                            \
+  --kubeconfig=kubelet-bootstrap.kubeconfig
+  
+# 设置Kubelet客户端认证配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-credentials kubelet-bootstrap \
+  --token=${BOOTSTRAP_TOKEN}                                                            \
+  --kubeconfig=kubelet-bootstrap.kubeconfig
+  
+# 设置Kubelet上下文配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-context default \
+  --cluster=kubernetes                                                    \
+  --user=kubelet-bootstrap                                                \
+  --kubeconfig=kubelet-bootstrap.kubeconfig
+  
+# 设置Kubelet默认上下文配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config use-context default \
+  --kubeconfig=kubelet-bootstrap.kubeconfig
+
+  
+# 生成Kube-Proxy的配置文件
+# 创建kube-proxy.kubeconfig（注意：Api Server的地址，最好使用Keepalived做高可用，然后配个虚拟ip或主机名放到这里）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
+  --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
+  --embed-certs=true                                                         \
+  --server=https://server006:6443                                            \
+  --kubeconfig=kube-proxy.kubeconfig
+  
+# 设置Kube-Proxy证书相关配置  
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-credentials kube-proxy \
+  --client-certificate=/etc/kubernetes-pki-cluster/kube-proxy/kube-proxy.pem     \
+  --client-key=/etc/kubernetes-pki-cluster/kube-proxy/kube-proxy-key.pem         \
+  --embed-certs=true                                                             \
+  --kubeconfig=kube-proxy.kubeconfig
+
+# 设置Kube-Proxy上下文配置   
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-context default \
+  --cluster=kubernetes                                                    \
+  --user=kube-proxy                                                       \
+  --kubeconfig=kube-proxy.kubeconfig 
+  
+# 设置Kube-Proxy默认上下文配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config use-context default \
+  --kubeconfig=kube-proxy.kubeconfig   
+  
+# 分发work（从）节点安装包到集群的各个work（从）节点（注意：是work（从）节点）
+$ scp -r /opt/kubernetes-work root@server008:/opt  
+```
+
+#### 二三、在每个work（从）节点上创建[vi /opt/kubernetes-work/config/kubelet.config.json] Kubelet的配置文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+```bash
+{
+  "kind": "KubeletConfiguration",
+  "apiVersion": "kubelet.config.k8s.io/v1beta1",
+  "authentication": {
+    "x509": {
+      # 根证书的地址
+      "clientCAFile": "/etc/kubernetes-pki-cluster/ca.pem"
+    },
+    "webhook": {
+      "enabled": true,
+      "cacheTTL": "2m0s"
+    },
+    "anonymous": {
+      "enabled": false
+    }
+  },
+  "authorization": {
+    "mode": "Webhook",
+    "webhook": {
+      "cacheAuthorizedTTL": "5m0s",
+      "cacheUnauthorizedTTL": "30s"
+    }
+  },
+  # 当前节点IP（注意：修改成自己的IP，一定是IP，否则报错）
+  "address": "192.168.83.145",
+  "port": 10250,
+  "readOnlyPort": 10255,
+  "cgroupDriver": "cgroupfs",
+  "hairpinMode": "promiscuous-bridge",
+  "serializeImagePulls": false,
+  "featureGates": {
+    "RotateKubeletClientCertificate": true,
+    "RotateKubeletServerCertificate": true
+  },
+  "clusterDomain": "cluster.local.",
+  # 集群DNS地址（注意：这个一般不用修改）
+  "clusterDNS": ["10.254.0.2"]
+}
+```
+
+#### 二三、在每个work（从）节点上创建[vi /etc/systemd/system/kubelet.service] Kubelet Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+```bash
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+# 节点数据目录
+WorkingDirectory=/opt/kubernetes-work
+ExecStart=/opt/kubernetes-work/node/bin/kubelet \
+  # Kubelet 启动引导配置文件
+  --bootstrap-kubeconfig=/opt/kubernetes-work/config/kubelet-bootstrap.kubeconfig \
+  # 根证书地址
+  --cert-dir=/etc/kubernetes-pki-cluster \
+  # kubectl配置文件地址
+  --kubeconfig=/opt/kubernetes-work/config/kubectl.config \
+  # Kubelet 配置文件
+  --config=/opt/kubernetes-work/config/kubelet.config.json \
+  --network-plugin=cni \
+  # 指定镜像下载地址
+  --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1 \
+  --allow-privileged=true \
+  --alsologtostderr=true \
+  --logtostderr=false \
+  # 日志地址（注意：这个好像不起作用）
+  --log-dir=/var/log/kubernetes \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 二四、启动work（从）节点的Kubelet服务和简单测试（注意：每个work（从）节点都要执行）
+ - kublet 启动时查找配置的 --kubeletconfig 文件是否存在，如果不存在则使用 --bootstrap-kubeconfig 向 kube-apiserver 发送证书签名请求 (CSR)。 kube-apiserver 收到 CSR 请求后，对其中的 Token 进行认证（事先使用 kubeadm 创建的 token），认证通过后将请求的 user 设置为 system:bootstrap:，group 设置为 system:bootstrappers，这就是Bootstrap Token Auth
+```bash
+# bootstrap附权
+$ /opt/kubernetes-work/node/bin/kubectl create clusterrolebinding kubelet-bootstrap --clusterrole=system:node-bootstrapper --group=system:bootstrappers
 ```
