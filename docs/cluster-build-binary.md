@@ -470,7 +470,8 @@ NAMESPACE   NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S) 
 default     service/kubernetes   ClusterIP   10.254.0.1   <none>        443/TCP   15h
 
 # 获取所有组件的健康状态（注意：scheduler和controller-manager因为还没有部署所以是不健康的）
-$ /opt/kubernetes-apiserver/server/bin/kubectl get componentstatuses      
+$ /opt/kubernetes-apiserver/server/bin/kubectl get componentstatuses  
+NAME                 STATUS      MESSAGE                                  ERROR    
 scheduler            Unhealthy   Get http://127.0.0.1:10251/healthz: dial tcp 127.0.0.1:10251: connect: connection refused   
 controller-manager   Unhealthy   Get http://127.0.0.1:10252/healthz: dial tcp 127.0.0.1:10252: connect: connection refused   
 etcd-2               Healthy     {"health":"true"}                                                                           
