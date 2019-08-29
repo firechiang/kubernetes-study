@@ -519,6 +519,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
+  # 关闭监听 http /metrics 的请求，同时--address 参数无效，--bind-address 参数有效
   --port=0 \
   --secure-port=10252 \
   --bind-address=127.0.0.1 \
