@@ -524,7 +524,7 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-controller-manager \
   --port=0 \
   --secure-port=10252 \
   --bind-address=127.0.0.1 \
-  # Controller-Manager配置文件目录
+  # Controller-Manager配置文件地址
   --kubeconfig=/opt/kubernetes-apiserver/config/controller-manager.kubeconfig \
   --service-cluster-ip-range=10.254.0.0/16 \
   --cluster-name=kubernetes \
@@ -582,4 +582,87 @@ metadata:
   resourceVersion: "3322"
   selfLink: /api/v1/namespaces/kube-system/endpoints/kube-controller-manager
   uid: 585a4d8e-c4c7-4139-87d6-23c51010fe85
+```
+
+#### 十九、为每个Api Server节点（Master节点）的Scheduler创建配置文件（注意：修改成当前节点的IP或主机名，还有每个Api Server节点（Master节点）都要执行）
+ - Scheduler启动后将通过竞争选举机制产生一个 Leader 节点，其它节点为阻塞状态。当 Leader 节点不可用后，剩余节点将再次进行选举产生新的 leader 节点，从而保证服务的可用性
+ - 说明：这个和 HDFS 集群的 NameNode 高可用相似
+```bash
+# 创建并进入配置文件目录
+$ mkdir -p /opt/kubernetes-apiserver/config && cd /opt/kubernetes-apiserver/config
+
+# 创建配置文件（注意：修改成当前节点的地址）
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-cluster kubernetes \
+  --certificate-authority=/etc/kubernetes-pki-cluster/ca.pem                 \
+  --embed-certs=true                                                         \
+  --server=https://server006:6443                                            \
+  --kubeconfig=kube-scheduler.kubeconfig
+ 
+# 设置证书相关配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-credentials system:kube-scheduler \
+  --client-certificate=/etc/kubernetes-pki-cluster/scheduler/kube-scheduler.pem             \
+  --client-key=/etc/kubernetes-pki-cluster/scheduler/kube-scheduler-key.pem                 \
+  --embed-certs=true                                                                        \
+  --kubeconfig=kube-scheduler.kubeconfig
+  
+# 设置上下文配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config set-context system:kube-scheduler     \
+  --cluster=kubernetes                                                                      \
+  --user=system:kube-scheduler                                                              \
+  --kubeconfig=kube-scheduler.kubeconfig
+ 
+# 设置默认上下文配置
+$ /opt/kubernetes-apiserver/server/bin/kubectl config use-context system:kube-scheduler     \
+  --kubeconfig=kube-scheduler.kubeconfig
+```
+
+#### 二十、[vi /etc/systemd/system/kube-scheduler.service] 为每个Api Server节点（Master节点）的Scheduler创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建）
+```bash
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+
+[Service]
+ExecStart=/opt/kubernetes-apiserver/server/bin/kube-scheduler \
+  --address=127.0.0.1 \
+  # Scheduler配置文件地址
+  --kubeconfig=/opt/kubernetes-apiserver/config/kube-scheduler.kubeconfig \
+  --leader-elect=true \
+  --alsologtostderr=true \
+  --logtostderr=false \
+  # 日志地址（注意：这个好像不起作用）
+  --log-dir=/var/log/kubernetes \
+  --v=2
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 十八、启动和简单测试Scheduler节点（注意：集群每个主节点都要执行）
+```bash
+$ sudo systemctl daemon-reload && systemctl start kube-scheduler   # 启动 Kube-Scheduler
+$ sudo systemctl daemon-reload && systemctl restart kube-scheduler # 重启 Kube-Scheduler
+$ sudo systemctl stop kube-scheduler                               # 停止 Kube-Scheduler
+$ sudo systemctl enable kube-scheduler                             # 开启开机启动（建议开启）
+$ sudo systemctl disable kube-scheduler                            # 禁止开机启动
+
+$ sudo service kube-scheduler status                               # 查看 Kube-Scheduler 服务状态
+$ journalctl -f -u kube-scheduler                                  # 查看 Kube-Scheduler 日志
+$ netstat -ntlp
+
+# 查看 Leader信息
+$ /opt/kubernetes-apiserver/server/bin/kubectl get endpoints kube-scheduler --namespace=kube-system -o yaml
+apiVersion: v1
+kind: Endpoints
+metadata:
+  annotations:
+    control-plane.alpha.kubernetes.io/leader: '{"holderIdentity":"server006_1f78e56d-9a10-464b-99d0-bd04295eb54f","leaseDurationSeconds":15,"acquireTime":"2019-08-29T02:09:30Z","renewTime":"2019-08-29T02:11:23Z","leaderTransitions":0}'
+  creationTimestamp: "2019-08-29T02:09:30Z"
+  name: kube-scheduler
+  namespace: kube-system
+  resourceVersion: "4238"
+  selfLink: /api/v1/namespaces/kube-system/endpoints/kube-scheduler
+  uid: 45d660c3-242d-4f6b-bf62-8694a4bae57d
 ```
