@@ -702,6 +702,7 @@ $ tar -vxf kubernetes-node-linux-amd64.tar.gz &&   \
   mkdir -p /opt/kubernetes-work/data/kube-proxy && \
   mkdir -p /opt/kubernetes-work/data/kubelet &&    \
   mkdir -p /opt/kubernetes-work/log/kube-proxy &&  \
+  mkdir -p /opt/kubernetes-work/log/kubelet &&     \
   scp -r ./kubernetes/* /opt/kubernetes-work
 
 # 创建并进入配置文件目录
@@ -836,8 +837,8 @@ ExecStart=/opt/kubernetes-work/node/bin/kubelet \
   --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1 \
   --alsologtostderr=true \
   --logtostderr=false \
-  # 日志地址（注意：这个好像不起作用）
-  --log-dir=/var/log/kubernetes \
+  # 日志目录
+  --log-dir=/opt/kubernetes-work/log/kubelet \
   --v=2
 Restart=on-failure
 RestartSec=5
