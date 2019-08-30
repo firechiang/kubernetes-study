@@ -1163,6 +1163,7 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl apply -f coredns.yaml
 
 # 查看所有pod的部署状态
 $ /opt/kubernetes-apiserver/server/bin/kubectl get pods -n kube-system
+NAME                                       READY   STATUS    RESTARTS   AGE
 calico-kube-controllers-65b8787765-frj64   1/1     Running   0          4m2s
 calico-node-ss2v4                          1/1     Running   0          4m3s
 calico-typha-5d845864c4-mc5tp              1/1     Running   0          4m3s
