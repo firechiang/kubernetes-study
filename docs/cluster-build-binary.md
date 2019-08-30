@@ -348,7 +348,7 @@ $ tar -vxf kubernetes-server-linux-amd64.tar.gz && mkdir -p /opt/kubernetes-apis
 $ scp -r /opt/kubernetes-apiserver root@server007:/opt
 ```
 
-#### 十三、在集群的每个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP要修改成节点自己的，而且创建文件时，要删除注释，否则会报错）
+#### 十三、在集群的每个主节点上创建 [vi /etc/systemd/system/kube-apiserver.service] Api Service系统启动文件（注意：IP要修改成节点自己的，而且创建文件时，要删除注释，否则会报错），[kube-apiserver命令官方使用说明](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/)
 ```bash
 [Unit]
 Description=Kubernetes API Server
@@ -629,7 +629,7 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl config use-context system:kube-sc
   --kubeconfig=kube-scheduler.kubeconfig
 ```
 
-#### 二十、[vi /etc/systemd/system/kube-scheduler.service] 为每个Api Server节点（Master节点）的Scheduler创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建）
+#### 二十、[vi /etc/systemd/system/kube-scheduler.service] 为每个Api Server节点（Master节点）的Scheduler创建系统Service启动文件（注意：创建时要删除注释，否则会报错。还有每个Api Server节点（Master节点）都要创建），[kube-scheduler命令官方使用说明](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-scheduler/)
 ```bash
 [Unit]
 Description=Kubernetes Scheduler
@@ -898,7 +898,7 @@ metricsBindAddress: 192.168.83.145:10249
 mode: "iptables"
 ```
 
-#### 二七、在每个work（从）节点上创建[vi /etc/systemd/system/kube-proxy.service] Kube-Proxy Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+#### 二七、在每个work（从）节点上创建[vi /etc/systemd/system/kube-proxy.service] Kube-Proxy Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建），[kube-proxy命令官方使用说明](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/)
 ```bash
 [Unit]
 Description=Kubernetes Kube-Proxy Server
