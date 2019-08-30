@@ -395,6 +395,7 @@ ExecStart=/opt/kubernetes-apiserver/server/bin/kube-apiserver \
   --event-ttl=1h \
   --alsologtostderr=true \
   --logtostderr=false \
+  # 日志文件目录（注意：这个配置目录好像没用）
   --log-dir=/var/log/kubernetes \
   --v=2
 Restart=on-failure
@@ -698,7 +699,11 @@ $ wget -P /home/tools/kubernetes/work https://dl.k8s.io/v1.15.3/kubernetes-node-
 $ cd /home/tools/kubernetes/work
 
 # 解压work（从）节点安装包并将里面的内容复制到/opt/kubernetes-work目录
-$ tar -vxf kubernetes-node-linux-amd64.tar.gz && mkdir -p /opt/kubernetes-work && scp -r ./kubernetes/* /opt/kubernetes-work
+$ tar -vxf kubernetes-node-linux-amd64.tar.gz &&   \
+  mkdir -p /opt/kubernetes-work/data/kube-proxy && \
+  mkdir -p /opt/kubernetes-work/data/kubelet &&    \
+  mkdir -p /opt/kubernetes-work/log/kube-proxy &&  \
+  scp -r ./kubernetes/* /opt/kubernetes-work
 
 # 创建并进入配置文件目录
 $ mkdir -p /opt/kubernetes-work/config && cd /opt/kubernetes-work/config
@@ -801,12 +806,12 @@ $ scp -r /opt/kubernetes-work root@server008:/opt
     "RotateKubeletServerCertificate": true
   },
   "clusterDomain": "cluster.local.",
-  # 集群DNS地址（注意：这个一般不用修改）
+  # 集群DNS地址（注意：我们下面部署CoreDNS绑定的服务IP就是这个）
   "clusterDNS": ["10.254.0.2"]
 }
 ```
 
-#### 二四、在每个work（从）节点上创建[vi /etc/systemd/system/kubelet.service] Kubelet Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+#### 二四、在每个work（从）节点上创建[vi /etc/systemd/system/kubelet.service] Kubelet Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建），[官方kubelet命令使用说明](https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet)
 ```bash
 [Unit]
 Description=Kubernetes Kubelet
@@ -816,16 +821,19 @@ Requires=docker.service
 
 [Service]
 # 节点数据目录
-WorkingDirectory=/opt/kubernetes-work
+WorkingDirectory=/opt/kubernetes-work/data/kubelet
 ExecStart=/opt/kubernetes-work/node/bin/kubelet \
   # Kubelet 启动引导配置文件
   --bootstrap-kubeconfig=/opt/kubernetes-work/config/kubelet-bootstrap.kubeconfig \
   # 根证书地址
   --cert-dir=/etc/kubernetes-pki-cluster \
-  # kubectl配置文件地址
+  # kubectl配置文件地址（注意：实际没有这个配置文件，这项配置好像没什么用，可以删除）
   --kubeconfig=/opt/kubernetes-work/config/kubectl.config \
   # Kubelet 配置文件
   --config=/opt/kubernetes-work/config/kubelet.config.json \
+  # cgroup驱动（注意：这个需和docker的一致，建议都使用cgroupfs）
+  --cgroup-driver=cgroupfs \
+  # 指定网络插件
   --network-plugin=cni \
   # 指定镜像下载地址
   --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1 \
@@ -841,7 +849,7 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-#### 二五、启动work（从）节点的Kubelet服务和简单测试（注意：每个work（从）节点都要执行）
+#### 二五、启动work（从）节点的Kubelet服务和简单测试（注意：每个work（从）节点都要启动）
  - kublet 启动时查找配置的 --kubeletconfig 文件是否存在，如果不存在则使用 --bootstrap-kubeconfig 向 kube-apiserver 发送证书签名请求 (CSR)。 kube-apiserver 收到 CSR 请求后，对其中的 Token 进行认证（事先使用 kubeadm 创建的 token），认证通过后将请求的 user 设置为 system:bootstrap:，group 设置为 system:bootstrappers，这就是Bootstrap Token Auth
 ```bash
 # 给Kubelet赋予访问Api Server的权限（注意：该命令在任意一台主节点上执行即可，注意是在主节点上执行）
@@ -849,4 +857,311 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl create clusterrolebinding kubelet
   --clusterrole=system:node-bootstrapper                                                   \
   --group=system:bootstrappers
   
+
+$ systemctl daemon-reload && systemctl start kubelet    # 启动 Kubelet 服务
+$ systemctl daemon-reload && systemctl restart kubelet  # 重启 Kubelet 服务
+$ systemctl stop kubelet                                # 停止 Kubelet 服务
+$ systemctl enable kubelet                              # 开启开机启动 Kubelet 服务（建议开启）
+$ systemctl disable kubelet                             # 禁用开机启动 Kubelet 服务
+
+$ service kubelet status                                # 查看 Kubelet 服务运行状态
+
+# 查看 Kubelet 服务日志（注意：可能会报cni网络插件没有的错误，这个是因为cni网络插件Calico还没有部署，可以先忽略，等下面部署好了再看）
+$ journalctl -f -u kubelet                             
+
+# 在 Master（主）节点上 Approve（允许） bootstrap（从节点）加入集群的请求
+# 获取从节点要加入集群的请求（注意：该命令在主节点上执行）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get csr  
+# 通过从节点加集群的请求（注意：该命令在主节点上执行，<name>是请求的名称）
+$ /opt/kubernetes-apiserver/server/bin/kubectl certificate approve <name>
+
+# 在主节点上执行查看集群work（从）节点的信息（注意：STATUS是NotReady（不正常），可以先忽略，因为cni网络插件Calico还没有部署）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get nodes
+NAME        STATUS   ROLES    AGE   VERSION
+server008   NotReady    <none>   16h   v1.15.3
+``` 
+
+#### 二六、在每个work（从）节点上创建[vi /opt/kubernetes-work/config/kube-proxy.config.yaml] Kube-Proxy的配置文件（注意：修改成当前节点的IP，还有创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+```bash
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+# 服务绑定地址（注意：修改成当前节点的IP，注意一定是IP否则无法启动）
+bindAddress: 192.168.83.145
+clientConnection:
+  # Kube-Proxy配置文件地址
+  kubeconfig: /opt/kubernetes-work/config/kube-proxy.kubeconfig
+# pod网段  
+clusterCIDR: 172.22.0.0/16
+# 绑定健康检查地址（注意：修改成当前节点的IP，注意一定是IP否则无法启动）
+healthzBindAddress: 192.168.83.145:10256
+kind: KubeProxyConfiguration
+# 绑定监控检查地址（注意：修改成当前节点的IP，注意一定是IP否则无法启动）
+metricsBindAddress: 192.168.83.145:10249
+mode: "iptables"
+```
+
+#### 二七、在每个work（从）节点上创建[vi /etc/systemd/system/kube-proxy.service] Kube-Proxy Service的启动文件（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+```bash
+[Unit]
+Description=Kubernetes Kube-Proxy Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=network.target
+
+[Service]
+# Kube-Proxy数据存储目录
+WorkingDirectory=/opt/kubernetes-work/data/kube-proxy
+ExecStart=/opt/kubernetes-work/node/bin/kube-proxy \
+  # Kube-Proxy配置文件目录
+  --config=/opt/kubernetes-work/config/kube-proxy.config.yaml \
+  --alsologtostderr=true \
+  --logtostderr=false \
+  # 日志存储目录
+  --log-dir=/opt/kubernetes-work/log/kube-proxy \
+  --v=2
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+```
+
+#### 二八、启动work（从）节点的Kube-Proxy服务和简单测试（注意：每个work（从）节点都要启动）
+```bash
+$ systemctl daemon-reload && systemctl start kube-proxy   # 启动 Kube-Proxy 服务
+$ systemctl daemon-reload && systemctl restart kube-proxy # 重启 Kube-Proxy 服务
+$ systemctl stop kube-proxy                               # 停止 Kube-Proxy 服务
+$ systemctl enable kube-proxy                             # 开启开机启动 Kube-Proxy 服务（建议开启）
+$ systemctl disbale kube-proxy                            # 禁用开机启动 Kube-Proxy 服务
+
+$ service kube-proxy status                               # 查看 Kube-Proxy 服务运行状态
+$ journalctl -f -u kube-proxy                             # 查看 Kube-Proxy 服务运行日志
+```
+
+#### 二九、部署CNI插件 - Calico，[官方安装文档](https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/calico#installing-with-the-kubernetes-api-datastoremore-than-50-nodes)，（注意：以下命令在任意一台主节点上执行即可，从节点会自动部署）
+```bash
+# 创建并定位到存放部署Calico配置文件目录
+$ mkdir -p /opt/kubernetes-apiserver/addons && cd /opt/kubernetes-apiserver/addons
+
+# 从官方下载Calico安装的配置文件
+$ curl https://docs.projectcalico.org/v3.8/manifests/calico-typha.yaml -O
+
+# 修改pod网段，我们上面的配置文件里面使用的是：172.22.0.0/16，所以要修改成它
+$ POD_CIDR="172.22.0.0/16" && sed -i -e "s?192.168.0.0/16?$POD_CIDR?g" calico-typha.yaml
+
+# 部署Calico（注意：可以修改calico-typha.yaml文件里面的replicas属性来指定Calico的部署副本数（默认是1，就是同时部署2个Calico），-f是指定配置文件）
+$ /opt/kubernetes-apiserver/server/bin/kubectl apply -f calico-typha.yaml
+
+# 查看Calico部署状态
+$ /opt/kubernetes-apiserver/server/bin/kubectl get pods -n kube-system
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-65b8787765-hmh8m   1/1     Running   0          2m17s
+calico-node-2zl8m                          1/1     Running   0          2m17s
+calico-typha-5d845864c4-h5wch              1/1     Running   0          2m17s
+
+# 查看集群所有work（从）节点的状态（注意：STATUS应该都是Ready（正常）状态，因为Calico部署成功了）
+$ /opt/kubernetes-apiserver/server/bin/kubectl get nodes
+NAME        STATUS   ROLES    AGE   VERSION
+server008   Ready    <none>   16h   v1.15.3
+
+# 到work（从）节点上执行看看Kubelet的日志是否正常（不应该再报cni网络插件没有的错误，因为我们已经部署好了cni网络插件Calico）
+$ journalctl -f -u kubelet
+```
+
+#### 三十、部署DNS服务 - CoreDNS（注意：以下命令在任意一台主节点上执行即可）
+```bash
+# 创建并定位到存放部署CoreDNS配置文件目录
+$ mkdir -p /opt/kubernetes-apiserver/addons && cd /opt/kubernetes-apiserver/addons
+
+# 创建部署CoreDNS配置文件
+$ vi coredns.yaml
+# __MACHINE_GENERATED_WARNING__
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+    addonmanager.kubernetes.io/mode: Reconcile
+  name: system:coredns
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - endpoints
+  - services
+  - pods
+  - namespaces
+  verbs:
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+    addonmanager.kubernetes.io/mode: EnsureExists
+  name: system:coredns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:coredns
+subjects:
+- kind: ServiceAccount
+  name: coredns
+  namespace: kube-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health
+        kubernetes cluster.local. in-addr.arpa ip6.arpa {
+            pods insecure
+            upstream
+            fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        proxy . /etc/resolv.conf
+        cache 30
+        reload
+    }
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "CoreDNS"
+spec:
+  # 默认部署副本数是1
+  # replicas: not specified here:
+  # 1. In order to make Addon Manager do not reconcile this replicas parameter.
+  # 2. Default is 1.
+  # 3. Will be tuned in real time if DNS horizontal auto-scaling is turned on.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
+  template:
+    metadata:
+      labels:
+        k8s-app: kube-dns
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: 'docker/default'
+    spec:
+      serviceAccountName: coredns
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      containers:
+      - name: coredns
+        # 镜像
+        image: coredns/coredns:1.4.0
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            memory: 170Mi
+          requests:
+            cpu: 100m
+            memory: 70Mi
+        args: [ "-conf", "/etc/coredns/Corefile" ]
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/coredns
+          readOnly: true
+        ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 9153
+          name: metrics
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - all
+          readOnlyRootFilesystem: true
+      dnsPolicy: Default
+      volumes:
+        - name: config-volume
+          configMap:
+            name: coredns
+            items:
+            - key: Corefile
+              path: Corefile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-dns
+  namespace: kube-system
+  annotations:
+    prometheus.io/port: "9153"
+    prometheus.io/scrape: "true"
+  labels:
+    k8s-app: kube-dns
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: Reconcile
+    kubernetes.io/name: "CoreDNS"
+spec:
+  selector:
+    k8s-app: kube-dns
+  # 绑定集群DNS服务地址  
+  clusterIP: 10.254.0.2
+  ports:
+  - name: dns
+    port: 53
+    protocol: UDP
+  - name: dns-tcp
+    port: 53
+    protocol: TCP
+
+# 部署 CoreDNS
+$ /opt/kubernetes-apiserver/server/bin/kubectl create -f coredns.yaml
+
+# 查看所有pod的部署状态
+$ /opt/kubernetes-apiserver/server/bin/kubectl get pods -n kube-system
 ```
