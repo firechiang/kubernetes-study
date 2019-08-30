@@ -767,7 +767,7 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl config use-context default \
 $ scp -r /opt/kubernetes-work root@server008:/opt  
 ```
 
-#### 二三、在每个work（从）节点上创建[vi /opt/kubernetes-work/config/kubelet.config.json] Kubelet的配置文件，注意修改当前节点的IP（注意：创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
+#### 二三、在每个work（从）节点上创建[vi /opt/kubernetes-work/config/kubelet.config.json] Kubelet的配置文件，（注意：修改当前节点的IP，还有创建时要删除注释，否则会报错。还有每个work（从）节点都要创建）
 ```bash
 {
   "kind": "KubeletConfiguration",
