@@ -965,7 +965,7 @@ server008   Ready    <none>   16h   v1.15.3
 $ journalctl -f -u kubelet
 ```
 
-#### 三十、部署DNS服务 - CoreDNS（注意：以下命令在任意一台主节点上执行即可，不建议使用CoreDNS-1.4.0以上的版本，因为新版本部署完成后无法启动状态是CrashLoopBackOff，不过百度有解决方案，也可以尝试）
+#### 三十、部署DNS服务 - CoreDNS（注意：以下命令在任意一台主节点上执行即可。不建议使用CoreDNS-1.4.0以上的版本，因为新版本部署完成后无法启动，状态是CrashLoopBackOff。不过百度有解决方案，也可以尝试）
 ```bash
 # 创建并定位到存放部署CoreDNS配置文件目录
 $ mkdir -p /opt/kubernetes-apiserver/addons && cd /opt/kubernetes-apiserver/addons
