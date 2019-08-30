@@ -1,5 +1,5 @@
 #### 一、[Kubeadm方式搭建Kubernetes集群][1]
-#### 二、[二进制包的方式搭建Kubernetes集群][4]
+#### 二、[安装包的方式搭建Kubernetes集群（推荐使用）][4]
 #### 三、[简单测试集群的可用性][2]
 #### 四、[Kubernetes-Dashboard部署和简单使用（不推荐使用，建议使用RanCher）][3]
 
