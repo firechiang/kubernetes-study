@@ -973,7 +973,7 @@ $ journalctl -f -u kubelet
 $ mkdir -p /opt/kubernetes-apiserver/addons && cd /opt/kubernetes-apiserver/addons
 
 # 创建部署CoreDNS配置文件
-$ vi coredns.yaml
+$ cat > /opt/kubernetes-apiserver/addons/coredns.yaml <<EOF
 # __MACHINE_GENERATED_WARNING__
 
 apiVersion: v1
@@ -1158,9 +1158,10 @@ spec:
   - name: dns-tcp
     port: 53
     protocol: TCP
+EOF    
 
 # 部署 CoreDNS
-$ /opt/kubernetes-apiserver/server/bin/kubectl create -f coredns.yaml
+$ /opt/kubernetes-apiserver/server/bin/kubectl apply -f coredns.yaml
 
 # 查看所有pod的部署状态
 $ /opt/kubernetes-apiserver/server/bin/kubectl get pods -n kube-system
