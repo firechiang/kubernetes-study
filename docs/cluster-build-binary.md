@@ -707,8 +707,6 @@ $ tar -vxf kubernetes-node-linux-amd64.tar.gz &&   \
 # 创建并进入配置文件目录
 $ mkdir -p /opt/kubernetes-work/config && cd /opt/kubernetes-work/config
 
-$ cat ~/.kube/config >> /opt/kubernetes-work/config/kubectl.config
-
 # 生成Kubelet的配置文件
 # 定义生成 token 的变量
 $ export BOOTSTRAP_TOKEN=$(/opt/kubernetes-apiserver/server/bin/kubeadm token create \
