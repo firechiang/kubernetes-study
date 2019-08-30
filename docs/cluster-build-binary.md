@@ -17,11 +17,10 @@ server008  |                    |     Y      |
 #### 二、关闭集群各个节点swap和selinux以及dnsmasq（注意：集群中每个节点都要执行）
 ```bash
 # 关闭swap（注意：Kubernetes不支持swap（用硬盘补内存））
-$ swapoff -a
-$ sed -i '/swap/s/^\(.*\)$/#\1/g' /etc/fstab
+$ swapoff -a && sed -i '/swap/s/^\(.*\)$/#\1/g' /etc/fstab
 
 # 关闭selinux
-$ setenforce 0
+$ setenforce 0 && sed -i "/^SELINUX/s/enforcing/disabled/" /etc/selinux/config
 
 # 关闭dnsmasq(不关闭可能导致docker容器无法解析域名)
 $ service dnsmasq stop && systemctl disable dnsmasq
