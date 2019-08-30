@@ -1,6 +1,6 @@
 #### 一、环境简要说明
  - Kubernetes集群以ETCD作为注册中心（注意：要先搭建好ETCD集群）
- - 集群中每个节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host）
+ - 集群中每个work（从）节点要预先[安装Docker](https://github.com/firechiang/kubernetes-study/tree/master/docker/docs/docker-online-install.md)而且还要配置好hostname和host，Master（主）节点不需要Docker，因为主节点Api Server相关服务使用的是安装包的方式部署的，而且主节点是不会跑容器服务的。容器服务都是跑在work（从）节点上。
  - [官方安装文档](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/)，[本集群搭建参考文档](https://gitee.com/pa/kubernetes-ha-binary)
 ```bash
 -----------|--------------------|------------|
@@ -1163,4 +1163,8 @@ $ /opt/kubernetes-apiserver/server/bin/kubectl apply -f coredns.yaml
 
 # 查看所有pod的部署状态
 $ /opt/kubernetes-apiserver/server/bin/kubectl get pods -n kube-system
+calico-kube-controllers-65b8787765-frj64   1/1     Running   0          4m2s
+calico-node-ss2v4                          1/1     Running   0          4m3s
+calico-typha-5d845864c4-mc5tp              1/1     Running   0          4m3s
+coredns-787676d7b5-cmpbc                   1/1     Running   0          15s
 ```
