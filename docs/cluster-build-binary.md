@@ -850,7 +850,7 @@ WantedBy=multi-user.target
 #### 二五、启动work（从）节点的Kubelet服务和简单测试（注意：每个work（从）节点都要启动）
  - kublet 启动时查找配置的 --kubeletconfig 文件是否存在，如果不存在则使用 --bootstrap-kubeconfig 向 kube-apiserver 发送证书签名请求 (CSR)。 kube-apiserver 收到 CSR 请求后，对其中的 Token 进行认证（事先使用 kubeadm 创建的 token），认证通过后将请求的 user 设置为 system:bootstrap:，group 设置为 system:bootstrappers，这就是Bootstrap Token Auth
 ```bash
-# 给Kubelet赋予访问Api Server的权限（注意：该命令在任意一台主节点上执行即可，注意是在主节点上执行）
+# 在主节点上给Kubelet赋予访问Api Server的权限（注意：该命令在任意一台主节点上执行即可，注意是在主节点上执行）
 $ /opt/kubernetes-apiserver/server/bin/kubectl create clusterrolebinding kubelet-bootstrap \
   --clusterrole=system:node-bootstrapper                                                   \
   --group=system:bootstrappers
