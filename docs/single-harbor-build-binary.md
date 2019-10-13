@@ -32,3 +32,20 @@ data_volume: /data                     # 镜像存储目录
 $ cd /home/harbor-1.9.0/harbor         # 定位到Harbor解压目录
 $ ./install.sh                         # 执行部署
 ```
+
+#### 七、测试私有仓库推拉镜像（注意：私有仓库地址要在docker的信任地址里面，否则推拉镜像可能报错[如何配置docker信任私有仓库地址](https://github.com/firechiang/kubernetes-study/blob/master/docker/docs/docker-online-install.md#%E4%B8%89%E9%85%8D%E7%BD%AE-vi-etcdockerdaemonjson-%E6%8C%87%E5%AE%9Adocker%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E5%8F%AF%E4%BD%BF%E7%94%A8docker-info%E5%85%88%E6%9F%A5%E7%9C%8B%E9%BB%98%E8%AE%A4%E5%80%BC%E5%86%8D%E4%BF%AE%E6%94%B9%E5%BB%BA%E8%AE%AE%E4%BD%BF%E7%94%A8%E9%BB%98%E8%AE%A4%E5%80%BC%E6%B3%A8%E6%84%8F%E4%BF%AE%E6%94%B9%E8%BF%99%E4%B8%AA%E9%85%8D%E7%BD%AE%E9%9C%80%E8%A6%81%E5%85%88%E5%90%AF%E5%8A%A8docker)）
+```bash
+$ docker login server003:7079          # 登陆私有仓库，然后输入用户名和密码（注意：私有仓库地址要在docker信任地址里面）
+    Username: admin
+    Password: Harbor12345
+    
+# 打tag      镜像                私有仓库         私有仓库项目  完成后镜像名及版本
+               |             |             |           |
+$ docker tag openjdk:8-jre server003:7079/test-service/openjdk:9-jre   
+
+# 推送镜像
+$ docker push server003:7079/test-service/openjdk:9-jre
+
+# 拉取镜像
+$ docker pull server003:7079/test-service/openjdk:9-jre    
+```
