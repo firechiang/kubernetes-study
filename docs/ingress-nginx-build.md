@@ -306,15 +306,16 @@ $ kubectl get nodes
 
 # 给某个节点打个标签，让Ingress-Nginx部署在该节点上
 # 注意：上面部署文件里面配置了节点选择器，会部署在具有app=ingress-nginx标签的节点上
-#   node名称（可使用kubectl get nodes命令查看）       标签
-#                        |                           |
-$ kubectl label node dh-neibi-20.120-docker.cn app=ingress-nginx
+# （可使用kubectl get nodes命令查看）
+#                     node名称       标签
+#                        |            |
+$ kubectl label node server002 app=ingress-nginx
 
 # 修改标签（注意：这个命令不需要执行）
-# kubectl label node dh-neibi-20.120-docker.cn app=ingress-nginx1 --overwrite
+# kubectl label node server002 app=ingress-nginx1 --overwrite
 
 # 删除标签，只需在命令行最后指定Label的key名并与一个减号相连即可（注意：这个命令不需要执行）
-# kubectl label node dh-neibi-20.120-docker.cn app-
+# kubectl label node server002 app-
 
 # 查看所有节点以及节点的Label，看看上面添加的Label是否有了
 $ kubectl get node --show-labels
