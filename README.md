@@ -12,6 +12,6 @@
 [4]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-binary.md
 [5]: https://github.com/firechiang/kubernetes-study/tree/master/docs/single-harbor-build-binary.md
 [6]: https://github.com/firechiang/kubernetes-study/tree/master/docs/ha-harbor-build-binary.md
-[7]: https://github.com/firechiang/kubernetes-study/tree/master/docs/ha-harbor-build-binary.md
+[7]: https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build.md
 
 
