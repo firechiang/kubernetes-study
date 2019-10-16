@@ -238,8 +238,9 @@ spec:
         app: ingress-nginx
       containers:
         - name: nginx-ingress-controller
-          # 指定镜像
-          image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
+          # 指定阿里云的镜像
+          #image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
+          image: registry.aliyuncs.com/google_containers/nginx-ingress-controller:0.26.1
           # 配置容器运行参数
           args:
             - /nginx-ingress-controller
@@ -304,10 +305,19 @@ spec:
 $ kubectl get nodes
 
 # 给某个节点打个标签，让Ingress-Nginx部署在该节点上
-# 注意：部署文件里面配置节点选择器，会部署在具有app=ingress-nginx标签的节点上
+# 注意：上面部署文件里面配置了节点选择器，会部署在具有app=ingress-nginx标签的节点上
 #   node名称（可使用kubectl get nodes命令查看）       标签
-#                        |                    |
+#                        |                           |
 $ kubectl label node dh-neibi-20.120-docker.cn app=ingress-nginx
+
+# 修改标签（注意：这个命令不需要执行）
+# kubectl label node dh-neibi-20.120-docker.cn app=ingress-nginx1 --overwrite
+
+# 删除标签，只需在命令行最后指定Label的key名并与一个减号相连即可（注意：这个命令不需要执行）
+# kubectl label node dh-neibi-20.120-docker.cn app-
+
+# 查看所有节点以及节点的Label，看看上面添加的Label是否有了
+$ kubectl get node --show-labels
 
 # apply表示修改或创建部署（也可以使用create代替），-f 表示指定部署配置文件
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-nginx-deployment.yaml
