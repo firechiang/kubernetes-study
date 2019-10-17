@@ -199,7 +199,30 @@ subjects:
     namespace: ingress-nginx
 
 ---
-
+# 这个service的配置新加的，因为如果没有这个service会一直打印一个警告说找不到ingress-nginx service
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+spec:
+  externalTrafficPolicy: Local
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+      
+---
 apiVersion: apps/v1
 # 部署相关信息
 kind: Deployment
