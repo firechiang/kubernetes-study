@@ -240,7 +240,7 @@ spec:
         - name: nginx-ingress-controller
           # 指定阿里云的镜像
           #image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
-          image: registry.aliyuncs.com/google_containers/nginx-ingress-controller:0.26.1
+          image: registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller:0.26.1
           # 配置容器运行参数
           args:
             - /nginx-ingress-controller
