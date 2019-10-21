@@ -1,0 +1,6 @@
+server:
+  port: 8088
+  
+spring:
+  application:
+    name: k8s-deploy-springcloud-service
