@@ -15,7 +15,7 @@ public class TestController {
 	 * 获取服务名称
 	 * @return
 	 */
-	@GetMapping
+	@GetMapping("/serviceName")
 	public String getServiceName() {
 		
 		return String.join("-", environment.getProperty("spring.application.name"),String.valueOf(System.currentTimeMillis()));

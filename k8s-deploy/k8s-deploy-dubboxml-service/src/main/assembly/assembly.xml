@@ -1,0 +1,30 @@
+<assembly>
+    <id>assembly</id>
+    <formats>
+        <!-- 打包后文件输出格式 -->
+        <format>tar.gz</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <!-- 在项目bin目录下的文件，打包后放到包的bin目录 -->
+        <fileSet>
+            <directory>${project.build.directory}/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <!-- 在项目conf目录下的文件，打包后放到包的conf目录 -->
+        <fileSet>
+            <directory>${project.build.directory}/conf</directory>
+            <outputDirectory>conf</outputDirectory>
+            <fileMode>0644</fileMode>
+        </fileSet>
+    </fileSets>
+    <!-- 项目所有的依赖，打包后放到包的lib目录 -->
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>true</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+        </dependencySet>
+    </dependencySets>
+</assembly>

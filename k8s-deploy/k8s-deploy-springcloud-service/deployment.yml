@@ -1,0 +1,54 @@
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-web-demo
+spec:
+  selector:
+    matchLabels:
+      app: springboot-web-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: springboot-web-demo
+    spec:
+      containers:
+      - name: springboot-web-demo
+        image: hub.mooc.com/kubernetes/springboot-web:v1
+        ports:
+        # 容器端口（注意：这个端口要服务实际的端口一直）
+        - containerPort: 8080
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-web-demo
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  # 注意：选择器的名称要和  上面Deployment 的名称一直，否则部署服务（原因：Service要通过这个名称去寻找Deployment）
+  selector:
+    app: springboot-web-demo
+  type: ClusterIP
+
+---
+#ingress（注意：Ingress要提前部署好，否则无法部署服务）
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: springboot-web-demo
+spec:
+  rules:
+  # 访问这个域名自动转发到当前服务
+  - host: springboot.mooc.com
+    http:
+      paths:
+      - path: /
+        # Service的名字和端口要和上面Service配置的一致
+        backend:
+          serviceName: springboot-web-demo
+          servicePort: 80

@@ -36,5 +36,7 @@
   <modules>
     <module>k8s-deploy-job-demo</module>
     <module>k8s-deploy-springcloud-service</module>
+    <module>k8s-deploy-dubboxml-service</module>
+    <module>k8s-deploy-dubbo-api</module>
   </modules>
 </project>
