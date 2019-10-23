@@ -1,4 +1,4 @@
-#### [Dubbo注解搭建示例][https://github.com/apache/dubbo-samples/tree/master/dubbo-samples-annotation]
+#### [Dubbo注解搭建示例](https://github.com/apache/dubbo-samples/tree/master/dubbo-samples-annotation)
 #### 测试Dubbo服务是否正常运行
 ```bash
 $ telnet 127.0.0.1 20880                         # 连接Dubbo服务
