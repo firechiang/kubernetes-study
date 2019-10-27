@@ -16,13 +16,13 @@ if [ -z "${SERVER_NAME}" ]; then
     echo "ERROR: can not found 'dubbo.application.name' config in 'dubbo.properties' !"
 	exit 1
 fi
-# 判断服务进程是否存在
-PIDS=`ps  --no-heading -C java -f --width 1000 | grep "${CONF_DIR}" |awk '{print $2}'`
-if [ -n "${PIDS}" ]; then
-    echo "ERROR: The ${SERVER_NAME} already started!"
-    echo "PID: ${PIDS}"
-    exit 1
-fi
+
+# 如果环境变量里面配置了Dubbo的端口，参数 DUBBO_PORT，我们就替换配置文件里面dubbo.protocol.port的值
+if [ ! -z "${DUBBO_PORT}" ];then
+    sed -i "s/dubbo.protocol.port=${SERVER_PORT}/dubbo.protocol.port=${DUBBO_PORT}/g" conf/dubbo.properties
+    SERVER_PORT=${DUBBO_PORT}
+fi    
+
 # 判断服务端口是否被占用
 if [ -n "${SERVER_PORT}" ]; then
 	SERVER_PORT_COUNT=`netstat -ntl | grep ${SERVER_PORT} | wc -l`

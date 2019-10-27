@@ -1,0 +1,37 @@
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dubb-demo
+spec:
+  selector:
+    matchLabels:
+      app: dubb-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: dubb-demo
+    spec:
+      # 使用host网络模式
+      hostNetwork: true
+      # 调度策略（注意：以下配置会让多实列的服务不会跑在同一台机器上，一防止端口冲突，因为我们是host模式）
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - dubb-demo
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: dubb-demo
+        image: hub.mooc.com/kubernetes/dubbo:v1
+        ports:
+        - containerPort: 20880
+        # 在容器里面定义环境变量（注意：value的值必须加双引号）（在容器里面，可以使用${test_name}获取到）
+        env:
+        - name: test_name
+          value: "jiajia"

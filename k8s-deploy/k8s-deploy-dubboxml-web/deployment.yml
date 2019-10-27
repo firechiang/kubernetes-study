@@ -1,0 +1,51 @@
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-demo
+spec:
+  selector:
+    matchLabels:
+      app: web-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-demo
+    spec:
+      containers:
+      - name: web-demo
+        image: server003:7079/test-service/k8s-deploy-dubboxml-web:0.0.1
+        ports:
+        - containerPort: 8080
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-demo
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: web-demo
+  type: ClusterIP
+
+---
+#ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-demo
+spec:
+  rules:
+  # 访问这个域名 Ingress 会自动代理到当前服务（注意：Ingress要提前部署好）
+  - host: web.mooc.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web-demo
+          servicePort: 80

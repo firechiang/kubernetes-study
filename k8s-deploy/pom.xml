@@ -38,5 +38,6 @@
     <module>k8s-deploy-springcloud-service</module>
     <module>k8s-deploy-dubboxml-service</module>
     <module>k8s-deploy-dubbo-api</module>
+    <module>k8s-deploy-dubboxml-web</module>
   </modules>
 </project>
