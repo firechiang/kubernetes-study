@@ -55,5 +55,6 @@
 		<module>rancher</module>
 		<module>etcd</module>
         <module>k8s-deploy</module>
-  </modules>
+        <module>jenkins</module>
+    </modules>
 </project>
