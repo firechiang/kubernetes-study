@@ -30,38 +30,77 @@ $ jar uf /home/jenkins/jenkins.war WEB-INF/web.xml
 $ jar uf /home/jenkins/jenkins.war META-INF/JENKINS.RSA
 ```
 
-#### 三、创建[vi /home/jenkins/jenkins.sh]启动和关闭脚本文件
+#### 三、创建[vi /etc/init.d/jenkins]启动脚本（注意：一定要修改jenkins的绑定端口和war包目录以及java的安装目录）
 ```bash
-#!/bin/bash
-# jenkins war包目录
-export JENKINS_WAR_HOME=/home/jenkins
+#!/bin/sh
+# jenkins服务必须在2，3，4，5运行级下被启动或关闭，启动的优先级是80，关闭的优先级是93
+#chkconfig: 2345 80 93
+#description: this script to start and stop jenkins server
+#version: 1.0
+#setting variable
+
+# 绑定端口
+HTTP_PORT=8099
+# jenkins war包目录（注意：这个目录会被当成jenkins的根目录）
+JENKINS_WAR_HOME=/home/jenkins
+# java安装目录（注意：因为init.d目录下脚本无法加载/etc/profile文件里面的环境变量，所以要定义java安装目录）
+JAVA_HOME=/usr/lib/jvm/jdk1.8.0_171
+
+# 内存溢出导出堆文件
+JENKINS_DUMP_FILE=$JENKINS_WAR_HOME/jenkins.dump
+# 日志文件
+JENKINS_LOG_FILE=$JENKINS_WAR_HOME/jenkins.log
+# 插件安装目录
+JENKINS_PLUGIN_DIR=$JENKINS_WAR_HOME/plugin
+# 源码解压目录
+JENKINS_SRC_DIR=$JENKINS_WAR_HOME/src
 # jenkins数据目录
 export JENKINS_HOME=$JENKINS_WAR_HOME/data
 
-pid=`ps -ef | grep jenkins.war | grep -v 'grep'| awk '{print $2}'`    
-if [ "$1" = "start" ];then 
-    if [ -n "$pid" ];then
-        echo 'jenkins is running...' 
-    else
-        nohup $JAVA_HOME/bin/java -Xms768m -Xmx768m        \
-	           -XX:+UseConcMarkSweepGC                     \
-	           -XX:+CMSParallelRemarkEnabled               \
-	           -XX:+HeapDumpOnOutOfMemoryError             \
-	           -XX:HeapDumpPath=/home/jenkins/jenkins.dump \
-	           -jar $JENKINS_WAR_HOME/jenkins.war          \
-	           --webroot=/home/jenkins/src                 \
-	           --pluginroot=/home/jenkins/plugin           \
-	           --logfile=/home/jenkins/jenkins.log         \
-	           --httpPort=8099 >/dev/null 2>&1 &           
-    fi
-elif [ "$1" = "stop" ];then
-    exec ps -ef | grep jenkins | grep -v grep | awk '{print $2}'| xargs kill -9 | echo 'jenkins is stop...'
-else
-    echo "Please input like this：./jenkins.sh start or ./jenkins stop"
-fi
+JENKINS_PID=`ps -ef | grep jenkins.war | grep -v 'grep'| awk '{print $2}'`
+
+case "$1" in
+    start)
+        if [ -n "$JENKINS_PID" ]
+        then
+                echo "jenkins-$JENKINS_PID exists, process is already running or crashed"
+        else
+                nohup $JAVA_HOME/bin/java -Xms768m -Xmx768m     \
+	                   -XX:+UseConcMarkSweepGC                  \
+	                   -XX:+CMSParallelRemarkEnabled            \
+	                   -XX:+HeapDumpOnOutOfMemoryError          \
+	                   -XX:HeapDumpPath=$JENKINS_DUMP_FILE      \
+	                   -jar $JENKINS_WAR_HOME/jenkins.war       \
+	                   --webroot=$JENKINS_SRC_DIR               \
+	                   --pluginroot=$JENKINS_PLUGIN_DIR         \
+	                   --logfile=$JENKINS_LOG_FILE              \
+	                   --httpPort=$HTTP_PORT >/dev/null 2>&1 &
+	            echo "Jenkins Started"       
+        fi
+        ;;
+    stop)
+        if [ ! -n "$JENKINS_PID" ]
+        then
+                echo "Jenkins does not exist, process is not running"
+        else
+                kill -9 $JENKINS_PID
+                echo "Jenkins stopped"
+        fi
+        ;;
+    *)
+        echo "Please use start or stop as first argument"
+        ;;
+esac
 ```
 
 #### 四、给jenkins.sh脚本赋予权限
 ```bash
-$ chmod +x /home/jenkins/jenkins.sh
+$ chmod +x /etc/init.d/jenkins
+```
+
+#### 五、启动Jenkins
+$ service jenkins start           # 启动jenkins
+$ service jenkins stop            # 停止jenkins
+$ sudo chkconfig jenkins on       # 设置jenkins开机启动（建议开启）
+$ sudo chkconfig jenkins off      # 关闭jenkins开机启动
 ```
