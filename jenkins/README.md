@@ -65,7 +65,7 @@ case "$1" in
         then
                 echo "jenkins-$JENKINS_PID exists, process is already running or crashed"
         else
-                nohup $JAVA_HOME/bin/java -Xms768m -Xmx768m     \
+                nohup $JAVA_HOME/bin/java -Xms768m -Xmx768m         \
 	                   -XX:+UseConcMarkSweepGC                  \
 	                   -XX:+CMSParallelRemarkEnabled            \
 	                   -XX:+HeapDumpOnOutOfMemoryError          \
@@ -75,7 +75,7 @@ case "$1" in
 	                   --pluginroot=$JENKINS_PLUGIN_DIR         \
 	                   --logfile=$JENKINS_LOG_FILE              \
 	                   --httpPort=$HTTP_PORT >/dev/null 2>&1 &
-	            echo "Jenkins Started"       
+	        echo "Jenkins Started"       
         fi
         ;;
     stop)
