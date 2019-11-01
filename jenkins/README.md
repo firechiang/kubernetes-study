@@ -105,3 +105,8 @@ $ service jenkins stop            # 停止jenkins
 $ sudo chkconfig jenkins on       # 设置jenkins开机启动（建议开启）
 $ sudo chkconfig jenkins off      # 关闭jenkins开机启动
 ```
+
+#### 六、初始化Jenkins配置
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-01.jpg)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-02.jpg)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-03.jpg)
