@@ -30,7 +30,7 @@ $ jar uf /home/jenkins/jenkins.war WEB-INF/web.xml
 $ jar uf /home/jenkins/jenkins.war META-INF/JENKINS.RSA
 ```
 
-#### 三、创建[vi /etc/init.d/jenkins]启动脚本（注意：一定要修改jenkins的绑定端口和war包目录以及java的安装目录）
+#### 三、创建[vi /etc/init.d/jenkins]启动脚本（注意：修改jenkins的绑定端口和war包目录以及java的安装目录）
 ```bash
 #!/bin/sh
 # jenkins服务必须在2，3，4，5运行级下被启动或关闭，启动的优先级是80，关闭的优先级是93
@@ -99,6 +99,7 @@ $ chmod +x /etc/init.d/jenkins
 ```
 
 #### 五、启动Jenkins
+```bash
 $ service jenkins start           # 启动jenkins
 $ service jenkins stop            # 停止jenkins
 $ sudo chkconfig jenkins on       # 设置jenkins开机启动（建议开启）
