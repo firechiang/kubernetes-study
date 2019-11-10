@@ -107,6 +107,6 @@ $ sudo chkconfig jenkins off      # 关闭jenkins开机启动
 ```
 
 #### 六、初始化Jenkins配置
-![image](https://github.com/firechiang/kubernetes-study/raw/master/jenkins/image/setup-jenkins-01.jpg)
-![image](https://github.com/firechiang/kubernetes-study/raw/master/jenkins/image/setup-jenkins-02.jpg)
-![image](https://github.com/firechiang/kubernetes-study/raw/master/jenkins/image/setup-jenkins-03.jpg)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-01.jpg)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-02.png)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-03.png)
