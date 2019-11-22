@@ -106,7 +106,18 @@ $ sudo chkconfig jenkins on       # 设置jenkins开机启动（建议开启）
 $ sudo chkconfig jenkins off      # 关闭jenkins开机启动
 ```
 
-#### 六、初始化Jenkins配置
+#### 六、安装Git（注意：如果没有Git将无法拉取代码）
+```bash
+$ yum install git -y
+```
+
+#### 七、初始化Jenkins配置
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-01.jpg)
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-02.png)
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-03.png)
+#### 八、配置JAVA_HOME和Maven相关（系统管理 > 全局工具配置）（注意：这一步可以不用配置）
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-04.PNG)
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-05.PNG)
+#### 九、配置Java和Maven的环境变量（系统管理 > 系统配置）（注意：环境变量一定要配置，否则无法执行构建任务，会找不到命令）
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-06.PNG)
+
