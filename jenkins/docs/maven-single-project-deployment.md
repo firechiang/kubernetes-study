@@ -27,6 +27,16 @@ node {
       // 推送镜像到仓库（注意：要事先在机器上登录镜像仓库，否则无法推送，会报没有权限的错误）
       sh 'docker push chiangfire/${JOB_NAME}:${BUILD_TIMESTAMP}'
    }
+   // 调用Kubernetes部署
+   stage('Kubernetes Deployment') {
+      // 替换部署文件里面的版本号
+      sh 'sed -i "s,{{version}},${BUILD_TIMESTAMP},g" deployment.yaml'
+      // 使用Kubernetes部署，如果是多模块的话就再加一级/${MODULE}目录最后得到（${WORKSPACE}/${MODULE}/deployment.yaml）
+      // 注意：kubectl命令要配置好（配置kubectl命令可参考Kubernetes搭建）（--kubeconfig是指定kubectl命令的配置文件所在地址）
+      // 如果没有指定kubectl命令的配置文件地址，kubectl命令将无法使用，
+      // 会报Get http://localhost:8080/api?timeout=32s: dial tcp [::1]:8080: connect: connection 错误，因为kubectl命令没有配置的话默认找本机的8080服务
+      sh "/opt/kubernetes-apiserver/server/bin/kubectl apply -f ${WORKSPACE}/deployment.yaml --kubeconfig='/root/.kube/config'"
+   }
 }
 ```
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/build04.PNG)
