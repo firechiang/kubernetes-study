@@ -8,7 +8,7 @@ $ cd kubernetes-study/k8s-deploy/k8s-deploy-job-demo
 # Maven打包
 $ mvn clean package
 
-# 构建Docker镜像，名为k8s-deploy-job-demo，版本v1。构建完成后放到当前目录
+# 构建Docker镜像，名为k8s-deploy-job-demo，版本v1，.表示Dockerfile在当前目录
 # 注意：这个命令需要Dockerfile配置文件，已经写好了，可查看
 $ docker build -t k8s-deploy-job-demo:v1 .
 

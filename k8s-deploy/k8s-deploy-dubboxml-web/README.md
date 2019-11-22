@@ -16,7 +16,7 @@ $ cd ROOT
 $ jar -xvf k8s-deploy-dubboxml-web-0.0.1-SNAPSHOT.war
 $ cd ../
 
-# 构建Docker镜像（.表示构建后的文件放到当前目录）
+# 构建Docker镜像（.表示Dockerfile在当前目录）
 $ docker build -t k8s-deploy-dubboxml-web:0.0.1 .
 
 # 为镜像打上tag
