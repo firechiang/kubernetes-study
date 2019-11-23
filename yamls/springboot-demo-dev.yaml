@@ -21,6 +21,16 @@ spec:
         ports:
         # 注意：这个端口要和服务本身启动起来的端口相同
         - containerPort: 2019
+        # 资源限制
+        resources:
+          # 容器希望被分配到的资源（1核CPU=1000m）  
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          # 容器所能使用的资源最大限制（1核CPU=1000m）  
+          limits:
+            memory: 100Mi
+            cpu: 200m
 ---
 #service
 apiVersion: v1

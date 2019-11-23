@@ -7,6 +7,7 @@
 #### 七、[私有镜像仓库Harbor双主同步复制高可用离线安装][6]
 #### 八、[Kubernetes定时调度执行容器简单使用][8]
 #### 九、[Namespace简单说明和使用][9]
+#### 十、[Resources资源限制简单说明和使用][10]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -18,5 +19,6 @@
 [7]: https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build.md
 [8]: https://github.com/firechiang/kubernetes-study/blob/master/k8s-deploy/k8s-deploy-job-demo/README.md
 [9]: https://github.com/firechiang/kubernetes-study/tree/master/docs/namespace-simple.md
+[10]: https://github.com/firechiang/kubernetes-study/tree/master/docs/resources-simple.md
 
 
