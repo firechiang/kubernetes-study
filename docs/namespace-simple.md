@@ -17,7 +17,7 @@ kind: Namespace
 metadata:
   name: dev
   
-$ kubectl create -f namespace-dev.yaml  # 创建Namespace
+$ kubectl create -f namespace-dev.yaml  # 创建Namespace（直接用命令创建Namespace：kubectl create ns dev）
 $ kubectl get namespaces                # 获取所有的命名空间（看看有没有我们刚刚创建的dev）
 ```
 
