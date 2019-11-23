@@ -6,8 +6,9 @@
 #### 六、[私有镜像仓库Harbor单节点离线安装（推荐生产使用）][5]
 #### 七、[私有镜像仓库Harbor双主同步复制高可用离线安装][6]
 #### 八、[Kubernetes定时调度执行容器简单使用][8]
-#### 九、[Namespace简单说明和使用][9]
-#### 十、[Resources资源限制简单说明和使用][10]
+#### 九、[Namespace（命名空间）简单使用和说明][9]
+#### 十、[Resources（资源限制）简单使用和说明][10]
+#### 十一、[Label（标签）简单使用和说明][11]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -20,5 +21,6 @@
 [8]: https://github.com/firechiang/kubernetes-study/blob/master/k8s-deploy/k8s-deploy-job-demo/README.md
 [9]: https://github.com/firechiang/kubernetes-study/tree/master/docs/namespace-simple.md
 [10]: https://github.com/firechiang/kubernetes-study/tree/master/docs/resources-simple.md
+[11]: https://github.com/firechiang/kubernetes-study/tree/master/docs/label-simple.md
 
 

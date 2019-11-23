@@ -154,7 +154,7 @@ $ kubectl describe quota -n resource-quota-test
 ```
 ##### 7.3 使用资源配额度（指定这个Namespace即可）
 
-#### 八、Pod Eviction（就是当资源不够用了的时候，杀死那些Pod）配置
+#### 八、Pod Eviction（就是当资源不够用了的时候，杀死那些Pod）驱逐策略
  - 磁盘紧缺的时候Kubernetes会删除死掉的Pod和容器以及没有用的镜像
  - 内存紧缺的时候Kubernetes会杀死不可靠的且占用内存最大的Pod（就是没有配置资源的部署，也是按照Pod的等级从低到高开始杀（最上面有Pod的等级说明））
 ##### 8.1 策略一（节点的机器内存小于1.5G并且持续了1分30秒时可能触发杀手Pod（注意：不一定会触发））

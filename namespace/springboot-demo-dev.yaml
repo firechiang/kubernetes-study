@@ -7,12 +7,15 @@ metadata:
   namespace: dev
 spec:
   selector:
+    # 匹配标签（就是这个Deployment只管理带有app=springboot-demo标签的Pod）
     matchLabels:
       app: springboot-demo
   replicas: 1
+  # 创建Pod的配置
   template:
     metadata:
       labels:
+        # 为Pod打上app=springboot-demo标签（如果没有这个Deployment将无法部署）
         app: springboot-demo
     spec:
       containers:
@@ -36,6 +39,7 @@ spec:
     # 注意：这个端口要和服务本身启动起来的端口相同
     targetPort: 2019
   selector:
+    # 匹配标签（就是这个Service只管理带有app=springboot-demo标签的Pod）
     app: springboot-demo
   type: ClusterIP
 
