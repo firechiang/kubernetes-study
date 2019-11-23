@@ -1,0 +1,58 @@
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-demo
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: springboot-demo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: springboot-demo
+    spec:
+      containers:
+      - name: springboot-demo
+        image: chiangfire/springboot-demo:20191122051537
+        ports:
+        # 注意：这个端口要和服务本身启动起来的端口相同
+        - containerPort: 2019
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-demo
+  # Service指定部署在dev的Namespace下
+  namespace: dev
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    # 注意：这个端口要和服务本身启动起来的端口相同
+    targetPort: 2019
+  selector:
+    app: springboot-demo
+  type: ClusterIP
+
+---
+#ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: springboot-demo
+  # Ingress指定部署在dev的Namespace下
+  namespace: dev
+spec:
+  rules:
+  # 访问这个域名 Ingress 会自动代理到当前服务（注意：Ingress要提前部署好）
+  - host: web.springbootdemo.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: springboot-demo
+          servicePort: 80
