@@ -9,6 +9,9 @@
 #### 九、[Namespace（命名空间）简单使用和说明][9]
 #### 十、[Resources（资源限制）简单使用和说明][10]
 #### 十一、[Label（标签）简单使用和说明][11]
+#### 十二、[健康检查和验证服务是否启动成功才对外提供服务（执行命令的方式）简单使用][12]
+#### 十三、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][13]
+#### 十四、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][14]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -22,5 +25,8 @@
 [9]: https://github.com/firechiang/kubernetes-study/tree/master/docs/namespace-simple.md
 [10]: https://github.com/firechiang/kubernetes-study/tree/master/docs/resources-simple.md
 [11]: https://github.com/firechiang/kubernetes-study/tree/master/docs/label-simple.md
+[12]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-cmd.md
+[13]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-http.md
+[14]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-tcp.md
 
 
