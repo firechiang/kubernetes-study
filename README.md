@@ -18,6 +18,7 @@
 #### 十八、[创建部署（先将原有的服务杀掉重新部署）简单使用（不推荐生产使用）][18]
 #### 十九、[滚动部署（先启动新服务再停止旧服务）简单使用（推荐生产使用）][19]
 #### 二十、[蓝绿部署（新启动一个部署，等服务没有问题之后，再通过Service的Select将流量切到新的服务上来，最后删除旧的部署）简单使用（推荐生产使用）][20]
+#### 二一、[金丝雀部署（新旧版本同时存在，访问可能是旧的也可能是新的）简单使用][21]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -40,5 +41,6 @@
 [18]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-recreate.md
 [19]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-rollingupdate.md
 [20]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-bluegreen.md
+[21]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-bluegreen2.md
 
 
