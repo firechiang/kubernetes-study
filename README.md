@@ -16,6 +16,7 @@
 #### 十六、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][16]
 #### 十七、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][17]
 #### 十八、[创建部署（先将原有的服务杀掉重新部署）简单使用（不推荐生产使用）][18]
+#### 十九、[滚动部署（先启动新服务再停止旧服务）简单使用（推荐生产使用）][19]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -36,5 +37,6 @@
 [16]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-http.md
 [17]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-tcp.md
 [18]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-recreate.md
+[19]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-rollingupdate.md
 
 

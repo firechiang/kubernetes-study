@@ -10,13 +10,20 @@ metadata:
 spec:
   # 部署策略
   strategy:
-    # 先将原有的服务杀掉重新部署
-    type: Recreate
+    # 滚动部署 
+    rollingUpdate:
+      # 最大可超出服务实列数的百分比 （比如最大4个实列，那么在部署时最大可启动6个实列）
+      # 注意：把百分号去掉指的时数量
+      maxSurge: 50%
+      # 最大不可用的服务实列数的百分比 （比如最大4个实列，那么最多只能有一个2实列不可用）
+      # 注意：把百分号去掉指的时数量
+      maxUnavailable: 50%
+    type: RollingUpdate
   selector:
     # 匹配标签（就是这个Deployment只管理带有app=springboot-demo标签的Pod）
     matchLabels:
       app: springboot-demo
-  # 部署实列数    
+  # 部署实列数 
   replicas: 2
   # 创建Pod的配置
   template:
@@ -31,13 +38,21 @@ spec:
         ports:
         # 注意：这个端口要和服务本身启动起来的端口相同
         - containerPort: 2019
-        # 健康检查的配置（pod存活的探针配置）
+        # 资源限制
+        resources:
+          requests:
+            memory: 1024Mi
+            cpu: 500m
+          limits:
+            memory: 2048Mi
+            cpu: 2000m
+        # 健康检查的配置（pod存活的探针配置）   
         livenessProbe:
           tcpSocket:
             port: 2019
           initialDelaySeconds: 20
           periodSeconds: 10
-          failureThreshold: 2
+          failureThreshold: 3
           successThreshold: 1
           timeoutSeconds: 5
         # 以下检查通过以后才会把服务挂载到负载均衡器（pod是否启动好的探针配置） 
@@ -46,8 +61,8 @@ spec:
             path: /host
             port: 2019
             scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 5
+          initialDelaySeconds: 20
+          periodSeconds: 10
           failureThreshold: 1
           successThreshold: 1
           timeoutSeconds: 5
@@ -86,10 +101,17 @@ spec:
           servicePort: 80
 ```
 
-#### 二、创建部署服务（先将原有的服务杀掉重新部署）
+#### 二、创建部署服务（先启动新服务再停止旧服务）
 ```bash
 # 部署服务
-$ kubectl apply -f deploy-simple-recreate.yaml
+$ kubectl apply -f deploy-simple-rollingupdate.yaml
+
+# 启动一个新服务以后执行该命令，可暂停部署，然后看看新服务是否有什么问题，如果没有问题可执行其它命令继续部署
+#$ kubectl rollout pause deploy springboot-demo -n dev   # 暂停 
+#$ kubectl rollout resume deploy springboot-demo -n dev  # 继续
+
+# 回滚部署（如果发现升级有问题，执行该命令，可快速回滚到上一个版本）
+#$ kubectl rollout undo deploy springboot-demo -n dev
 
 # 查看所有的Pod信息
 $ kubectl get pods -n dev
