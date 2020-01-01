@@ -12,10 +12,10 @@
 #### 十二、[Taint（污点<给Node加上特殊的标记，让Pod不能自动部署到该Node（节点）上，除非Pod容忍该污点才能部署在该节点上>）简单使用和说明][14]
 #### 十三、[部署时选择指定Node（节点）简单使用和说明][12]
 #### 十四、[部署时想和指定Pod部署在一起或多实列不要部署在同一台机器上简单使用和说明][13]
-#### 十五、[部署时选择指定Taint简单使用和说明][14]
-#### 十六、[健康检查和验证服务是否启动成功才对外提供服务（执行命令的方式）简单使用][15]
-#### 十七、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][16]
-#### 十八、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][17]
+#### 十五、[健康检查和验证服务是否启动成功才对外提供服务（执行命令的方式）简单使用][15]
+#### 十六、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][16]
+#### 十七、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][17]
+#### 十八、[创建部署（先将原有的服务杀掉重新部署）简单使用（不推荐生产使用）][18]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -35,5 +35,6 @@
 [15]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-cmd.md
 [16]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-http.md
 [17]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-tcp.md
+[18]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-recreate.md
 
 
