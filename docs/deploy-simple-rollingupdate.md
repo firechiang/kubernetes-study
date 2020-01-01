@@ -107,8 +107,8 @@ spec:
 $ kubectl apply -f deploy-simple-rollingupdate.yaml
 
 # 启动一个新服务以后执行该命令，可暂停部署，然后看看新服务是否有什么问题，如果没有问题可执行其它命令继续部署
-#$ kubectl rollout pause deploy springboot-demo -n dev   # 暂停 
-#$ kubectl rollout resume deploy springboot-demo -n dev  # 继续
+#$ kubectl rollout pause deploy springboot-demo -n dev    # 暂停 
+#$ kubectl rollout resume deploy springboot-demo -n dev   # 继续
 
 # 回滚部署（如果发现升级有问题，执行该命令，可快速回滚到上一个版本）
 #$ kubectl rollout undo deploy springboot-demo -n dev
