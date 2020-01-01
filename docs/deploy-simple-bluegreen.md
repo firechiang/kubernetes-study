@@ -5,7 +5,7 @@
  - 4: 创建新的Service
  - 5: 测试新的服务是否有问题
  - 6: 切换新的部署到旧的Service（俗称：切换流量）
- - 7: 删除新的Service和旧的部署
+ - 7: 删除新的Service和旧的部署（生产建议先不要删除旧的部署，等新的部署运行一段时间后才删除）
 #### 一、创建部署[vi deploy-simple-bluegreen-web.yaml]文件
 ```bash
 #deploy
@@ -348,7 +348,7 @@ springboot-demo       ClusterIP   10.254.48.197    <none>        80/TCP    10m
 springboot-demo-new   ClusterIP   10.254.239.224   <none>        80/TCP    5s
 ```
 
-#### 十二、删除新的Service和旧的部署（到此蓝绿部署完成）
+#### 十二、删除新的Service和旧的部署（生产建议先不要删除旧的部署，等新的部署运行一段时间后才删除）（到此蓝绿部署完成）
 ```bash
 # 删除新的Service
 $ kubectl delete -f deploy-simple-bluegreen-service-new.yaml
