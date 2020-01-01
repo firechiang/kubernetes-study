@@ -9,9 +9,13 @@
 #### 九、[Namespace（命名空间）简单使用和说明][9]
 #### 十、[Resources（资源限制）简单使用和说明][10]
 #### 十一、[Label（标签）简单使用和说明][11]
-#### 十二、[健康检查和验证服务是否启动成功才对外提供服务（执行命令的方式）简单使用][12]
-#### 十三、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][13]
-#### 十四、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][14]
+#### 十二、[Taint（污点<给Node加上特殊的标记，让Pod不能自动部署到该Node（节点）上，除非Pod容忍该污点才能部署在该节点上>）简单使用和说明][14]
+#### 十三、[部署时选择指定Node（节点）简单使用和说明][12]
+#### 十四、[部署时想和指定Pod部署在一起或多实列不要部署在同一台机器上简单使用和说明][13]
+#### 十五、[部署时选择指定Taint简单使用和说明][14]
+#### 十六、[健康检查和验证服务是否启动成功才对外提供服务（执行命令的方式）简单使用][15]
+#### 十七、[健康检查和验证服务是否启动成功才对外提供服务（HTTP请求的方式）简单使用][16]
+#### 十八、[健康检查和验证服务是否启动成功才对外提供服务（TCP的方式（检查端口是否处于监听状态））简单使用][17]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -25,8 +29,11 @@
 [9]: https://github.com/firechiang/kubernetes-study/tree/master/docs/namespace-simple.md
 [10]: https://github.com/firechiang/kubernetes-study/tree/master/docs/resources-simple.md
 [11]: https://github.com/firechiang/kubernetes-study/tree/master/docs/label-simple.md
-[12]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-cmd.md
-[13]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-http.md
-[14]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-tcp.md
+[12]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-select-node.md
+[13]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-select-pod.md
+[14]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-select-taint.md
+[15]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-cmd.md
+[16]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-http.md
+[17]: https://github.com/firechiang/kubernetes-study/tree/master/docs/health-simple-tcp.md
 
 
