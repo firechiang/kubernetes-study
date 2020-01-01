@@ -147,7 +147,7 @@ springboot-demo       ClusterIP   10.254.48.197    <none>        80/TCP    10m
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: springboot-demo
+  name: springboot-demo-new
   # Deployment指定部署在dev的Namespace下
   namespace: dev
 spec:
@@ -163,22 +163,23 @@ spec:
       maxUnavailable: 50%
     type: RollingUpdate
   selector:
-    # 匹配标签（就是这个Deployment只管理带有app=springboot-demo标签的Pod）
+    # 匹配标签（就是这个Deployment只管理带有app=springboot-demo-new标签的Pod）
     matchLabels:
-      app: springboot-demo
+      app: springboot-demo-new
   # 部署实列数     
   replicas: 2
   # 创建Pod的配置
   template:
     metadata:
-      # 为Pod打上app=springboot-demo标签（如果没有这个Deployment将无法部署）
+      # 为Pod打上app=springboot-demo-new标签（如果没有这个Deployment将无法部署）
       labels:
+        # 这个是旧的标签（为了让Service能找到） 
         app: springboot-demo
-        # 部署的版本（注意：新的部署一定要加版本控制）
-        version: v2.0
+        # 这个是新的标签
+        app: springboot-demo-new
     spec:
       containers:
-      - name: springboot-demo
+      - name: springboot-demo-new
         image: chiangfire/springboot-demo:20191122051537
         ports:
         # 注意：这个端口要和服务本身启动起来的端口相同
