@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-downwardapi
+  # 为pod自定义标签
+  labels:
+    app: downwardapi
+    type: webapp
+spec:
+  containers:
+  - name: web
+    image: chiangfire/springboot-demo:20191122051537
+    ports:
+    - containerPort: 2019
+    # 共享信息的挂载配置
+    volumeMounts:
+      # 指定要挂载的共享信息的名字（这个就是我们下面配置的那个）
+      - name: podinfo
+        # 共享信息挂载的目录
+        mountPath: /etc/podinfo
+  # 共享信息相关配置      
+  volumes:
+    # 共享信息的名字（注意：这个名字可以随便器）
+    - name: podinfo
+      projected:
+        # 共享信息的来源
+        sources:
+        # 通过downwardAPI（就是apiServer）获取共享信息（更多的信息可查看downwardAPI）
+        - downwardAPI:
+            items:
+              # 将pod的labels的值，赋给共享信息的labels
+              - path: "labels"
+                fieldRef:
+                  fieldPath: metadata.labels
+              # 将pod的name的值，赋给共享信息的name    
+              - path: "name"
+                fieldRef:
+                  fieldPath: metadata.name
+              # 将pod的namespace的值，赋给共享信息的namespace     
+              - path: "namespace"
+                fieldRef:
+                  fieldPath: metadata.namespace 
+              # 将pod的所使用的最大内存的值，赋给共享信息的memory-request    
+              - path: "memory-request"
+                resourceFieldRef:
+                  # 要获取那个容器的信息
+                  containerName: web
+                  # 具体要容器的哪一项信息
+                  resource: limits.memory

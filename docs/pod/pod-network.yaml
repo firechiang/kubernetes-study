@@ -3,11 +3,35 @@ kind: Pod
 metadata:
   name: pod-network
 spec:
+  # 是否使用宿主机的网络
+  #hostNetwork: true
+  # 是否使用宿主机的进程命名空间
+  #hostPID: true
+  # 为pod里面的容器添加host信息（其实就是修改host文件）
+  hostAliases:
+  # ip
+  - ip: "10.155.20.120"
+    hostnames:
+    # 这个ip要绑定的域名
+    - "maomoa.com"
+    - "tianjian.com"
   containers:
   - name: web
     image: chiangfire/springboot-demo:20191122051537
     ports:
     - containerPort: 2019
+    # 容器的生命周期相关配置
+    lifecycle:
+      # 容器启动时执行某些操作（注意：这个是和容器启动时，同时执行，并行的关系）
+      postStart:
+        # 容器启动时执行某个命令
+        exec:
+          command: ["java","-version"]
+      # 容器停止之前执行某些操作（注意：这个是容器停止之前执行，而且是同步执行的（就是这个执行完成以后，才会停止容器））
+      preStop:
+        # 容器停止之前执行某个命令（这个一般用来做容器的优雅退出）
+        exec:
+          command: ["java","-version"] 
   - name: nginx
     image: nginx:1.7.9
     ports:

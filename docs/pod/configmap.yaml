@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # 配置信息的名称
+  name: config-test
+data:
+  JAVA_OPTS: -Xms256m
+  LOG_LEVEL: DEBUG
