@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-volume
+spec:
+  containers:
+  - name: web
+    image: chiangfire/springboot-demo:20191122051537
+    ports:
+    - containerPort: 2019
+    # 将信息存储到名字为shared-volume的volumes所在目录（就是我们下面配置的/shared-volume-data；注意：/shared-nginx是容器里面所显示的挂载目录）
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /shared-web
+  - name: nginx
+    image: nginx:1.7.9
+    ports:
+    - containerPort: 80
+      hostPort: 80
+    # 将信息存储到名字为shared-volume的volumes所在目录（就是我们下面配置的/shared-volume-data；注意：/shared-nginx是容器里面所显示的挂载目录）
+    volumeMounts:
+    - name: shared-volume
+      mountPath: /shared-nginx
+  # pod存储相关配置 （注意：下面的这个目录是pod里面所有容器共享的）  
+  volumes:
+  # 存储的名称
+  - name: shared-volume
+    # 机器目录
+    hostPath:
+      path: /shared-volume-data
