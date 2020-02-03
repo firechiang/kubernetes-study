@@ -10,7 +10,8 @@
 #### 二、同一个Pod里面的容器是共享网络的，它们在启动的时候是通过pause中间容器做协调的，所以每个Pod里面都会有一个pause容器（注意：pause容器只是在Pod启动时做协调，Pod启动后pause容器将不再使用，也不占用资源）
 ```bash
 # 注意：这个配置文件里面有容器生命周期管理和怎么修改容器里面的host文件
-#（注意：修改host信息都是在pod层面修改，切记不能单独修改某个容器的host信息）
+# 注意：修改host信息都是在pod层面修改，切记不能单独修改某个容器的host信息
+# 注意：这个配置文件里面有容器启动或停止时自动执行其它命令
 $ kubectl create -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/docs/pod/pod-network.yaml
 
 # 查看所有的Pod（找到Pod具体运行在哪个节点上）
