@@ -2,7 +2,8 @@
 #### 二、[安装包的方式搭建Kubernetes集群（推荐使用）][4]
 #### 三、[简单测试集群的可用性][2]
 #### 四、[Kubernetes-Dashboard部署和简单使用（不推荐使用，建议使用RanCher）][3]
-#### 五、[Ingress（浏览器访问集群服务的桥梁，就是代理转发）部署（推荐使用）][7]
+#### 五、[Ingress（浏览器访问集群服务的桥梁，就是代理转发）部署（测试使用）][7]
+#### 五、[Ingress（浏览器访问集群服务的桥梁，就是代理转发）部署（生产使用）][23]
 #### 六、[私有镜像仓库Harbor单节点离线安装（推荐生产使用）][5]
 #### 七、[私有镜像仓库Harbor双主同步复制高可用离线安装][6]
 #### 八、[Kubernetes定时调度执行容器简单使用][8]
@@ -19,7 +20,7 @@
 #### 十九、[滚动部署（先启动新服务再停止旧服务）简单使用（推荐生产使用）][19]
 #### 二十、[蓝绿部署（新启动一个部署，等服务没有问题之后，再通过Service的Select将流量切到新的服务上来，最后删除旧的部署）简单使用（推荐生产使用）][20]
 #### 二一、[金丝雀部署（新旧版本同时存在，访问可能是旧的也可能是新的）简单使用][21]
-#### 二二、[pod相关（状态说明、网络共享、存储共享、容器启动或停止时自动执行其它命令、自定义host、自定义环境变量、通过downwardAPI获取pod的信息供容器使用、通过ApiServer将自定义的配置或文件分发给pod里面的容器使用）简单使用][22]
+#### 二二、[pod相关（状态说明、网络共享、存储共享、动态修改部署配置、容器启动或停止时自动执行其它命令、自定义host、自定义环境变量、通过downwardAPI获取pod的信息供容器使用、通过ApiServer将自定义的配置或文件分发给pod里面的容器使用）简单使用][22]
 
 
 [1]: https://github.com/firechiang/kubernetes-study/tree/master/docs/cluster-build-kubeadm.md
@@ -44,5 +45,6 @@
 [20]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-bluegreen.md
 [21]: https://github.com/firechiang/kubernetes-study/tree/master/docs/deploy-simple-bluegreen2.md
 [22]: https://github.com/firechiang/kubernetes-study/blob/master/docs/pod/pod-index.md
+[23]: https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build2.md
 
 

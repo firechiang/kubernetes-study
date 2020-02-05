@@ -224,8 +224,8 @@ spec:
       
 ---
 apiVersion: apps/v1
-# 部署相关信息
-kind: Deployment
+# 部署相关信息（DaemonSet=Node的守护进程）
+kind: DaemonSet
 metadata:
   name: nginx-ingress-controller
   # 指定命名空间
@@ -234,12 +234,18 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
 spec:
-  # 部署副本1
-  replicas: 1
+  # 节点选择（匹配标签）
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
       app.kubernetes.io/part-of: ingress-nginx
+  # 更新策略（重新部署模式，比如：滚动部署、蓝绿部署、金丝雀部署等等）
+  updateStrategy:
+    rollingUpdate:
+      # 停掉1个更新1个
+      maxUnavailable: 1
+    # 滚动更新  
+    type: RollingUpdate    
   template:
     metadata:
       labels:
