@@ -333,7 +333,7 @@ spec:
 # 获取集群所有的节点信息
 $ kubectl get nodes
 
-# 给某个节点打个标签，让Ingress-Nginx部署在该节点上
+# 给某个节点打个标签，让Ingress-Nginx部署在该节点上（注意：可以在多个节点上打上标签，都运行Ingress-Nginx）
 # 注意：上面部署文件里面配置了节点选择器，会部署在具有app=ingress-nginx标签的节点上
 # （可使用kubectl get nodes命令查看）
 #                     node名称       标签
