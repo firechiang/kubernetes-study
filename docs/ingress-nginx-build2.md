@@ -354,6 +354,11 @@ $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-nginx-deplo
 
 # 查看ingress-nginx部署信息（注意查看是不是部署在具有app=ingress-nginx标签的节点上）
 $ kubectl get all -n ingress-nginx
+
+# 查看ingress-nginx命名空间下所有的部署
+$ kubectl get DaemonSet -n ingress-nginx
+# 查看ingress-nginx命名空间下nginx-ingress-controller部署的详细配置
+$ kubectl get DaemonSet -n ingress-nginx nginx-ingress-controller -o yaml
 ```
 
 #### 七、测试 Ingress-Nginx（说明：其实就我们部署一个服务看看Ingress-Nginx能不能转发）
@@ -421,10 +426,5 @@ $ kubectl apply -f ingress-demo.yaml
 
 # 查看测试服务是否部署起来
 $ kubectl get pod -o wide
-
-# 查看ingress-nginx命名空间下所有的部署
-$ kubectl get deployment -n ingress-nginx
-# 查看ingress-nginx命名空间下nginx-ingress-controller部署的详细配置
-$ kubectl get deployment -n ingress-nginx nginx-ingress-controller -o yaml
 ```
 
