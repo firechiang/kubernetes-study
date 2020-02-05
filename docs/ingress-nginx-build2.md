@@ -563,7 +563,9 @@ spec:
       paths:
       - path: /
         backend:
+          # 要转发到的Service的名称
           serviceName: tomcat-demo
+          # 要转发到的Service的端口
           servicePort: 80
   # 证书配置
   tls:
@@ -582,7 +584,7 @@ $ kubectl create secret tls mooc-tls --key mooc.key --cert mooc.crt
 # 查看默认命名空间下所有的证书（注意：查看有没有我们刚刚创建的mooc-tls）
 $ kubectl get secrets -o wide
 
-# 重新启动测试服务
+# 重新启动测试服务（一切正常的话，就可以使用https了）
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-tls-test.yaml
 ```
 #### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
