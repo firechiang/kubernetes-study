@@ -57,11 +57,11 @@ spec:
             - --annotations-prefix=nginx.ingress.kubernetes.io
           # 共享信息配置 （注意：这个就是用来存储ingress-nginx配置模板文件的）
           volumeMounts:
-            # 信息挂载目录
-            - mountPath: /etc/nginx/template
-              # 要读取的共享信息的名字（注意：这个名字叫nginx-template-volume的共享信息我们在后面配置好了）
-              name: nginx-template-volume
-              readOnly: true   
+          # 信息挂载目录
+          - mountPath: /etc/nginx/template
+            # 要读取的共享信息的名字（注意：这个名字叫nginx-template-volume的共享信息我们在后面配置好了）
+            name: nginx-template-volume
+            readOnly: true   
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
