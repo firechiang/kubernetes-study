@@ -424,7 +424,34 @@ $ cd /home/kubernetes-deployment/ingress-nginx
 # 部署测试服务（apply表示修改或创建部署（也可以使用create代替），-f 表示指定部署配置文件）
 $ kubectl apply -f ingress-demo.yaml
 
-# 查看测试服务是否部署起来
+# 查看测试服务是否部署起来（注意：如果正常的话，请使用tomcat.mooc.com域名，访问一下看看能不能访问，可以的话说明ingress-nginx部署成功）
 $ kubectl get pod -o wide
+```
+##### 7.3、创建单独测试代理配置文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml]注意：这个只是测试ingress-nginx单独代理转发（可以不测试）
+```bash
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: tcp-services
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+data:
+  # 在ingress-nginx的机器上暴露一个端口30000
+  # 当访问30000端口时，将代理到namespace（命名空间）为default下的Service名字为tomcat-demo，Service端口为80的服务上
+  # 注意：下面这个被代理的服务我们在上面已经创建好了
+  "30000": default/tomcat-demo:80  
+```
+```bash
+# 创建代理
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml
+
+# 找到ingress-nginx运行的节点
+$ kubectl get pods -n ingress-nginx -o wide
+
+# 在ingress-nginx的运行节点上执行，看看是否班绑定端口30000（正常是要有的）
+# 直接使用ingress-nginx运行节点的IP加30000端口正常可以访问，说明单独代理配置成功
+$ netstat -ntlp
 ```
 
