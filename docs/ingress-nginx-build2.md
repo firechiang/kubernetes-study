@@ -563,7 +563,7 @@ spec:
       paths:
       - path: /
         backend:
-          # 要转发到的Service的名称
+          # 要转发到的Service的名称（注意：这个Service要提前创建好，我们的这个Service在最上面的测试环节就已经创建好了）
           serviceName: tomcat-demo
           # 要转发到的Service的端口
           servicePort: 80
