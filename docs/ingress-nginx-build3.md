@@ -37,6 +37,18 @@ spec:
       serviceAccountName: nginx-ingress-serviceaccount
       # host网络模式运行（注意：这个配置是新加的，目的是提高网络效率（没有转发）和绑定宿主机端口，以对外提供服务）
       hostNetwork: true
+      # 共享信息（注意：在这里面主要是用来存储ingress-nginx的配置信息）            
+      volumes:
+        # 共享信息的名称（这个名称可以随便起）
+	    - name: nginx-template-volume
+	      configMap:
+	        # 要读取的configmap的名称（注意：这个configmap要提前创建好） 
+	        name: nginx-template
+	        items:
+	        # 要读取的configmap的key
+	        - key: nginx.tmpl
+	          # 要读取的configmap的文件所在路径
+	          path: nginx.tmpl   
       # 节点选择器
       nodeSelector:
         #kubernetes.io/os: linux
@@ -109,6 +121,7 @@ spec:
               exec:
                 command:
                   - /wait-shutdown
+<<<<<<< HEAD
       # 共享信息（注意：在这里面主要是用来存储ingress-nginx的配置信息）            
       volumes:
       # 共享信息的名称（这个名称可以随便起）
@@ -121,6 +134,8 @@ spec:
           - key: nginx.tmpl
 	    # 要读取的configmap的文件所在路径
 	    path: nginx.tmpl              
+=======
+>>>>>>> fix
 ```
 #### 二、修改nginx-ingress-controlle的部署信息（注意：一定是先部署好了ingress-nginx，拿着上面的配置文件来修改，而不是拿着上面的配置文件来部署ingress-nginx）
 ```bash
@@ -145,4 +160,5 @@ $ kubectl get configmap -n ingress-nginx
 # 查看名字叫nginx-template的configmap的详细配置
 $ kubectl get configmap nginx-template -n ingress-nginx -o yaml
 
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/nginx-ingress-controlle.yaml
 ```
