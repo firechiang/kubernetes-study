@@ -1,0 +1,59 @@
+#deploy
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-canary-a
+  namespace: canary
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: web-canary-a
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-canary-a
+    spec:
+      containers:
+      - name: web-canary-a
+        image: chiangfire/springboot-demo:20191122051537
+        ports:
+        - containerPort: 2019
+        livenessProbe:
+          tcpSocket:
+            port: 2019
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /host
+            port: 2019
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          failureThreshold: 1
+          successThreshold: 1
+          timeoutSeconds: 5
+---
+#service
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-canary-a
+  namespace: canary
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 2019
+  selector:
+    app: web-canary-a
+  type: ClusterIP

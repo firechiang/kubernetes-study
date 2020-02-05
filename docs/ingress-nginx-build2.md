@@ -270,7 +270,8 @@ spec:
           # 指定阿里云的镜像
           #image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.26.1
           image: registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller:0.26.1
-          # 配置容器运行参数
+          # ingress-nginx运行命令（--表示的是参数）
+          # 更多运行参数，可等ingress-nginx跑起来之后进入其容器，执行命令：/nginx-ingress-controller --help 查看
           args:
             - /nginx-ingress-controller
             - --configmap=$(POD_NAMESPACE)/nginx-configuration
@@ -278,6 +279,10 @@ spec:
             - --udp-services-configmap=$(POD_NAMESPACE)/udp-services
             - --publish-service=$(POD_NAMESPACE)/ingress-nginx
             - --annotations-prefix=nginx.ingress.kubernetes.io
+            # 指定https证书（注意：default表示Secret的命名空间，mooc-tls表示Secret证书的名称）
+            # 注意：mooc-tls证书要提前创建好
+            # 注意：这里好像不需要指定证书，在单独的服务上指定即可，最下面有详细的证书使用方法（如果不行再到这里也指定https证书）
+            #- --default-ssl-certificate=default/mooc-tls
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
@@ -575,7 +580,7 @@ spec:
     # 证书的名称（就是Secret的名称，注意：Secret要提前创建好）
     secretName: mooc-tls
 ```    
-```bash  
+```bash 
 $ mkdir -p /home/ingress-nginx-tls && cd /home/ingress-nginx-tls
 # 创建证书（如果有的话就不用执行了）
 $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mooc.key -out mooc.crt -subj "/CN=*.mooc.com/O=*.mooc.com"
@@ -583,9 +588,50 @@ $ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mooc.key -out mooc
 $ kubectl create secret tls mooc-tls --key mooc.key --cert mooc.crt
 # 查看默认命名空间下所有的证书（注意：查看有没有我们刚刚创建的mooc-tls）
 $ kubectl get secrets -o wide
+# 查看证书的详细信息
+$ kubectl get secret mooc-tls -o yaml
 
 # 重新启动测试服务（一切正常的话，就可以使用https了）
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-tls-test.yaml
+```
+
+#### 十一、Ingress-Nginx Session保持（后端多个服务，一个用户始终请求同一个同一个服务）简单使用[vi /home/kubernetes-deployment/ingress-nginx/ingress-session-test1.yaml]
+```bash
+#ingress
+apiVersion: extensions/v1beta1
+# Ingress 相关配置
+kind: Ingress
+metadata:
+  annotations:
+    # 自定义http response头信息（注意：这是为单个服务配置头信息，而不是全局的）
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Request-Id: $req_id";
+    # Session保持的配置（Session保持方式使用cookie）  
+    nginx.ingress.kubernetes.io/affinity: cookie
+    # Session保持的配置（Session保持生成cookie的方式）
+    nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+    # Session保持的配置（Session保持cookie的名称）
+    nginx.ingress.kubernetes.io/session-cookie-name: route
+  name: tomcat-demo
+  namespace: default
+spec:
+  # 转发规则
+  rules:
+  # 配置转发域名，注意修改（当访问这个域名的时候，会自动转发到当前这个服务）
+  # 注意：这个域名绑定的IP需是装有ingress-nginx的节点，如果没有公网域名，可配置主机host域名测试
+  - host: tomcat.mooc.com
+    http:
+      paths:
+      - path: /
+        backend:
+          # 要转发到的Service的名称（注意：这个Service要提前创建好，我们的这个Service在最上面的测试环节就已经创建好了）
+          serviceName: tomcat-demo
+          # 要转发到的Service的端口
+          servicePort: 80
+```    
+```bash 
+# 重新启动测试服务（一切正常的话，查看Request Headers里面一项 cookie: route=1580893009.782.38.964092）
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-session-test1.yaml
 ```
 #### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
