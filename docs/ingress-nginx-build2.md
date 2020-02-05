@@ -565,16 +565,24 @@ spec:
         backend:
           serviceName: tomcat-demo
           servicePort: 80
-  # 证书配置        
+  # 证书配置
   tls:
   - hosts:
-    # 证书的名称（就是Secret的名称，注意：Secret要提前创建好）
-    secretName: mooc-tls
     # 证书要作用在哪些域名上
     - tomcat.mooc.com
-```
-```bash
+    # 证书的名称（就是Secret的名称，注意：Secret要提前创建好）
+    secretName: mooc-tls
+```bash  
+$ mkdir -p /home/ingress-nginx-tls && cd /home/ingress-nginx-tls
+# 创建证书（如果有的话就不用执行了）
+$ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout mooc.key -out mooc.crt -subj "/CN=*.mooc.com/O=*.mooc.com"
+# 创建名字叫mooc-tls的Secret（证书）
+$ kubectl create secret tls mooc-tls --key mooc.key --cert mooc.crt
+# 查看默认命名空间下所有的证书（注意：查看有没有我们刚刚创建的mooc-tls）
+$ kubectl get secrets -o wide
 
+# 重新启动测试服务
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-tls-test.yaml
 ```
 #### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
