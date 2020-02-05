@@ -540,5 +540,41 @@ $ ps -ef
 # 注意：ingress-nginx和nginx的配置项可能不是一一对应的
 $ more /etc/nginx/nginx.conf
 ```
-#### 十、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
+#### 十、Ingress-Nginx配置证书（使用HTTS）简单使用[vi /home/kubernetes-deployment/ingress-nginx/ingress-tls-test.yaml]
+```bash
+#ingress
+apiVersion: extensions/v1beta1
+# Ingress 相关配置
+kind: Ingress
+metadata:
+  annotations:
+    # 自定义http response头信息（注意：这是为单个服务配置头信息，而不是全局的）
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Request-Id: $req_id";
+  name: tomcat-demo
+  namespace: default
+spec:
+  # 转发规则
+  rules:
+  # 配置转发域名，注意修改（当访问这个域名的时候，会自动转发到当前这个服务）
+  # 注意：这个域名绑定的IP需是装有ingress-nginx的节点，如果没有公网域名，可配置主机host域名测试
+  - host: tomcat.mooc.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tomcat-demo
+          servicePort: 80
+  # 证书配置        
+  tls:
+  - hosts:
+    # 证书的名称（就是Secret的名称，注意：Secret要提前创建好）
+    secretName: mooc-tls
+    # 证书要作用在哪些域名上
+    - tomcat.mooc.com
+```
+```bash
+
+```
+#### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
