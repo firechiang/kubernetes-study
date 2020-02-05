@@ -328,7 +328,6 @@ spec:
 
 ---
 ```
-#### 六、部署Ingress-Nginx
 ```bash
 # 获取集群所有的节点信息
 $ kubectl get nodes
@@ -361,8 +360,8 @@ $ kubectl get DaemonSet -n ingress-nginx
 $ kubectl get DaemonSet -n ingress-nginx nginx-ingress-controller -o yaml
 ```
 
-#### 七、测试 Ingress-Nginx（说明：其实就我们部署一个服务看看Ingress-Nginx能不能转发）
-##### 7.1、创建测试部署文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-demo.yaml]注意：如果文件内容没有格式化，可以在编辑状态下使用：:set paste 命令格式化
+#### 六、测试 Ingress-Nginx（说明：其实就我们部署一个服务看看Ingress-Nginx能不能转发）
+##### 6.1、创建测试部署文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-demo.yaml]注意：如果文件内容没有格式化，可以在编辑状态下使用：:set paste 命令格式化
 ```bash
 #deploy
 apiVersion: apps/v1
@@ -404,6 +403,10 @@ apiVersion: extensions/v1beta1
 # Ingress 相关配置
 kind: Ingress
 metadata:
+  annotations:
+    # 自定义http response头信息（注意：这是为单个服务配置头信息，而不是全局的）
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Request-Id: $req_id";
   name: tomcat-demo
 spec:
   rules:
@@ -417,7 +420,7 @@ spec:
           serviceName: tomcat-demo
           servicePort: 80
 ```
-##### 7.2、部署测试服务，测试ingress-nginx是否可用（说明：使用部署测试服务，配置文件里面配置的ingress域名访问，看看会不会转发到当前服务上来）
+##### 6.2、部署测试服务，测试ingress-nginx是否可用（说明：使用部署测试服务，配置文件里面配置的ingress域名访问，看看会不会转发到当前服务上来）
 ```bash
 $ cd /home/kubernetes-deployment/ingress-nginx
 
@@ -427,7 +430,7 @@ $ kubectl apply -f ingress-demo.yaml
 # 查看测试服务是否部署起来（注意：如果正常的话，请使用tomcat.mooc.com域名，访问一下看看能不能访问，可以的话说明ingress-nginx部署成功）
 $ kubectl get pod -o wide
 ```
-##### 7.3、创建单独测试代理配置文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml]注意：这个只是测试ingress-nginx单独代理转发（注意：可以不测试）
+#### 七、单独使用Ingress-Nginx代理[vi /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml]，（注意：这个只是测试ingress-nginx单独代理转发，可以不测试）
 ```bash
 kind: ConfigMap
 apiVersion: v1
@@ -447,6 +450,9 @@ data:
 # 创建代理
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml
 
+# 查看命名空间ingress-nginx下，所有的configmap的配置（看看是否有我们上面创建的那个）
+$ kubectl get configmap -n ingress-nginx
+
 # 找到ingress-nginx运行的节点
 $ kubectl get pods -n ingress-nginx -o wide
 
@@ -454,4 +460,85 @@ $ kubectl get pods -n ingress-nginx -o wide
 # 直接使用ingress-nginx运行节点的IP加30000端口正常可以访问，说明单独代理配置成功
 $ netstat -ntlp
 ```
+
+#### 八、修改Ingress-Nginx配置简单使用[vi /home/kubernetes-deployment/ingress-nginx/ingress-config-test.yaml]，[官网详细配置项](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/)
+```bash
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-configuration
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+data:
+  # 要修改的配置项（详细的配置项请查看官网:https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/）
+  proxy-body-size: "64m"
+  proxy-read-timeout: "180"
+  proxy-send-timeout: "180"  
+```
+```bash
+# 修改Ingress-Nginx配置
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-config-test.yaml
+
+# 到ingress-Nginx运行节点上执行（找到ingress-nginx容器）
+$ docker ps | grep ingress-nginx
+# 进入到ingress-nginx容器内
+$ docker exec -it 339c055858b8 sh
+# 找到ingress-nginx进程，并找到nginx配置文件
+$ ps -ef
+# 可使用 / 搜索 64m，查看配置文件是否有我们上面修改的配置项（proxy-body-size = client_max_body_size 64m;）
+# 注意：ingress-nginx和nginx的配置项可能不是一一对应的
+$ more /etc/nginx/nginx.conf
+```
+
+#### 九、修改Ingress-Nginx全局Header（头）信息简单使用[vi /home/kubernetes-deployment/ingress-nginx/ingress-header1-test.yaml]
+```bash
+apiVersion: v1
+kind: ConfigMap
+data:
+  # 具体要添加的head（头）信息
+  X-Different-Name: "true"
+  X-Request-Start: t=${msec}
+  X-Using-Nginx-Controller: "true"
+metadata:
+  # configmap的名称
+  name: custom-headers
+  # configmap所属的命名空间
+  namespace: ingress-nginx
+---
+apiVersion: v1
+kind: ConfigMap
+data:
+  # 将命名空间ingress-nginx下，名字叫custom-headers的configmap的所有配置项，添加到ingress-nginx的全局头信息里面
+  # 注意：custom-headers的configmap在上面有配置
+  # 注意：如果设置失败，将下面的双引号去掉，再试试
+  proxy-set-headers: "ingress-nginx/custom-headers"
+  add-headers: "ingress-nginx/custom-headers"
+metadata:
+  name: nginx-configuration
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+```
+```bash
+# 修改Ingress-Nginx配置
+# 注意：如果修改失败（可通过ingress-nginx日志查看到是否执行成功），可将配置文件里面的"ingress-nginx/custom-headers"的双引号去掉再试一试
+$ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-header1-test.yaml
+
+# 查看命名空间ingress-nginx下所有的configmap（看看有没有我们上面创建的那个custom-headers）
+$ kubectl get configmap -n ingress-nginx
+
+# 到ingress-Nginx运行节点上执行（找到ingress-nginx容器）
+$ docker ps | grep ingress-nginx
+# 进入到ingress-nginx容器内
+$ docker exec -it 339c055858b8 sh
+# 找到ingress-nginx进程，并找到nginx配置文件
+$ ps -ef
+# 可使用 / 搜索 proxy_set_header，查看配置文件是否有我们上面修改的配置项（proxy_set_header X-Different-Name "true";）
+# 注意：ingress-nginx和nginx的配置项可能不是一一对应的
+$ more /etc/nginx/nginx.conf
+```
+#### 十、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
