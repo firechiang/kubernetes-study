@@ -1,4 +1,4 @@
-#### 一、修改nginx-ingress-controlle的配置文件[vi /home/kubernetes-deployment/ingress-nginx/nginx-ingress-controlle.yaml]
+#### 一、修改nginx-ingress-controlle的配置文件[vi /home/kubernetes-deployment/ingress-nginx/nginx-ingress-controlle.yaml]，[官方参考文档](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/custom-template/)
 ```bash
 apiVersion: apps/v1
 # 部署相关信息（DaemonSet=Node的守护进程）
@@ -122,7 +122,7 @@ spec:
                 command:
                   - /wait-shutdown
 ```
-#### 二、修改nginx-ingress-controlle的部署信息（注意：一定是先部署好了ingress-nginx，拿着上面的配置文件来修改，而不是拿着上面的配置文件来部署ingress-nginx）
+#### 二、修改nginx-ingress-controlle的部署信息（注意：一定是先部署好了ingress-nginx，拿着上面的配置文件来修改，而不是拿着上面的配置文件来部署ingress-nginx），[官方参考文档](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/custom-template/)
 ```bash
 # 找到ingress-nginx运行节点
 $ kubectl get pods -n ingress-nginx -o wide
@@ -145,5 +145,23 @@ $ kubectl get configmap -n ingress-nginx
 # 查看名字叫nginx-template的configmap的详细配置
 $ kubectl get configmap nginx-template -n ingress-nginx -o yaml
 
+# 修改并重启nginx-ingress-controlle服务
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/nginx-ingress-controlle.yaml
+
+# 修改名字叫nginx-template的configmap（注意：修改这个模板就会自动修改ingress-nginx的配置文件）
+# 测试将 types_hash_max_size 配置修改成 4096;
+$ kubectl edit configmap nginx-template -n ingress-nginx
+
+# 到ingress-Nginx运行节点上执行（找到ingress-nginx容器）
+$ docker ps | grep ingress-nginx
+# 进入到ingress-nginx容器内
+$ docker exec -it 339c055858b8 sh
+# 查看容器里面的模板文件是否已经修改了
+# 可使用 / 搜索 types_hash_max_size 看看是不是变成4096了
+$ more /etc/nginx/template/nginx.tmpl
+# 找到ingress-nginx进程，并找到nginx配置文件
+$ ps -ef
+# 查看nginx的配置文件看看变了没有（注意：nginx的配置文件是不会变的，这也是不推荐使用模板文件来修改ingress-nginx配置的原因）
+# 注意：要想ingress-nginx配置文件也修改，只需要执行：kubectl apply -f /home/kubernetes-deployment/ingress-nginx/nginx-ingress-controlle.yaml （重新启动ingress-nginx即可）
+$ more /etc/nginx/nginx.conf
 ```
