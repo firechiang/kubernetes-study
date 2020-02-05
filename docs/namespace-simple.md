@@ -2,6 +2,7 @@
  - 资源对象的隔离，比如：Service，Deployment， Pod
  - 资源配额的隔离，比如：CPU，Memory
 ```bash
+$ kubectl create namespace dev          # 创建dev命名空间
 $ kubectl get namespaces                # 获取所有的命名空间
 $ kubectl get pods -n default           # 获取default命名空间下所有的pod（-n就是指定命名空间）
 $ kubectl get all -n default            # 获取default命名空间下的所有东西
