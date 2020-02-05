@@ -1,0 +1,23 @@
+#ingress
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-canary-b
+  namespace: canary
+  annotations:
+    # 启动流量控制
+    nginx.ingress.kubernetes.io/canary: "true"
+    # 20%的流量会转发到当前这个新服务上来（注意：旧服务和新服务是同一个域名）
+    nginx.ingress.kubernetes.io/canary-weight: "20"
+spec:
+  rules:
+  # 访问这个域名即可访问服务
+  - host: canary.mooc.com
+    http:
+      paths:
+      - path: /
+        backend:
+          # 要转发Service的名称（注意：这个Service要提前创建好，我们的这个在上面已经创建好了）
+          serviceName: web-canary-b
+          # 要转发Service的端口
+          servicePort: 80

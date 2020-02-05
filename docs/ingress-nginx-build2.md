@@ -633,5 +633,37 @@ spec:
 # 重新启动测试服务（一切正常的话，查看Request Headers里面一项 cookie: route=1580893009.782.38.964092）
 $ kubectl apply -f /home/kubernetes-deployment/ingress-nginx/ingress-session-test1.yaml
 ```
+#### 十二、Ingress-Nginx流量切换（新旧版本同时存在，将旧版本的流量切一些到新版本上面来）简单使用
+```bash
+# 创建名字叫canary的命名空间（这个命名空间供下面的两个服务使用）
+$ kubectl create namespace canary
+# 部署服务A
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/web-canary-a.yaml
+# 部署服务B
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/web-canary-b.yaml
+
+# 查看上面的两个服务是否部署起来
+$ kubectl get pods -n canary -o wide
+
+# 将web-canary-a服务挂载到Ingress-Nginx上（测试访问：http://canary.mooc.com/host）
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-common.yaml
+```
+##### 12.1、将新版本web-canary-a服务，挂载到Ingress-Nginx上（注意：这个里面有切换的配置（就是会切一部份的流量到这个新版本上面来），测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-weight.yaml
+```
+##### 12.2、使用cookie做流量定向（就是只要请求链接里面带了名字叫web-canary的cookie且值为always，流量就会转发到新版本上来），测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-cookie.yaml
+```
+##### 12.3、使用header做流量定向（就是只要请求头里面带了web-canary且值为always，流量就会转发到新版本上来），测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-header.yaml
+```
+##### 12.4、只要请求头或cookie里面包含web-canary且值为always，就会将流量转发到新版本上来。如果都没有就将流量的30%转发到新版本上来（测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
+```bash
+$ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-compose.yaml
+```
+
 #### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
