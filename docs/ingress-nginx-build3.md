@@ -113,12 +113,12 @@ spec:
       volumes:
       # 共享信息的名称（这个名称可以随便起）
       - name: nginx-template-volume
-        configMap:
+        configMap: 
 	  # 要读取的configmap的名称（注意：这个configmap要提前创建好） 
 	  name: nginx-template
 	  items:
 	  # 要读取的configmap的key
-	  - key: nginx.tmpl
+          - key: nginx.tmpl
 	    # 要读取的configmap的文件所在路径
 	    path: nginx.tmpl              
 ```
