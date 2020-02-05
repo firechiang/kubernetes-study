@@ -572,6 +572,7 @@ spec:
     - tomcat.mooc.com
     # 证书的名称（就是Secret的名称，注意：Secret要提前创建好）
     secretName: mooc-tls
+```    
 ```bash  
 $ mkdir -p /home/ingress-nginx-tls && cd /home/ingress-nginx-tls
 # 创建证书（如果有的话就不用执行了）
