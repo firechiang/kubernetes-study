@@ -652,7 +652,7 @@ $ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-weight.yaml
 ```
-##### 12.2、使用cookie做流量定向（就是只要请求链接里面带了名字叫web-canary的cookie且值为always，流量就会转发到新版本上来），测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
+##### 12.2、使用cookie做流量定向（设置cookie：document.cookie="web-canar=always"）（就是只要请求链接里面带了名字叫web-canary的cookie且值为always，流量就会转发到新版本上来），测试访问：http://canary.mooc.com/host 看看是否有流量切换的效果）
 ```bash
 $ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-cookie.yaml
 ```
