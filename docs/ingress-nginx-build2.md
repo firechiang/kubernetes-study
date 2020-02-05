@@ -427,7 +427,7 @@ $ kubectl apply -f ingress-demo.yaml
 # 查看测试服务是否部署起来（注意：如果正常的话，请使用tomcat.mooc.com域名，访问一下看看能不能访问，可以的话说明ingress-nginx部署成功）
 $ kubectl get pod -o wide
 ```
-##### 7.3、创建单独测试代理配置文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml]注意：这个只是测试ingress-nginx单独代理转发（可以不测试）
+##### 7.3、创建单独测试代理配置文件[vi /home/kubernetes-deployment/ingress-nginx/ingress-proxy-test.yaml]注意：这个只是测试ingress-nginx单独代理转发（注意：可以不测试）
 ```bash
 kind: ConfigMap
 apiVersion: v1
