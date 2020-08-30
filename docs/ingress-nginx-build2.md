@@ -665,5 +665,5 @@ $ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study
 $ kubectl apply -f https://raw.githubusercontent.com/firechiang/kubernetes-study/master/yamls/ingress-compose.yaml
 ```
 
-#### 十一、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
+#### 十三、[使用模板文件的方式修改Ingress-Nginx的配置（可修改nginx参数以及头信息等等，注意：因每次修改需要重启Ingress-Nginx才会生效，故不推荐使用）](https://github.com/firechiang/kubernetes-study/tree/master/docs/ingress-nginx-build3.md)
 
