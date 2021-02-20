@@ -139,17 +139,19 @@ http {
             index index.html index.htm;
         }
 	# 不带字符匹配地址（匹配优先级5（最最低））
+	# 注意：地址最后没有带/，表示把/index当成目录地址也当成文件地址处理（就是如果直接访问/index，会在/的映射目录下找index文件）
         location /index {
             # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
             alias /html/index.html/;
         }
 	# = 表示精准匹配地址(注意：这个可以匹配到以/index1/开头的地址)（匹配优先级1（最高））
+	# 注意：地址最后带了/，表示只把/index1当成目录地址处理，而不是文件地址（就是如果直接访问/index1，不会在/的映射目录下找index1文件）
 	location = /index1/ {
             root  html;
             index index.html index.htm;
         }
 	# ^~ 表示匹配到即停止搜索匹配地址（比如请求 /index4/test 地址也会映射到如下目录，因为/index4已经匹配到了，它就会停止向下搜索）（匹配优先级2（其次））
-	location ^~ /index4/ {
+	location ^~ /index4 {
             root  html;
             index index.html index.htm;
         }
