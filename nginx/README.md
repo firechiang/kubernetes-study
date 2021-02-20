@@ -131,12 +131,15 @@ http {
 	# 服务主机名或域名（可以写多个用空格隔开，可以用通配符配置比如 *.nginx.com或~^www\.nginx\..*$。(注意：~开头表示以正则表达式方式匹配)）
 	# 匹配的优先级是 1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配
         server_name  localhost;
-		 
+	
+	#
+	# 不带字符匹配地址
         location / {
             # 前端请求 /admin 会映射到 html/admin文件夹，html默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
             root  html;
             index index.html index.htm;
         }
+	# 不带字符匹配地址
         location /index {
             # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
             alias /html/index.html/;
