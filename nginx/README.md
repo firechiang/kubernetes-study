@@ -165,6 +165,19 @@ http {
             root  html;
             index index.html index.htm;
         }
+	
+	# 配置当前server段nginx监控api的地址，就是客户端请求这个地址会得到nginx监控的相关信息如下
+	# Active Connections 活跃的连接数（包括正在处理和等待处理的连接数），在nginx服务器里面想要获取该值，它的内嵌变量是${connections_active}
+	# accepts            已接受的客户端连接总数量（累计增加）
+	# handled            已处理的客户端连接总数量（累计增加）
+	# requests           客户端总的请求数（累计增加）
+	# Reading            读取客户端数据的连接数（就是正在接收客户端数据的连接数），在nginx服务器里面想要获取该值，它的内嵌变量是${connections_reading}
+	# Writing            响应数据到客户端的连接数（就是正在发送数据到客户端的连接数），在nginx服务器里面想要获取该值，它的内嵌变量是${connections_writing}
+	# Waiting            正在等待处理的请求连接数，在nginx服务器里面想要获取该值，它的内嵌变量是${connections_waiting}
+	location /monitor_api {
+	    # 标识该地址是监控api（注意：如果nginx的版本低于1.7.5请使用 stub_status on 开启监控api）
+	    stub_status
+        }
     }
 }
 ```
