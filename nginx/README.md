@@ -141,7 +141,7 @@ http {
             # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
             alias /html/index.html/;
         }
-	# = 表示精准匹配地址
+	# = 表示精准匹配地址(注意：这个可以匹配到以/index1/开头的地址)
 	location = /index1/ {
             root  html;
             index index.html index.htm;
