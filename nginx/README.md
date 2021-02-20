@@ -141,6 +141,26 @@ http {
             # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
             alias /html/index.html/;
         }
+	# = 表示精准匹配地址
+	location = /index1/ {
+            root  html;
+            index index.html index.htm;
+        }
+        # ~ 表示以正则表达式区分大小写匹配地址
+	location ~ \.(jpeg|jpg)$ {
+            root  html;
+            index index.html index.htm;
+        }
+	# ~* 表示以正则表达式不区分大小写匹配地址
+	location ~* \.(jpeg|jpg)$ {
+            root  html;
+            index index.html index.htm;
+        }
+	# ^~ 表示匹配到即停止搜索匹配地址
+	location ^~ /index4/ {
+            root  html;
+            index index.html index.htm;
+        }
     }
 }
 ```
