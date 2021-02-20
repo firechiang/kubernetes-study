@@ -132,35 +132,34 @@ http {
 	# 匹配的优先级是 1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配
         server_name  localhost;
 	
-	# location匹配的优先级 1 =符号（优先级最高），2 ^~符号，3 ~符号，4 ~*符号，5 不带字符匹配地址优先级最低
-	# 不带字符匹配地址
+	# 不带字符匹配地址（匹配优先级5（最最低））
         location / {
             # 前端请求 /admin 会映射到 html/admin文件夹，html默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
             root  html;
             index index.html index.htm;
         }
-	# 不带字符匹配地址
+	# 不带字符匹配地址（匹配优先级5（最最低））
         location /index {
             # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
             alias /html/index.html/;
         }
-	# = 表示精准匹配地址(注意：这个可以匹配到以/index1/开头的地址)
+	# = 表示精准匹配地址(注意：这个可以匹配到以/index1/开头的地址)（匹配优先级1（最高））
 	location = /index1/ {
             root  html;
             index index.html index.htm;
         }
-        # ~ 表示以正则表达式区分大小写匹配地址
+	# ^~ 表示匹配到即停止搜索匹配地址（比如请求 /index4/test 地址也会映射到如下目录，因为/index4已经匹配到了，它就会停止向下搜索）（匹配优先级2（其次））
+	location ^~ /index4/ {
+            root  html;
+            index index.html index.htm;
+        }
+        # ~ 表示以正则表达式区分大小写匹配地址（匹配优先级3（较低））
 	location ~ \.(jpeg|jpg)$ {
             root  html;
             index index.html index.htm;
         }
-	# ~* 表示以正则表达式不区分大小写匹配地址
+	# ~* 表示以正则表达式不区分大小写匹配地址（匹配优先级4（最低））
 	location ~* \.(jpeg|jpg)$ {
-            root  html;
-            index index.html index.htm;
-        }
-	# ^~ 表示匹配到即停止搜索匹配地址（比如请求 /index4/test 地址也会映射到如下目录，因为/index4已经匹配到了，它就会停止向下搜索）
-	location ^~ /index4/ {
             root  html;
             index index.html index.htm;
         }
