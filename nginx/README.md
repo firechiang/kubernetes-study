@@ -106,44 +106,44 @@ events {
 }
 
 http {
-     # 以下的单个配置也可以出现在server里面，只不过在server里面优先级更高
+    # 以下的单个配置也可以出现在server里面，只不过在server里面优先级更高
     include      mime.types;
-	 default_type application/octet-stream;
+    default_type application/octet-stream;
     charset      utf-8;
 	
-	 #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-	 #                  '$status $body_bytes_sent "$http_referer" '
-	 #                  '"$http_user_agent" "$http_x_forwarded_for"';
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
 	
-	 #access_log  logs/access.log  main;
+    #access_log  logs/access.log  main;
 	
     sendfile        on;
-	 #tcp_nopush     on;
+    #tcp_nopush     on;
 	
-	 # 长连接超时时间（单位秒）;
+    # 长连接超时时间（单位秒）;
     keepalive_timeout  65;
 	
-	 #gzip  on;
-     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
+    #gzip  on;
+    # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
     server {
-          # 服务监听地址（可写域名）和端口（注意：没写地址默认是0.0.0.0，没写端口默认是80）
-	     listen       127.0.0.1:80;
-	      # 服务主机名或域名（可以写多个用空格隔开，可以用通配符配置比如 *.nginx.com或~^www\.nginx\..*$。(注意：~开头表示以正则表达式方式匹配)）
-	      # 匹配的优先级是 1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配
-		  server_name  localhost;
+        # 服务监听地址（可写域名）和端口（注意：没写地址默认是0.0.0.0，没写端口默认是80）
+	listen       127.0.0.1:80;
+	# 服务主机名或域名（可以写多个用空格隔开，可以用通配符配置比如 *.nginx.com或~^www\.nginx\..*$。(注意：~开头表示以正则表达式方式匹配)）
+	# 匹配的优先级是 1 精确匹配，2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配
+        server_name  localhost;
 		 
         location / {
-		       # 前端请求 / 会映射到 html文件夹，默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
+            # 前端请求 / 会映射到 html文件夹，默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
             root  html;
-               # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
+            # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
             #alias /html/index.html
             index index.html index.htm;
-          }
+        }
         location /index {
-                # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
+            # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
             alias /html/index.html
-          }
-     }
+        }
+    }
 }
 ```
 
