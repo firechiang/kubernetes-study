@@ -177,7 +177,7 @@ http {
 	location /monitor_api {
 	    # 标识该地址是监控api（注意：如果nginx的版本低于1.7.5请使用 stub_status on 开启监控api）
 	    # 注意：这个需要在nginx编译期间将该模块编译进nginx才可以使用（可使用命令 nginx -V 查看是否有 --with-http_stub_status_module 参数来判断该模块是否已被编译进nginx）
-	    stub_status
+	    stub_status;
         }
     }
 }
