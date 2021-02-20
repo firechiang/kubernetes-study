@@ -133,15 +133,13 @@ http {
         server_name  localhost;
 		 
         location / {
-            # 前端请求 / 会映射到 html文件夹，默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
+            # 前端请求 /admin 会映射到 html/admin文件夹，html默认是nginx安装目录下的文件夹，可以写绝对路径。 (说明：比如请求/index.html就会映射到html文件夹下的index.html文件)
             root  html;
-            # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
-            #alias /html/index.html
             index index.html index.htm;
         }
         location /index {
-            # 前端请求/会直接映射到 /html/index.html 文件（注意：这个配置和root配置互斥）
-            alias /html/index.html
+            # 前端请求/会直接映射到 /html/index.html 文件（注意：映射地址最后要加/，还有这个配置和root配置互斥）
+            alias /html/index.html/;
         }
     }
 }
