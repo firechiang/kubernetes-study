@@ -176,6 +176,7 @@ http {
 	# Waiting            正在等待处理的请求连接数，在nginx服务器里面想要获取该值，它的内嵌变量是${connections_waiting}
 	location /monitor_api {
 	    # 标识该地址是监控api（注意：如果nginx的版本低于1.7.5请使用 stub_status on 开启监控api）
+	    # 注意：这个需要在nginx编译期间将该模块编译进nginx才可以使用（可使用命令 nginx -V 查看是否有 --with-http_stub_status_module 参数来判断该模块是否已被编译进nginx）
 	    stub_status
         }
     }
