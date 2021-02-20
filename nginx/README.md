@@ -150,7 +150,7 @@ http {
             root  html;
             index index.html index.htm;
         }
-	# ^~ 表示匹配到即停止搜索匹配地址（比如请求 /index4/test 地址也会映射到如下目录，因为/index4已经匹配到了，它就会停止向下搜索）（匹配优先级2（其次））
+	# ^~ 表示匹配到即停止搜索地址（比如请求 /index4/test 地址会直接返回/index4数据，因为/index4已经匹配到了，它就会停止向下搜索）（匹配优先级2（其次））
 	location ^~ /index4 {
             root  html;
             index index.html index.htm;
