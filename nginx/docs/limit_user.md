@@ -26,9 +26,10 @@ http {
     server {
          # 注意：下面的配置可以配置在server或http段
         location / {
-              auth_basic "请输入用户名密码";
-              # 用户配置文件（注意：用户配置文件我们在上面已经生成好了）
-              auth_basic_user_file /home/chiangfire/data-dev/nginx/users/htpasswd_users;
+            # 提示输入用户名密码弹出框的说明信息
+            auth_basic "请输入用户名密码";
+            # 用户配置文件（注意：用户配置文件我们在上面已经生成好了）
+            auth_basic_user_file /home/chiangfire/data-dev/nginx/users/htpasswd_users;
         }
     }
 }
