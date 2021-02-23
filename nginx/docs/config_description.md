@@ -35,7 +35,7 @@ timer_resolution 100ms;
 # nginx运行方式，on后台运行，off前台运行（注意：nginx默认是后台运行）
 #daemon on;
 
- # 负载均衡互斥锁文件存放路径
+# 负载均衡互斥锁文件存放路径
 lock_file /home/chiangfire/data-dev/nginx/nginx-1.19.7/logs/nginx.lock;
 
 events {
