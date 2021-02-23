@@ -25,7 +25,7 @@ http {
             # 开启限速（limit_req_addr是记录请求数的内存空间的名称（我们在上面配置了）
             limit_req zone=limit_req_addr;
             #  开启限速（limit_req_addr是记录请求数的内存空间的名称（我们在上面配置了），burst=5 表示漏斗的大小，就是最多有多少个请求在等待处理，一般不建议配置漏斗大小）
-        #limit_req zone=limit_req_addr burst=5;
+            #limit_req zone=limit_req_addr burst=5;
             # 限速产生时返回给前端的状态码
             limit_req_status 503;
             # 限速产生时打印的日志级别
