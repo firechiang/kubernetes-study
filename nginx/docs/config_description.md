@@ -41,11 +41,11 @@ lock_file /home/chiangfire/data-dev/nginx/nginx-1.19.7/logs/nginx.lock;
 events {
     # nginx使用哪种事件驱动模型来处理连接，默认没有配置，建议不配置让Nginx自动选择（可选值 select,poll,kqueue,epoll,/dev/poll,eventport）
     #use epoll;
-     # 单个Work（工作）进程最大处理请求数
+    # 单个Work（工作）进程最大处理请求数
     worker_connections 65535;
-     # 是否打开负载均衡互斥锁（推荐打开） on 是，off 否
+    # 是否打开负载均衡互斥锁（推荐打开） on 是，off 否
     accept_mutex on;
-     # 新连接分配给work（工作）进程的超时时间（默认500ms），该配置生效的前提是 accept_mutex（负载均衡互斥锁） 以打开
+    # 新连接分配给work（工作）进程的超时时间（默认500ms），该配置生效的前提是 accept_mutex（负载均衡互斥锁） 以打开
     accept_mutex_delay 200ms;
     # work(工作)进程是否可以接收新连接（推荐打开，但是打开对性能的影响也不大，默认是关闭的） on 是，off 否（注意：默认一个work（工作）进程只能处理一个连接，只有打开了下面的参数才会处理多个连接）
     multi_accept on;
@@ -69,7 +69,9 @@ http {
     # 长连接超时时间（单位秒）;
     keepalive_timeout  65;
     
+    # 是否开启gzip压缩
     #gzip  on;
+    
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
     server {
         # 服务监听地址（可写域名）和端口（注意：没写地址默认是0.0.0.0，没写端口默认是80）
