@@ -3,6 +3,7 @@
 #### 三、[限制Connection连接数量简单使用][3]
 #### 四、[限制处理客户端请求的速度（漏斗算法限流，一大堆流量先到漏斗里，然后通过漏斗的最大流出速率，处理请求）简单使用和漏斗算法说明][4]
 #### 五、[限制特定IP或网段访问简单使用][5]
+#### 六、[配置用户访问简单使用][6]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -61,3 +62,4 @@ $ kill -s SIGQUIT 16763
 [3]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_connections.md
 [4]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_request.md
 [5]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_ip.md
+[6]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_user.md
