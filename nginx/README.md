@@ -1,6 +1,7 @@
 #### 一、[Nginx编译安装][1]
 #### 二、[Nginx配置相关说明][2]
 #### 三、[限制Connection连接数量简单使用][3]
+#### 四、[限制客户端的请求速率（漏斗算法限流，一大堆流量先到漏斗里，然后通过漏斗的最大流出速率，处理请求）简单使用和漏斗算法说明][4]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -57,3 +58,4 @@ $ kill -s SIGQUIT 16763
 [1]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/compile_install.md
 [2]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/config_description.md
 [3]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_connections.md
+[4]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_request.md
