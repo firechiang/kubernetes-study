@@ -24,7 +24,7 @@ $ ./htpasswd -b /home/chiangfire/data-dev/nginx/users/htpasswd_users tiantian 12
 ```bash
 http {
     server {
-         # 注意：下面的配置可以配置在server或http段
+        # 注意：下面的配置可以配置在server或http段
         location / {
             # 提示输入用户名密码弹出框的说明信息
             auth_basic "请输入用户名密码";
