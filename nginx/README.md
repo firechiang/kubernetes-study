@@ -5,7 +5,8 @@
 #### 五、[限制特定IP或网段访问简单使用][5]
 #### 六、[配置用户访问简单使用][6]
 #### 七、[使用第三方鉴权服务控制用户访问Nginx][7]
-#### 八、[return指令简单使用（就是直接返回信息）][8]
+#### 八、[return配置简单使用（就是直接返回信息）][8]
+#### 九、[rewrite配置简单使用（使用正则表达式匹配请求地址的某一部分内容，然后将匹配到的内容重写为一个URL并重定向过去）][9]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -72,3 +73,4 @@ $ kill -s SIGQUIT 16763
 [6]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_user.md
 [7]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/authentication.md
 [8]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/return.md
+[9]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/rewrite.md
