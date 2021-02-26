@@ -5,6 +5,7 @@
 #### 五、[限制特定IP或网段访问简单使用][5]
 #### 六、[配置用户访问简单使用][6]
 #### 七、[使用第三方鉴权服务控制用户访问Nginx][7]
+#### 八、[return指令简单使用（就是直接返回信息）][8]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -56,7 +57,12 @@ $ kill -s SIGHUP 16763
 # 如果新Nginx没有问题，就停止旧的Nginx主进程（注意：这一步完成以后，查看旧的Nginx主进程是否停止，如果停止了表示Nginx升级成功）
 $ kill -s SIGQUIT 16763
 ```
-
+#### 、HTTP协议重定向状态码说明
+ - 301（永久重定向)
+ - 302（临时重定向，禁止被缓存）
+ - 303（临时重定向，禁止缓存，允许改变方法）
+ - 307（临时重定向，禁止缓存，不允许改变方法）
+ - 308（永久重定向，不允许改变方法）
 
 [1]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/compile_install.md
 [2]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/config_description.md
@@ -65,3 +71,4 @@ $ kill -s SIGQUIT 16763
 [5]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_ip.md
 [6]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/limit_user.md
 [7]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/authentication.md
+[8]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/return.md
