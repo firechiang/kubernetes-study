@@ -7,6 +7,7 @@
 #### 七、[使用第三方鉴权服务控制用户访问Nginx][7]
 #### 八、[return配置简单使用（就是直接返回信息）][8]
 #### 九、[rewrite配置简单使用（使用正则表达式匹配请求地址的某一部分内容，然后将匹配到的内容重写为一个URL并重定向过去）][9]
+#### 十、[if配置简单使用（就是通过判断语句执行对应逻辑）][10]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -58,6 +59,10 @@ $ kill -s SIGHUP 16763
 # 如果新Nginx没有问题，就停止旧的Nginx主进程（注意：这一步完成以后，查看旧的Nginx主进程是否停止，如果停止了表示Nginx升级成功）
 $ kill -s SIGQUIT 16763
 ```
+#### 、Nginx内置变量简单说明
+ - $http_user_agent（获取浏览器的 user_agent）
+ - $remote_addr（或客户端的IP地址）
+ 
 #### 、HTTP协议重定向状态码说明
  - 301（永久重定向)
  - 302（临时重定向，禁止被缓存）
@@ -74,3 +79,4 @@ $ kill -s SIGQUIT 16763
 [7]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/authentication.md
 [8]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/return.md
 [9]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/rewrite.md
+[10]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/if.md
