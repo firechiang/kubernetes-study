@@ -62,7 +62,16 @@ $ kill -s SIGQUIT 16763
 ```
 #### 、Nginx内置变量简单说明
  - $http_user_agent（获取浏览器的 user_agent）
- - $remote_addr（或客户端的IP地址）
+ - $remote_addr（客户端的IP地址）
+ - $remote_port(客户端端口)
+ - $binary_remote_addr（二进制格式的客户端IP地址）
+ - $connection（TCP连接的序号，自动递增）
+ - $connection_request（TCP当前的请求数）
+ - $proxy_protocol_addr（若使用了proxy_protocol代理协议，则返回协议中的地址，否则返回空）
+ - $proxy_protocol_port（若使用了proxy_protocol代理协议，则返回协议中的端口，否则返回空）
+ - $server_addr（服务端IP地址）
+ - $server_port（服务端端口）
+ - $server_protocol（服务端协议）
  
 #### 、HTTP协议重定向状态码说明
  - 301（永久重定向)
