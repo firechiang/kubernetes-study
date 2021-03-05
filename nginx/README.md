@@ -61,7 +61,7 @@ $ kill -s SIGHUP 16763
 $ kill -s SIGQUIT 16763
 ```
 #### 、Nginx内置变量简单说明
- - $http_user_agent（获取浏览器的 user_agent）
+ - $http_user_agent（获取浏览器的 user_agent；注意：Nginx可能修改这个值）
  - $remote_addr（客户端的IP地址）
  - $remote_port(客户端端口)
  - $binary_remote_addr（二进制格式的客户端IP地址）
@@ -72,6 +72,29 @@ $ kill -s SIGQUIT 16763
  - $server_addr（服务端IP地址）
  - $server_port（服务端端口）
  - $server_protocol（服务端协议）
+ - $uri（请求的URL不包含参数）
+ - $request_uri（请求的URL，包含参数）
+ - $scheme（协议名称（http或https））
+ - $request_method（请求方法）
+ - $request_length（请求的全部长度（包含请求行，请求头，请求体））
+ - $args（全部参数字符串）
+ - $arg_参数名（特定参数值）
+ - $is_args（URL中有参数，则返回?号，否则返回空）
+ - $query_string（与agrs变量的值相同）
+ - $remote_user（获取由HTTP Basic Authentication协议传入的用户名）
+ - $host（先看请求行，再看请求头，最后找server_name；注意：Nginx可能修改这个值）
+ - $http_referer（请求来源，从哪些链接过来的请求；注意：Nginx可能修改这个值）
+ - $http_via（代理服务器信息，经过一层代理服务器，添加对应代理服务器的信息；注意：Nginx可能修改这个值）
+ - $http_x_forwarded_for（获取用户真实IP；注意：Nginx可能修改这个值）
+ - $http_cookie（用户cookie；注意：Nginx可能修改这个值）
+ - $request_time（处理请求已耗费时间）
+ - $request_completion（请求是否处理完成，已完成返回OK，否则返回空）
+ - $server_name（获取请求server_name的值）
+ - $https（若开启https，则返回on，否则返回空）
+ - $request_filename（磁盘文件系统待访问文件的完成路径（比如下载文件就是请求所对应的磁盘文件所在的完整路径））
+ - $document_root（由URL和root/alias规则生成的文件夹路径）
+ - $realpath_root（将document_root中的软链接换成真实路径）
+ - $limit_rate（获取返回响应时的速度上限值）
  
 #### 、HTTP协议重定向状态码说明
  - 301（永久重定向)
