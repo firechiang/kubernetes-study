@@ -78,18 +78,18 @@ http {
     # Nginx处理请求时body缓冲区的大小。32位系统默认是8k，64位系统默认是16k（建议看应用情款调大一点），该配置可在http, server, location段中
     #client_body_buffer_size 16k;
     
-    # 是否将请求体的数据放置在缓冲区的一段连续内存当中（默认是关闭的）
+    # 是否将请求体的数据放置在缓冲区的一段连续内存当中（默认是关闭的），该配置可在http, server, location段中
     #client_body_in_single_buffer on;
     
-    # 如果请求体的数据大于缓冲区的大小，那么数据将会放置在磁盘上，下面就是配置临时目录（这个目录都是相对Nginx的安装目录的）
+    # 如果请求体的数据大于缓冲区的大小，那么数据将会放置在磁盘上，下面就是配置临时目录（这个目录都是相对Nginx的安装目录的），该配置可在http, server, location段中
     # client_body_temp 目录是Nginx启动后就会有的目录
     #client_body_temp_path client_body_temp;
     
-    # 如果请求体的数据大于缓冲区的大小，是否将数据放置在磁盘上（注意：如果开启那么缓冲区将不起作用）
+    # 如果请求体的数据大于缓冲区的大小，是否将数据放置在磁盘上（注意：如果开启那么缓冲区将不起作用），该配置可在http, server, location段中
     # 如果配置 clean 数据将会放置在磁盘上，请求完成数据删除
     #client_body_in_file_only off;
     
-    # 接收客户端请求体数据的超时时间
+    # 接收客户端请求体数据的超时时间，该配置可在http, server, location段中
     #client_body_timeout 60s;
     
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
