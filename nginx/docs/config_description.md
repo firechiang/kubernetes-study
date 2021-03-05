@@ -72,10 +72,10 @@ http {
     # 是否开启gzip压缩
     #gzip  on;
     
-   # Nginx可以处理的请求体的大小（默认是1M，如果要上传文件，建议调大一点，否则无法上传文件），该配置可在http, server, location段中
+    # Nginx可以处理的请求体的大小（默认是1M，如果要上传文件，建议调大一点，否则无法上传文件），该配置可在http, server, location段中
     #client_max_body_size 1M;
     
-   # Nginx处理请求时body缓冲区的大小。32位系统默认是8k，64位系统默认是16k（建议看应用情款调大一点），该配置可在http, server, location段中
+    # Nginx处理请求时body缓冲区的大小。32位系统默认是8k，64位系统默认是16k（建议看应用情款调大一点），该配置可在http, server, location段中
     #client_body_buffer_size 16k;
     
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
