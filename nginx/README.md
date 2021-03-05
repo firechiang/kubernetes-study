@@ -8,6 +8,7 @@
 #### 八、[return配置简单使用（就是直接返回信息）][8]
 #### 九、[rewrite配置简单使用（使用正则表达式匹配请求地址的某一部分内容，然后将匹配到的内容重写为一个URL并重定向过去）][9]
 #### 十、[if配置简单使用（就是通过判断语句执行对应逻辑）][10]
+#### 十一、[autoindex文件目录模块简单使用（就是当用户请求以/结尾时，列出目录结构还可下载文件）][11]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -80,3 +81,4 @@ $ kill -s SIGQUIT 16763
 [8]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/return.md
 [9]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/rewrite.md
 [10]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/if.md
+[11]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/autoindex.md
