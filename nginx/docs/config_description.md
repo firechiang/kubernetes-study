@@ -95,6 +95,16 @@ http {
     # 代理转发时连接上游服务器超时时间，该配置可在http, server, location段中
     #proxy_connect_timeout 60s;
     
+    # 代理转发时是否开启TCP层的长连接（系统层长连接，非应用层），该配置可在http, server, location段中
+    #proxy_socket_keepalive off;
+    
+    # 代理转发时向上游服务器发送数据的超时时间（就是规定时间内没有发送数据，就断开连接），该配置可在http, server, location段中
+    #proxy_send_timeout 60s;
+    
+    # 代理转发时是否忽略客户端关闭连接的指令（就是浏览器向Nginx发送关闭连接的指令，该指令是否不发送给上游服务器；如果开启，浏览器和Nginx断开了，Nginx和上游服务器的连接将不会断开）
+    # 注意：该配置建议设置成off,该配置可在http, server, location段中
+    #proxy_ignore_client_abort off;
+    
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
     server {
         # 服务监听地址（可写域名）和端口（注意：没写地址默认是0.0.0.0，没写端口默认是80）
