@@ -105,6 +105,10 @@ http {
     # 注意：该配置建议设置成off,该配置可在http, server, location段中
     #proxy_ignore_client_abort off;
     
+    # 代理转发时,上游服务发生错误时，返回什么状态给客户端，可以配置多个（默认是error和timeout，也可以配置off就是关闭该功能）
+    # 可选值 error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_403 | http_404 | http_429 | non_idempotent | off
+    #proxy_next_upstream error timeout;
+    
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
     server {
         # 服务监听地址（可写域名）和端口（注意：没写地址默认是0.0.0.0，没写端口默认是80）
