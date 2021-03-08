@@ -66,7 +66,7 @@ http {
     sendfile        on;
     #tcp_nopush     on;
 	
-    # 长连接超时时间（单位秒）;
+    # 客户端长连接超时时间（单位秒）;
     keepalive_timeout  65;
     
     # 是否开启gzip压缩
@@ -91,6 +91,9 @@ http {
     
     # 接收客户端请求体数据的超时时间，该配置可在http, server, location段中
     #client_body_timeout 60s;
+    
+    # 代理转发时连接上游服务器超时时间，该配置可在http, server, location段中
+    #proxy_connect_timeout 60s;
     
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
     server {
