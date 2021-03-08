@@ -106,7 +106,12 @@ http {
     #proxy_ignore_client_abort off;
     
     # 代理转发时,上游服务发生错误时，返回什么状态给客户端，可以配置多个（默认是error和timeout，也可以配置off就是关闭该功能）
-    # 可选值 error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504 | http_403 | http_404 | http_429 | non_idempotent | off
+    # 可选值 
+    # error | timeout 
+    # invalid_header（上游服务器返回无效的响应）
+    # http_500 | http_502 | http_503 | http_504 | http_403 | http_404 | http_429
+    # non_idempotent（非幂等请求上游服务异常时，是否要转发到其它服务器上）
+    # off（关闭该功能）
     #proxy_next_upstream error timeout;
     
     # 单个Server端配置（注意：可以配置多个Server端；服务主机名或域名的匹配优先级是  1 精确匹配（优先级最高），2 左侧通配符匹配，3 右侧通配符匹配，4 正则表达匹配）
