@@ -1,92 +1,74 @@
-# GitLab安装、使用教程（Docker版）
-## 一、下载镜像
-官方版本是：gitlab/gitlab-ce:latest，为了提升速度我们这里使用阿里云的仓库
+#### 一、下载镜像（官方版本是：gitlab/gitlab-ce:latest，为了提升速度我们这里使用阿里云的仓库）
 ```bash
 $ docker pull registry.cn-hangzhou.aliyuncs.com/imooc/gitlab-ce:latest
 ```
 
-## 二、运行GitLab容器
-使用docker命令运行容器，注意修改hostname为自己喜欢的名字，-v部分挂载目录要修改为自己的目录。  
-端口映射这里使用的都是安全端口，如果大家的环境没有端口限制或冲突可以使用与容器同端口，如：-p 443:443 -p 80:80 -p 22:22
-#### 1. 生成启动文件 - start.sh，注意创建自己的GitLab目录
+#### 二、创建GitLab工作目录
 ```bash
-$ cat <<EOF > start.sh
+$ mkdir -p /home/gitlab
+```
+
+#### 三、创建 [vi /home/gitlab/start.sh] GitLab启动脚本
+```bash
 #!/bin/bash
-HOST_NAME=192.168.78.130                               #可以写域名（注意这个是变量以供下面${HOST_NAME}使用）
-GITLAB_DIR=/home/gitlab                                #GitLab工作目录（注意这个是变量以供下面${GITLAB_DIR}使用）
+# 绑定主机名或IP也可以写域名（注意：这个是变量以供下面${HOST_NAME}使用）
+HOST_NAME=192.168.78.130
+# GitLab工作目录（注意这个是变量以供下面${GITLAB_DIR}使用）                        
+GITLAB_DIR=/home/gitlab                                
 docker stop gitlab
 docker rm gitlab
-docker run -d \\
-    --hostname \${HOST_NAME} \\
-    -p 9443:443 -p 9199:80 -p 2222:22 \\
-    --name gitlab \\
-    -v \${GITLAB_DIR}/config:/etc/gitlab \\
-    -v \${GITLAB_DIR}/logs:/var/log/gitlab \\
-    -v \${GITLAB_DIR}/data:/var/opt/gitlab \\
+# -v 部分为数据挂载目录
+# -p 部分为端口映射包括http和ssh连接，前面的宿主机端口，后面的容器端口
+docker run -d 
+    --hostname ${HOST_NAME} 
+    --name gitlab 
+    -p 9443:443 -p 9199:80 -p 2222:22 
+    -v ${GITLAB_DIR}/config:/etc/gitlab 
+    -v ${GITLAB_DIR}/logs:/var/log/gitlab 
+    -v ${GITLAB_DIR}/data:/var/opt/gitlab 
     registry.cn-hangzhou.aliyuncs.com/imooc/gitlab-ce:latest
-EOF
 ```
-#### 2. 运行start.sh 启动gitlab
+
+#### 四、启动Gitlab（注意：Gitlab首次启动后会生成初始配置，以后就可以直接去修改配置了）
 ```bash
-$ sh start.sh
+$ sh /home/gitlab/start.sh
 ```
 
-#### 3. 配置环境
-* 修改host文件，使域名可以正常解析
-> 127.0.0.1 gitlab.mooc.com
-
-* 修改ssh端口（如果主机端口使用的不是22端口）
-> 修改文件：${GITLAB_DIR}/config/gitlab.rb
-> 找到这一行：# gitlab_rails['gitlab_shell_ssh_port'] = 22
-> 把22修改为你的宿主机端口（这里是2222）。然后将注释去掉。
-
-* 重新启动容器
+#### 五、修改 [vi ${GITLAB_DIR}/config/gitlab.rb] 自定义Gitlab配置（注意：配置生效需要重启Gitlab）
 ```bash
-$ sh start.sh
+# 宿主机ssh端口（注意：这个是Gitlab使用sshKey连接所使用的端口）
+gitlab_rails['gitlab_shell_ssh_port'] = 2222
 ```
 
-## 三、GitLab试用
-#### 1. 打开首页
-地址：http://gitlab.mooc.com:8080/  
+#### 六、账户管理，项目创建
+##### 6.1、打开首页（http://192.168.78.130:9199/）
 
-#### 2. 设置管理员密码
-首先根据提示输入管理员密码，这个密码是管理员用户的密码。对应的用户名是root，用于以管理员身份登录Gitlab。  
+##### 6.2、设置管理员密码（注意：首先根据提示输入管理员密码，这个密码是管理员用户的密码。对应的用户名是root，用于以管理员身份登录Gitlab）
 <img src="../images/rootpass.png" width="50%" height="50%"/>
 
-#### 3. 创建账号
-设置好密码后去注册一个普通账号  
+##### 6.3、创建用户账号（设置好密码后去注册一个普通账号）
 <img src="../images/register.png" width="50%" height="50%"/>
 
-#### 4. 创建项目
-注册成功后会跳到首页，我们创建一个项目，名字大家随意  
+##### 6.4、创建项目（注册成功后会跳到首页，我们创建一个项目，名字大家随意）
 <img src="../images/create.png" width="50%" height="50%"/>
 
-#### 5. 添加ssh key
-项目建好了，我们加一个ssh key，以后本地pull/push就简单啦  
-<img src="../images/addssh.png" width="70%" height="70%"/>
 
-首先去到添加ssh key的页面  
-<img src="../images/sshkey.png" />
-
-然后拿到我们的sshkey 贴到框框里就行啦
-怎么拿到呢？看下面：
+#### 七、添加ssh key以后本地pull/push就简单啦
+##### 7.1、生成密钥
 ```bash
-#先看看是不是已经有啦，如果有内容就直接copy贴过去就行啦
-$ cat ~/.ssh/id_rsa.pub
-
-#如果上一步没有这个文件 我们就创建一个，运行下面命令（邮箱改成自己的哦），一路回车就好了
-$ ssh-keygen -t rsa -C "youremail@example.com"
+$ ssh-keygen -t rsa -C "576416024@qq.com"
 $ cat ~/.ssh/id_rsa.pub
 ```
 
-#### 6. 测试一下
-点开我们刚创建的项目，复制ssh的地址  
-<img src="../images/gitindex.png" width="60%" height="60%" />
+##### 7.2、添加ssh key到Gitlab
+<img src="../images/addssh.png" width="70%" height="70%"/>
+<img src="../images/sshkey.png" />
 
-添加个文件试试（我的项目叫test）
+
+#### 八、克隆代码，测试提交
 ```bash
 #clone代码
-$ git clone ssh://git@gitlab.mooc.com:2222/michael/test.git
+$ git clone ssh://git@192.168.78.130:2222/michael/test.git
 #写一个文件
 $ cd test && echo test > test
 #push
@@ -94,6 +76,3 @@ $ git add .
 $ git commit -m "test"
 $ git push origin master
 ```
-
-去gitlab上看看  
-<img src="../images/file.png" width="50%" height="50%"/>
