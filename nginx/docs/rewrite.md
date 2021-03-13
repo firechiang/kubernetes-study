@@ -11,6 +11,8 @@ http {
         # redirect 表示返回302并临时重定向
         # permanent 表示返回301并永久重定向
         rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3 last;
+        # 将请求原封不动的进行HTTPS重定向
+        #rewrite ^(.*)$ https://$host$1 permanent;
         # 最后都没有匹配到就直接返回404（注意：return要写在后面，否则就直接返回404了）
         return  404;
     }
