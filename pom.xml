@@ -54,8 +54,9 @@
 		<module>docker</module>
 		<module>rancher</module>
 		<module>etcd</module>
-       <module>k8s-deploy</module>
-       <module>jenkins</module>
-       <module>nginx</module>
-   </modules>
+        <module>k8s-deploy</module>
+        <module>jenkins</module>
+        <module>nginx</module>
+        <module>gitlab</module>
+    </modules>
 </project>
