@@ -20,7 +20,7 @@ http {
         if($request_uri ~ \.(txt|text)$ ) {
             set $cookie_name "no cache";
         }
-        # 请求该地址直接返回200（注意：下面的配置可以配置在server或http段）
+        # 注意：下面的配置可以配置在server或http段
         location /test_proxy {
             # 是否开启代理缓存（就是缓存目标服务器的结果）
             proxy_cache off;
