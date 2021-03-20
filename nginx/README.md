@@ -10,6 +10,7 @@
 #### 十、[if配置简单使用（就是通过判断语句执行对应逻辑）][10]
 #### 十一、[autoindex文件目录模块简单使用（就是当用户请求以/结尾时，列出目录结构还可下载文件）][11]
 #### 十二、[反向代理相关配置说明以及简单使用][12]
+#### 十三、[缓存相关配置][13]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -83,7 +84,8 @@ $ kill -s SIGQUIT 16763
  - $is_args（URL中有参数，则返回?号，否则返回空）
  - $query_string（与agrs变量的值相同）
  - $remote_user（获取由HTTP Basic Authentication协议传入的用户名）
- - $host（先看请求行，再看请求头，最后找server_name；注意：Nginx可能修改这个值）
+ - $host（获取域名，先看请求行，再看请求头，最后找server_name；注意：Nginx可能修改这个值）
+ - $proxy_host（获取代理服务域名，先看请求行，再看请求头，最后找server_name；注意：Nginx可能修改这个值）
  - $http_referer（请求来源，从哪些链接过来的请求；注意：Nginx可能修改这个值）
  - $http_via（代理服务器信息，经过一层代理服务器，添加对应代理服务器的信息；注意：Nginx可能修改这个值）
  - $http_x_forwarded_for（获取用户真实IP；注意：Nginx可能修改这个值）
@@ -96,6 +98,8 @@ $ kill -s SIGQUIT 16763
  - $document_root（由URL和root/alias规则生成的文件夹路径）
  - $realpath_root（将document_root中的软链接换成真实路径）
  - $limit_rate（获取返回响应时的速度上限值）
+ - $upstream_cache_status（缓存是否命中：MISS=未命中缓存，HIT命中缓存，EXPIRED=缓存过期，STALE=命中了陈旧缓存，REVALIDDATED=Nginx验证陈旧缓存依然有效，UPDATING=内容陈旧，但正在更新，BYPASS=响应从原始服务器获取）
+ - $cookie_name（获取cookie的名称）
  
 #### 、HTTP协议重定向状态码说明
  - 301（永久重定向)
@@ -116,3 +120,4 @@ $ kill -s SIGQUIT 16763
 [10]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/if.md
 [11]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/autoindex.md
 [12]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/proxy.md
+[13]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/cache.md
