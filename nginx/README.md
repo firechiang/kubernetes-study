@@ -11,6 +11,7 @@
 #### 十一、[autoindex文件目录模块简单使用（就是当用户请求以/结尾时，列出目录结构还可下载文件）][11]
 #### 十二、[反向代理相关配置说明以及简单使用][12]
 #### 十三、[缓存相关配置][13]
+#### 十四、[https相关配置][14]
 
 #### 四、Nginx进程结构（注意：Nginx启动后会有两种进程）
  - Master Process（主进程（root用户管理），用于监控Worker process（工作进程），并自动管理工作进程（比如工作进程挂了，主进程会自动启动它））
@@ -121,3 +122,4 @@ $ kill -s SIGQUIT 16763
 [11]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/autoindex.md
 [12]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/proxy.md
 [13]: https://github.com/firechiang/kubernetes-study/blob/master/nginx/docs/cache.md
+[14]: https://github.com/firechiang/kubernetes-study/blob/master/gitlab/docs/gitlab-https.md
