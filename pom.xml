@@ -58,5 +58,6 @@
         <module>jenkins</module>
         <module>nginx</module>
         <module>gitlab</module>
+        <module>ansible</module>
     </modules>
 </project>
