@@ -34,7 +34,7 @@ $ cd ansible
 $ git checkout stable-2.10
 
 # 加载安装Ansible-2.10版本
-$ source /usr/local/python3/py3.8-ansible-2.10.7-env/ansible/hacking/env-setup -q
+$ source /usr/local/python3/py3.8-ansible-2.10-env/ansible/hacking/env-setup -q
 
 # 验证Ansible是否安装完成
 $ ansible --version
