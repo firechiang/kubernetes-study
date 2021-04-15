@@ -22,7 +22,7 @@ $ cd /usr/local/python3/py3.8-ansible-2.10-env
 $ git clone https://github.com/ansible/ansible.git
 
 # 加载Ansible独立运行环境
-$ source /usr/local/python3/py3.8-ansible-2.10.7-env/bin/activate
+$ source /usr/local/python3/py3.8-ansible-2.10-env/bin/activate
 
 # 安装Ansible相关依赖
 $ pip3 install paramiko PyYAML jinja2
