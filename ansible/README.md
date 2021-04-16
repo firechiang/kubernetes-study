@@ -1,4 +1,21 @@
 #### 一、[Centos7安装Ansible][1]
-
+#### 二、[配置Ansible免密登录目标服务器][2]
+#### 三、[Ansible部署脚本Playbooks在目标服务器上执行命令或脚本简单使用][3]
+#### 四、[Ansible部署脚本Playbooks在目标服务器上创建文件简单使用][4]
+#### 五、[Ansible部署脚本Playbooks将本地文件拷贝到目标服务器上简单使用][5]
+#### 六、[Ansible部署脚本Playbooks在目标服务器上安装软件简单使用][6]
+#### 七、[Ansible部署脚本Playbooks获取目标服务器上的某个文件信息并保存在某个变量里面供后面任务使用（这个里面有任务执行过程中打印自定义信息）][7]
+#### 八、[Ansible部署脚本Playbooks用配置信息替换模板配置文件里面的相关信息并将替换后的配置文件拷贝到目标服务器][8]
+#### 九、[Ansible部署脚本Playbooks在目标服务器上启动或重启或关闭某个服务简单使用][9]
+#### 十、[Ansible部署脚本Playbooks实际生产环境简单使用（上面的是单个逻辑使用，这个是将多个逻辑组合到一起使用）][10]
 
 [1]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/centos-install.md
+[2]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/password-free-login.md
+[3]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-simple.md
+[4]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-create-file.md
+[5]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-copy-file.md
+[6]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-install-yum.md
+[7]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-stat-file.md
+[8]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-properties.md
+[9]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-service.md
+[10]: https://github.com/firechiang/kubernetes-study/blob/master/ansible/docs/playbooks-group.md
