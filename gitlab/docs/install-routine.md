@@ -37,7 +37,7 @@ $ systemctl status postfix
 # 启动邮件组件
 $ systemctl start postfix
 # 停止邮件组件
-$ systemctl sop postfix
+$ systemctl stop postfix
 # 开机启动邮件组件
 $ systemctl enable postfix
 ```
