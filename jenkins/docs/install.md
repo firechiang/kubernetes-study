@@ -98,7 +98,7 @@ esac
 $ chmod +x /etc/init.d/jenkins
 ```
 
-#### 五、启动Jenkins
+#### 五、启动Jenkins（注意：如果启动报 java.desktop/sun.awt.FontConfiguration.getVersion(FontConfiguration.java)错误,是因为服务器缺少fontconfig组件，使用命令 yum install fontconfig 安装，再执行命令 fc-cache --force 即可）
 ```bash
 $ service jenkins start           # 启动jenkins
 $ service jenkins stop            # 停止jenkins
