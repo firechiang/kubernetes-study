@@ -15,7 +15,7 @@ $ chmod +x VMware-Workstation-Full-16.1.1-17801498.x86_64.bundle
 $ sudo ./VMware-Workstation-Full-16.1.1-17801498.x86_64.bundle
 ```
 
-#### 三、永久激活秘钥
+##### 三、永久激活秘钥
 ```bash
 ZF3R0-FHED2-M80TY-8QYGC-NPKYF
 YF390-0HF8P-M81RQ-2DXQE-M2UT6
