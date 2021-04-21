@@ -11,7 +11,7 @@ $ reboot
 $ mkdir -p /home/gitlab && cd /home/gitlab
 
 # 安装Gitlab依赖组件（注意：postfix 是邮件组件）
-$ yum -y install curl policycoreutils openssh-server openssh-clients postfix
+$ yum -y install curl policycoreutils openssh-server openssh-clients postfix policycoreutils-python
 
 # 下载适用于Centos7的Gitlab安装包
 $ wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-13.9.3-ce.0.el7.x86_64.rpm
