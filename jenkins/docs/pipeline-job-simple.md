@@ -35,7 +35,7 @@ pipeline {
 	    steps{
 	        // 命令行模块，写Shell命令
 	        sh 'git config --global http.sslVerify false'
-	        // 拉取代码 dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值
+	        // 拉取代码 dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值（注意：WORKSPACE的值是Jenkins拉取代码的存放目录）
 		dir ("${env.WORKSPACE}"){
 	            // branch=代码分支
 		    // credentialsId=拉取Git所使用凭据的ID（注意：在Jenkins里面配置Git账号密码或SSH秘钥之后，再返回查看凭据列表时会有凭据ID）
@@ -48,7 +48,7 @@ pipeline {
         // 将上面配置的参数打印到test.properties文件里面
 	stage ("Print env variable") {
 	    steps{
-	        // dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值
+	        // dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值（注意：WORKSPACE的值是Jenkins拉取代码的存放目录）
 	        dir ("${env.WORKSPACE}"){
 		    // 命令行模块，写Shell命令（注意：三个双引号包裹的Shell命令可以换行，还有下面的获取的环境变量都是我们在上面配置好了的参数）
 		    sh """
@@ -63,7 +63,7 @@ pipeline {
 	// 验证上面配置的参数是否打印到test.properties文件
 	stage("Check test properties") {
             steps{
-                // dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值
+                // dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值（注意：WORKSPACE的值是Jenkins拉取代码的存放目录）
                 dir ("${env.WORKSPACE}") {
                     // 命令行模块，写Shell命令（注意：三个双引号包裹的Shell命令可以换行）
                     sh """
@@ -76,6 +76,7 @@ pipeline {
                         echo "test.properties is empty"
                     fi
                     """
+		    // 打印输出模块，后面写要在控制台输出的信息即可
                     echo "[INFO] Build finished（构建成功）..."
                 }
             }
