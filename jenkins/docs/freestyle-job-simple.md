@@ -39,3 +39,6 @@ echo "[INFO] Build finished（构建完成）..."
 ```
 
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/freestyle-job-simple04.png)
+
+#### 五、打包示例
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/freestyle-job-simple05.png)
