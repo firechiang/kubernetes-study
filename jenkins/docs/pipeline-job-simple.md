@@ -37,6 +37,7 @@ pipeline {
 	        sh 'git config --global http.sslVerify false'
 	        // 拉取代码 dir=在那个目录下执行命令，${env.WORKSPACE}=从Jenkins环境变量里面获取值（注意：WORKSPACE的值是Jenkins拉取代码的存放目录）
 		dir ("${env.WORKSPACE}"){
+		    // Git模块
 	            // branch=代码分支
 		    // credentialsId=拉取Git所使用凭据的ID（注意：在Jenkins里面配置Git账号密码或SSH秘钥之后，再返回查看凭据列表时会有凭据ID）
 		    // url=Git源码地址
