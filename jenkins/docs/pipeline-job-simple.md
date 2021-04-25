@@ -71,7 +71,7 @@ pipeline {
                     if [ -s test.properties ]
                     then 
                         cat test.properties
-                        echo "[INFO] Done..."
+                        echo "[INFO] 文件写入成功，可到 ${env.WORKSPACE} 目录查看"
                     else
                         echo "test.properties is empty"
                     fi
