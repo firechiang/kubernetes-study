@@ -6,7 +6,6 @@
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/freestyle-job-simple02.png)
 
 #### 三、配置Git代码
-![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/freestyle-job-simple02.png)
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/freestyle-job-simple03.png)
 
 #### 四、配置构建脚本（Shell）代码
