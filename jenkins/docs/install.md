@@ -120,9 +120,11 @@ $ yum install git -y
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-05.PNG)
 #### 九、配置Java和Maven的环境变量（系统管理 > 系统配置）（注意：环境变量一定要配置，否则无法执行构建任务，会找不到命令）
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-06.PNG)
-#### 十、安装ZenTimestamp插件（ 系统管理>插件管理>可选插件）（注意：如果没有安装ZenTimestamp插件，BUILD_TIMESTAMP环境变量将无法使用）
+#### 十、配置Maven工具（系统管理 > 全局工具配置）（注意：环境变量一定要配置，否则 Freestyle-job（传统任务）打包时无法选择Maven版本）
+![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-09.png)
+#### 十一、安装ZenTimestamp插件（ 系统管理>插件管理>可选插件）（注意：如果没有安装ZenTimestamp插件，BUILD_TIMESTAMP环境变量将无法使用）
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-07.PNG)
-#### 十一、安装ZenTimestamp插件之后开启BUILD_TIMESTAMP环境变量（ 系统管理>系统配置>全局属性）（注意：如果没有开启，BUILD_TIMESTAMP环境变量也无法使用）
+#### 十二、安装ZenTimestamp插件之后开启BUILD_TIMESTAMP环境变量（ 系统管理>系统配置>全局属性）（注意：如果没有开启，BUILD_TIMESTAMP环境变量也无法使用）
 ![image](https://github.com/firechiang/kubernetes-study/blob/master/jenkins/image/setup-jenkins-08.PNG)
 
 
