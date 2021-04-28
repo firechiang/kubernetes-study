@@ -40,7 +40,8 @@ ansible -i /home/playbooks-test/inventory/testenv testservers -m command -a "ip 
 # 执行Ansible部署任务（注意：这个Ansible部署任务是我们在第一步就创建好了的）
 # /home/playbooks-test/inventory/testenv 是目标部署服务器列表相关信息
 # /home/playbooks-test/deploy.yml        是Playbooks任务入口配置文件
-ansible-playbook -i /home/playbooks-test/inventory/testenv /home/playbooks-test/deploy.yml
+# -e branch=$branch                      是添加参数branch它的值是$branch就是Jenkins参数branch的值（注意：这个参数在Ansible里面可以使用{{branch}}获取）
+ansible-playbook -i /home/playbooks-test/inventory/testenv /home/playbooks-test/deploy.yml -e project=test-test -e branch=$branch
 
 # 最后开启命令行扩张功能（因为我们上面把它给关了）
 set -x
