@@ -23,6 +23,9 @@ source /home/py3.6-ansible-2.10-env/bin/activate
 # 加载Ansible到内存（注意：这个的前提是我们的机器上已经安装好了Ansible）
 source /home/py3.6-ansible-2.10-env/ansible/hacking/env-setup -q
 
+# 打印源码编译目录（注意：这个环境变量是Jenkins内置的）
+echo $WORKSPACE
+
 # 打印输出Ansible相关信息
 ansible --version
 ansible-playbook --version
