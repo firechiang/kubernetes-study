@@ -10,6 +10,7 @@
 #### 十、[Freestyle Job（传统任务）包括动态参数配置简单使用][8]
 #### 十一、[Freestyle Job（传统任务）与Shell脚本集成（利用Jenkins执行Shell脚本）简单使用][10]
 #### 十二、[Freestyle Job（传统任务）拉取Git代码，Maven打包,动态参数配置简单使用（不推荐生产使用）][11]
+#### 十三、[Freestyle Job（传统任务）拉取Git代码，Maven打包,动态参数配置，Ansible部署（注意：Ansible部署脚本建议写到代码里面）][12]
 
 [1]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/install.md
 [2]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/configure-git-account.md
@@ -22,5 +23,5 @@
 [9]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/pipeline-job-simple.md
 [10]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/shell-freestyle-job.md
 [11]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/freestyle-job-gitmaven.md
-
+[12]: https://github.com/firechiang/kubernetes-study/blob/master/jenkins/docs/freestyle-job-ansible.md
 
