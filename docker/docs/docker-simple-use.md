@@ -38,7 +38,7 @@ $ docker run -it --entrypoint bash openjdk:7-jre
 $ docker run -e AAA=jiang -it --entrypoint bash openjdk
 
 # 启动Nginx镜像
-# --name = 指定镜像启动后的名称（注意：是镜像启动后的名称而不是镜像的名称）
+# --name = 指定镜像启动后的名称（注意：是镜像启动后的名称而不是镜像的名称，还有这个名称可以不指定）
 # -e = 往镜像里面添加环境变量，在进入镜像以后可以使用，一般服务的配置也是通过这个传递的
 # -d = 镜像将会运行在后台模式
 # -p = 将主机的80转发到镜像的80端口《可使用--net=host替代直接使用宿主机端口不做转发》
