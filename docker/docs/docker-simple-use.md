@@ -54,7 +54,7 @@ $ docker ps -a
 # 查看当前正在运行的容器
 $ docker ps
 
-# 进入正在运行的容器（如果报没有 bash 的错误，请使用命令：docker exec -it "容器运行ID" sh）
+# 进入正在运行的容器（注意：如果报没有 bash 的错误，请使用命令：docker exec -it "容器运行ID" sh）
 $ docker exec -it "容器启动后的名称 | 容器运行ID" bash
 
 # 进入正在运行的容器（注意：attach会重新连接容器会话，而且断开后会停止 docker 镜像，所以不推荐使用）
