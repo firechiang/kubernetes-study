@@ -45,7 +45,7 @@ $ docker run -e AAA=jiang -it --entrypoint bash openjdk
 # -rm = 镜像运行完成后立即删除（注意：这个配置项请谨慎使用）
 $ docker run  -e AAA=jiang --name nginx-test -d -p 80:80 nginx
 
-# 停止容器运行（注意：容器运行ID可使用命令 docker ps 查看，-f 表示跟随日志）
+# 停止容器运行（注意：容器运行ID可使用命令 docker ps 查看）
 $ docker stop "容器运行ID"
 
 # 查看所有容器
