@@ -43,10 +43,10 @@ $ docker run -e AAA=jiang -it --entrypoint bash openjdk
 # -d = 镜像将会运行在后台模式
 # -p = 将主机的80转发到镜像的80端口《可使用--net=host替代直接使用宿主机端口不做转发》
 # -rm = 镜像运行完成后立即删除（注意：这个配置项请谨慎使用）
-# docker run  -e AAA=jiang --name nginx-test -d -p 80:80 nginx
+$ docker run  -e AAA=jiang --name nginx-test -d -p 80:80 nginx
 
 # 停止容器运行（注意：容器运行ID可使用命令 docker ps 查看，-f 表示跟随日志）
-# docker stop "容器运行ID"
+$ docker stop "容器运行ID"
 
 # 查看所有容器
 $ docker ps -a
