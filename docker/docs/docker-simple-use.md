@@ -110,7 +110,7 @@ $ docker rm '容器ID'
 # docker 登陆，然后提示 输入用户名，密码（默认登陆 hub.docker）
 $ docker login
 
-# 为镜像 zookeeper 打上tag <:3.5是镜像版本>
+# 为镜像 zookeeper 打上tag <:3.5是镜像版本>（注意：给官方镜像打上Tag一般都要加上前缀，用于区分镜像所属权，比如下面的我们添加了 test 前缀）
 $ docker tag zookeeper:3.5 test/zookeeper:3.5
 
 # 将zookeeper 镜像上传到仓库<:3.5是镜像版本>
