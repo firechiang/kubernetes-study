@@ -22,11 +22,8 @@ $ sudo systemctl enable docker.service                       # 设置开机启�
 $ sudo systemctl disable docker.service                      # 禁止开机启动Docker
 ```
 
-#### 三、普通用户运行Docker
+#### 三、普通用户运行Docker命令
 ```bash
-$ sudo groupadd docker                                       # 创建docker用户组（注意：这个一般在安装docker时就自动创建好了，可以使用命令：more /etc/group 查看是否存在）
-$ sudo gpasswd -a ${USER} docker                             # 将当前用户添加到docker用户组
-$ sudo service docker restart                                # 重启docker服务
 $ sudo chmod a+rw /var/run/docker.sock                       # 给普通用户赋予执行docker命令的权限
 ```
 
