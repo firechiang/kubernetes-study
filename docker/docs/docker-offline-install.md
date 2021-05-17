@@ -29,7 +29,15 @@ $ sudo systemctl enable docker.service                       # 设置开机启�
 $ sudo systemctl disable docker.service                      # 禁止开机启动Docker
 ```
 
-#### 四、配置 [vi /etc/docker/daemon.json] 指定Docker启动参数，可使用docker info先查看默认值再修改，建议使用默认值（注意：修改这个配置需要先启动Docker）
+#### 四、普通用户运行Docker
+```bash
+$ sudo groupadd docker                                       # 创建docker用户组（注意：这个一般在安装docker时就自动创建好了，可以使用命令：more /etc/group 查看是否存在）
+$ sudo gpasswd -a ${USER} docker                             # 将当前用户添加到docker用户组
+$ sudo service docker restart                                # 重启docker服务
+$ sudo chmod a+rw /var/run/docker.sock                       # 给普通用户赋予执行docker命令的权限
+```
+
+#### 五、配置 [vi /etc/docker/daemon.json] 指定Docker启动参数，可使用docker info先查看默认值再修改，建议使用默认值（注意：修改这个配置需要先启动Docker）
 ```bash
 # registry-mirrors=设置镜像地址（可以使用docker info命令查看，默认镜像地址）
 # graph=设置docker数据目录：选择比较大的分区（我这里是根目录就不需要配置了，默认为/var/lib/docker）
