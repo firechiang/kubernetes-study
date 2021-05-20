@@ -12,8 +12,8 @@ EXPOSE 6379
 ENTRYPOINT java -version
 # 'ENV' 添加环境变量
 ENV JAVA_HOME /usr/lib/java-8
-# 创建镜像时要执行的命令《比如安装软件》多条命令可使用 \ 换行，下一行使用 && 开头，整个Dockerfile最好只有一个RUN因为每个RUN都是一层镜像
-RUN '创建镜像要执行的命令《比如安装软件》'
+# 创建镜像时会执行的命令《比如安装软件》多条命令可使用 \ 换行，下一行使用 && 开头，整个Dockerfile最好只有一个RUN因为每个RUN都是一层镜像
+RUN '创建镜像会执行的命令《比如安装软件》'
 ```
 
 #### 二、构建Docker镜像
