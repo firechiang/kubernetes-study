@@ -20,7 +20,7 @@ RUN '创建镜像会执行的命令《比如安装软件》'
 ```bash
 # chiangfire  = Docker镜像仓库账户ID（注意：可直接写仓库地址如：192.168.83.131:80/test-service/openjdk:9-jre，还有ID后面还可以使用 /xxx添加层级）
 # centos-test = 镜像名称
-# :0.0.1      =  镜像版本，
+# :0.0.1      = 镜像版本，
 # .           = Dockerfile所在目录（.表示当前目录）
 $ docker build -t chiangfire/centos-test:0.0.1 .
 ```
