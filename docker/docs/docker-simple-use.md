@@ -41,9 +41,10 @@ $ docker run -e AAA=jiang -it --entrypoint bash openjdk
 # --name = 指定镜像启动后的名称（注意：是镜像启动后的名称而不是镜像的名称，还有这个名称可以不指定）
 # -e = 往镜像里面添加环境变量，在进入镜像以后可以使用，一般服务的配置也是通过这个传递的
 # -d = 镜像将会运行在后台模式
+# -v = 将主机的home目录映射到镜像的home目录（镜像里面的程序在往home目录里面读写数据时，实际操作的是主机的home目录）
 # -p = 将主机的80转发到镜像的80端口《可使用--net=host替代直接使用宿主机端口不做转发》
 # -rm = 镜像运行完成后立即删除（注意：这个配置项请谨慎使用）
-$ docker run  -e AAA=jiang --name nginx-test -d -p 80:80 nginx
+$ docker run  -e AAA=jiang --name nginx-test -d -v /home:/home -p 80:80 nginx
 
 # 停止容器运行（注意：容器运行ID可使用命令 docker ps 查看）
 $ docker stop "容器运行ID"
