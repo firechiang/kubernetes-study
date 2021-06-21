@@ -90,6 +90,13 @@ http {
             # 注意：上游服务的URL末尾带/，转发时location匹配部分会被删除掉（比如请求/bbs/abc/test.html，经代理后转发到上游的URL会变成/abc/test.html）
 	    proxy_pass http://127.0.0.1:8050/;
         }
+	
+        # 不带字符匹配地址（location匹配优先级5（最最低））
+	# 静态文件代理（前端请求/index会被映射到/file目录，也就是前端如果请求/index/xxx.html 会返回/file/xxx.html文件）
+        location /index {
+            alias /file;
+	    index index.html index.htm;
+        }
     }
 }
 ``` 
