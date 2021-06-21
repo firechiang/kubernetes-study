@@ -149,6 +149,7 @@ http {
 	# 静态文件代理（前端请求/index会被映射到/file目录，也就是如果前端请求/index/xxx.html 会返回/file/xxx.html文件）
         location /index {
             alias /file;
+	    index index.html index.htm;
         }
 	# = 表示精准匹配地址(注意：这个可以匹配到以/index1/开头的地址)（location匹配优先级1（最高））
 	# 注意：地址最后没有带/，表示把/index当成目录地址也当成文件地址处理（就是如果直接访问/index，会在/的映射目录下找index文件。也可以使用/index/test/i.html找下级目录的文件）
