@@ -146,7 +146,7 @@ http {
             index index.html index.htm;
         }
 	# 不带字符匹配地址（location匹配优先级5（最最低））
-	# 静态文件代理（前端请求/index会被映射到/file目录，也就是前端如果请求/index/xxx.html 会返回/file/xxx.html文件）
+	# 静态文件代理（前端请求/index会被映射到/file目录，也就是如果前端请求/index/xxx.html 会返回/file/xxx.html文件）
         location /index {
             alias /file;
         }
