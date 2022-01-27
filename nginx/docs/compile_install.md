@@ -22,6 +22,10 @@ $ mv nginx-release-1.19.7 nginx-source-1.19.7
 ```bash
 # 进入nginx源码目录的auto目录（注意：编译脚本configure就在这个目录下）
 $ cd /home/chiangfire/data-dev/nginx/nginx-source-1.19.7
+
+# 安装编译依赖
+$ sudo zypper in gcc-c++ libopenssl-devel gd-devel
+
 # 查看编译脚本configure的使用方式（注意：--with开头的模块默认是没有被编译进nginx的，--without开头的模块是默认编译进nginx的）
 $ ./auto/configure --help
 
